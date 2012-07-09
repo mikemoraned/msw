@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Tim Taubert]]></title>
-  <link href="http://timtaubert.de//atom.xml" rel="self"/>
-  <link href="http://timtaubert.de//"/>
-  <updated>2012-07-09T21:11:43+02:00</updated>
-  <id>http://timtaubert.de//</id>
+  <link href="http://timtaubert.de/atom.xml" rel="self"/>
+  <link href="http://timtaubert.de/"/>
+  <updated>2012-07-09T21:19:43+02:00</updated>
+  <id>http://timtaubert.de/</id>
   <author>
     <name><![CDATA[Tim Taubert]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Are we small, yet?]]></title>
-    <link href="http://timtaubert.de//blog/2012/04/are-we-small-yet/"/>
+    <link href="http://timtaubert.de/blog/2012/04/are-we-small-yet/"/>
     <updated>2012-04-11T00:22:00+02:00</updated>
-    <id>http://timtaubert.de//blog/2012/04/are-we-small-yet</id>
+    <id>http://timtaubert.de/blog/2012/04/are-we-small-yet</id>
     <content type="html"><![CDATA[<p>Lately, <a href="http://weblogs.mozillazine.org/asa/">Asa Dotzler</a> <a href="https://groups.google.com/forum/#!topic/mozilla.dev.apps.firefox/k7fzkhdt9io">posted to dev.apps.firefox</a> regarding the download size of Firefox:</p>
 
 <blockquote><p>This evening I noticed that my full win32 mar update for Firefox was 21MB. That caused me to look at what our full win32 installer size was. I was a bit surprised to see it’s up to 17MB. When we shipped Firefox 1, our Windows installer build was 4.7MB. [&#8230;]</p>
@@ -32,7 +32,7 @@ Firefox 3.6 was a 7.7 MB download.</p>
 
 <p>To better illustrate the steady growth over the last few years I created <a href="http://www.arewesmallyet.com/">http://www.arewesmallyet.com/</a>. It’s updated daily, shows differences between nightly builds and links to the corresponding changelog if one would like to investigate the cause of increasing build sizes.</p>
 
-<p><img src="http://timtaubert.de//images/arewesmallyet.png" title="Screenshot of arewesmallyet.com" ></p>
+<p><img src="http://timtaubert.de/images/arewesmallyet.png" title="Screenshot of arewesmallyet.com" ></p>
 
 <p>While this surely isn’t the most important battle we have right now I hope this will turn out useful to anyone willing to pick this up and tackle some build size optimizations.</p>
 
@@ -42,10 +42,10 @@ Firefox 3.6 was a 7.7 MB download.</p>
   
   <entry>
     <title type="html"><![CDATA[One year at Mozilla]]></title>
-    <link href="http://timtaubert.de//blog/2012/04/one-year-at-mozilla/"/>
+    <link href="http://timtaubert.de/blog/2012/04/one-year-at-mozilla/"/>
     <updated>2012-04-09T13:28:00+02:00</updated>
-    <id>http://timtaubert.de//blog/2012/04/one-year-at-mozilla</id>
-    <content type="html"><![CDATA[<p>You may already know the story of <a href="http://timtaubert.de//blog/2012/01/how-i-became-a-firefox-contributor/">how I became a Firefox contributor</a>. Back in early April of 2011, having volunteered full-time for three months (a rather short time compared to other core contributors), I was given the opportunity to start as a paid contributor working for Mozilla.</p>
+    <id>http://timtaubert.de/blog/2012/04/one-year-at-mozilla</id>
+    <content type="html"><![CDATA[<p>You may already know the story of <a href="http://timtaubert.de/blog/2012/01/how-i-became-a-firefox-contributor/">how I became a Firefox contributor</a>. Back in early April of 2011, having volunteered full-time for three months (a rather short time compared to other core contributors), I was given the opportunity to start as a paid contributor working for Mozilla.</p>
 
 <p>Over the year I met a lot of great people and had the chance to visit our awesome offices in Mountain View, San Francisco and soon Toronto. I attended JSConf.eu, MozCamp and FOSDEM, with the JSDay yet to come.</p>
 
@@ -59,10 +59,10 @@ Firefox 3.6 was a 7.7 MB download.</p>
   
   <entry>
     <title type="html"><![CDATA[Fighting DocShell and DOMWindow leaks]]></title>
-    <link href="http://timtaubert.de//blog/2012/02/fighting-docshell-and-domwindow-leaks/"/>
+    <link href="http://timtaubert.de/blog/2012/02/fighting-docshell-and-domwindow-leaks/"/>
     <updated>2012-02-27T19:13:00+01:00</updated>
-    <id>http://timtaubert.de//blog/2012/02/fighting-docshell-and-domwindow-leaks</id>
-    <content type="html"><![CDATA[<p>In my post <a href="http://timtaubert.de//blog/2011/09/leak-hunting-in-browser-chrome-mochitests/">Leak hunting in browser-chrome mochitests</a> I wrote about the measures we were considering to prevent regressing efforts to get rid of leaks in Firefox. Now that <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=683953" title="Bug 683953 - Browser-chrome mochitests should show statistics about leaked DOMWindows and DocShells">bug 683953</a> has landed we finally have a way to detect the leakage of whole DocShells and DOMWindows for the lifetime of the browser when running the browser-chrome mochitest suite.</p>
+    <id>http://timtaubert.de/blog/2012/02/fighting-docshell-and-domwindow-leaks</id>
+    <content type="html"><![CDATA[<p>In my post <a href="http://timtaubert.de/blog/2011/09/leak-hunting-in-browser-chrome-mochitests/">Leak hunting in browser-chrome mochitests</a> I wrote about the measures we were considering to prevent regressing efforts to get rid of leaks in Firefox. Now that <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=683953" title="Bug 683953 - Browser-chrome mochitests should show statistics about leaked DOMWindows and DocShells">bug 683953</a> has landed we finally have a way to detect the leakage of whole DocShells and DOMWindows for the lifetime of the browser when running the browser-chrome mochitest suite.</p>
 
 <h2>How does it work?</h2>
 
@@ -92,9 +92,9 @@ Windows (XP): 120 (118) leaks
   
   <entry>
     <title type="html"><![CDATA[Help us test the New Tab Page!]]></title>
-    <link href="http://timtaubert.de//blog/2012/02/help-us-test-the-new-tab-page/"/>
+    <link href="http://timtaubert.de/blog/2012/02/help-us-test-the-new-tab-page/"/>
     <updated>2012-02-10T19:11:00+01:00</updated>
-    <id>http://timtaubert.de//blog/2012/02/help-us-test-the-new-tab-page</id>
+    <id>http://timtaubert.de/blog/2012/02/help-us-test-the-new-tab-page</id>
     <content type="html"><![CDATA[<p>Over the last weeks we worked hard on getting the New Tab Page into Firefox. It’s not quite ready yet but we need your help testing it. We enabled it by default on Nightly and decided to give it a week on Aurora to get feedback from those users as well.</p>
 
 <p>Nightly: <a href="http://nightly.mozilla.org/">http://nightly.mozilla.org/</a><br/>
@@ -106,15 +106,15 @@ Aurora: <a href="https://www.mozilla.org/en-US/firefox/aurora/">https://www.mozi
 
 <p>Please make sure you don’t report a duplicate bug and check the dependencies of the original New Tab Page bug before filing – <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=455553" title="Bug 455553 - New Tab Page feature">bug 455553</a>.</p>
 
-<p><img src="http://timtaubert.de//images/newtab.png" title="Screenshot of the new tab page" ></p>
+<p><img src="http://timtaubert.de/images/newtab.png" title="Screenshot of the new tab page" ></p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[How I became a Firefox contributor]]></title>
-    <link href="http://timtaubert.de//blog/2012/01/how-i-became-a-firefox-contributor/"/>
+    <link href="http://timtaubert.de/blog/2012/01/how-i-became-a-firefox-contributor/"/>
     <updated>2012-01-19T19:04:00+01:00</updated>
-    <id>http://timtaubert.de//blog/2012/01/how-i-became-a-firefox-contributor</id>
+    <id>http://timtaubert.de/blog/2012/01/how-i-became-a-firefox-contributor</id>
     <content type="html"><![CDATA[<p>December 2009. I’ve been a freelancer for quite some time now and decided to dedicate some weeks to something that always fascinated me: contributing to a big open source project. I started some smaller open source projects in the past (like <a href="https://github.com/ttaubert/video4linux-net">Video4Linux.Net</a> and <a href="https://github.com/ttaubert/ViGedit-Plus">ViGedit+</a>) and contributed every so often to Gentoo and the Linux kernel. I’ve always been a great fan of the open source movement and I felt that it’s time to give back some love.</p>
 
 <p>I made a list of all the things that interested me and that I could possibly contribute to. Besides having things like Linux, ReactOS and Wine on the list I picked “Firefox” because it simply has been a loyal companion for years. I think I’ve used it first in version 1.5 and it was one of the most valuable tools that helped me to earn money, get my everyday work done and the most trivial: just browse and experience the web.</p>
@@ -127,9 +127,9 @@ Aurora: <a href="https://www.mozilla.org/en-US/firefox/aurora/">https://www.mozi
   
   <entry>
     <title type="html"><![CDATA[Firefox Add-on: Websockets for IRCCloud]]></title>
-    <link href="http://timtaubert.de//blog/2011/12/firefox-add-on-websockets-for-irccloud/"/>
+    <link href="http://timtaubert.de/blog/2011/12/firefox-add-on-websockets-for-irccloud/"/>
     <updated>2011-12-07T19:00:00+01:00</updated>
-    <id>http://timtaubert.de//blog/2011/12/firefox-add-on-websockets-for-irccloud</id>
+    <id>http://timtaubert.de/blog/2011/12/firefox-add-on-websockets-for-irccloud</id>
     <content type="html"><![CDATA[<p>If you don’t know <a href="https://irccloud.com/">IRCCloud</a>, check it out. It’s become a very important tool for my every day work and I really don’t want to miss it. The one thing I never liked about it is that is currently uses a Flash fallback if it detects that the browser doesn’t support the WebSocket API.</p>
 
 <p>The Firefox WebSocket API is currently prefixed (called MozWebSocket) and that’s why even with the newest Firefox you’re forced to use the Flash fallback. They even check for MozWebSocket and explicitly don’t use it if detected. As I didn’t quite understand the reasons behind that I decided to write an add-on that convinces IRCCloud to use native WebSockets in Firefox. Works good so far. I hope that’ll encourage the IRCCloud guys to think about using it again.</p>
@@ -141,9 +141,9 @@ Source: <a href="https://github.com/ttaubert/irccloud-websockets">https://github
   
   <entry>
     <title type="html"><![CDATA[Firefox Add-on: Facebook Auto-Logout]]></title>
-    <link href="http://timtaubert.de//blog/2011/10/firefox-add-on-facebook-auto-logout/"/>
+    <link href="http://timtaubert.de/blog/2011/10/firefox-add-on-facebook-auto-logout/"/>
     <updated>2011-10-29T18:56:00+02:00</updated>
-    <id>http://timtaubert.de//blog/2011/10/firefox-add-on-facebook-auto-logout</id>
+    <id>http://timtaubert.de/blog/2011/10/firefox-add-on-facebook-auto-logout</id>
     <content type="html"><![CDATA[<p>While talking to a friend of mine recently I got to know that he really dislikes that Facebook hides the Logout link in a sub-menu. He told me that he even uses a separate browser only for Facebook because he is very well aware of Facebook’s business model relying on tracking users wherever they are (this is not a big issue for me because I’m very happy with <a href="https://addons.mozilla.org/de/firefox/addon/ghostery/">Ghostery</a>).</p>
 
 <p>A quick search revealed that there seem to be lot more users than I expected that would find an auto-logout of Facebook very useful. If not for privacy issues it’s also quite useful if someone else uses your computer and wants to post weird status updates.</p>
@@ -157,9 +157,9 @@ Source: <a href="https://github.com/ttaubert/facebook-auto-logout">https://githu
   
   <entry>
     <title type="html"><![CDATA[Leak hunting in browser-chrome mochitests]]></title>
-    <link href="http://timtaubert.de//blog/2011/09/leak-hunting-in-browser-chrome-mochitests/"/>
+    <link href="http://timtaubert.de/blog/2011/09/leak-hunting-in-browser-chrome-mochitests/"/>
     <updated>2011-09-09T18:49:00+02:00</updated>
-    <id>http://timtaubert.de//blog/2011/09/leak-hunting-in-browser-chrome-mochitests</id>
+    <id>http://timtaubert.de/blog/2011/09/leak-hunting-in-browser-chrome-mochitests</id>
     <content type="html"><![CDATA[<p>Some weeks (even months) ago <a href="http://design-noir.de/">Dão Gottwald</a> started the hunt for leaked DOMWindows and DocShells while running our browser-chrome mochitest suite (see <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=658738" title="Bug 658738 - (bc-leaks) [meta] We seem to be leaking hundreds of windows until shutdown during browser-chrome tests">bug 658738</a>). That means that there are some expensive objects whose lifetimes are longer than they should be – they are kept alive until the test runner shuts down. Sometimes these are caused by only a little typo in the test and sometimes they unveil bigger problems in the core.</p>
 
 <p>Dão has done some great work so far, fixed lots of those leaks and also pointed out patches that introduced new leaks. Inspired by his <a href="https://bugzilla.mozilla.org/attachment.cgi?id=553428">script</a> that parses the mochitest build log and lists all <a href="https://bugzilla.mozilla.org/attachment.cgi?id=559090">leaked URIs</a> I wrote a Python script that additionally assigns those URIs to the tests that created these DOMWindows and DocShells. I filed <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=683953" title="Bug 683953 - Browser-chrome mochitests should show statistics about leaked DOMWindows and DocShells">bug 683953</a> to automatically have those statistics at the end of each mochitest run. Here is an example:</p>
@@ -191,9 +191,9 @@ Source: <a href="https://github.com/ttaubert/facebook-auto-logout">https://githu
   
   <entry>
     <title type="html"><![CDATA[Firefox Electrolysis 101]]></title>
-    <link href="http://timtaubert.de//blog/2011/08/firefox-electrolysis-101/"/>
+    <link href="http://timtaubert.de/blog/2011/08/firefox-electrolysis-101/"/>
     <updated>2011-08-10T18:21:00+02:00</updated>
-    <id>http://timtaubert.de//blog/2011/08/firefox-electrolysis-101</id>
+    <id>http://timtaubert.de/blog/2011/08/firefox-electrolysis-101</id>
     <content type="html"><![CDATA[<p>You probably have all heard of this weird new thing called <a href="https://wiki.mozilla.org/Electrolysis">Electrolysis (a.k.a. e10s)</a>. Basically it’s all about running the browser UI and its tabs in separated processes. I recently rewrote a part of Panorama to be e10s-future-proof and thought I should share what I’ve learned so far…</p>
 
 <p><em>(If you don’t know why we’re all doing this, please read: <a href="http://blog.mozilla.com/products/2011/07/15/goals-for-multi-process-firefox/">http://blog.mozilla.com/products/2011/07/15/goals-for-multi-process-firefox/</a>)</em></p>
@@ -254,7 +254,7 @@ Source: <a href="https://github.com/ttaubert/facebook-auto-logout">https://githu
 
 <p>Here is an overview of all Electrolysis components. That’s not exactly how e10s is implemented in Gecko but rather a logical view to clarify interactions between these parts.</p>
 
-<p><img src="http://timtaubert.de//images/electrolysis.png" title="Overview of Electrolysis components" ></p>
+<p><img src="http://timtaubert.de/images/electrolysis.png" title="Overview of Electrolysis components" ></p>
 
 <h2>A simple example</h2>
 
@@ -299,7 +299,7 @@ Source: <a href="https://github.com/ttaubert/facebook-auto-logout">https://githu
 
 <p>This diagram illustrates what the communication between all processes involved looks like (regarding our simple example).</p>
 
-<p><img src="http://timtaubert.de//images/e10s-processes.png" title="Electrolysis process communication" ></p>
+<p><img src="http://timtaubert.de/images/e10s-processes.png" title="Electrolysis process communication" ></p>
 
 <h2>Which parts of your project will be affected by e10s?</h2>
 
@@ -410,9 +410,9 @@ target - the browser associated with the content that this
   
   <entry>
     <title type="html"><![CDATA[Seven things you may not know about me]]></title>
-    <link href="http://timtaubert.de//blog/2011/08/seven-things-you-may-not-know-about-me/"/>
+    <link href="http://timtaubert.de/blog/2011/08/seven-things-you-may-not-know-about-me/"/>
     <updated>2011-08-04T18:16:00+02:00</updated>
-    <id>http://timtaubert.de//blog/2011/08/seven-things-you-may-not-know-about-me</id>
+    <id>http://timtaubert.de/blog/2011/08/seven-things-you-may-not-know-about-me</id>
     <content type="html"><![CDATA[<p>My name is Tim Taubert (ttaubert on IRC and Twitter). I work as a Firefox Engineer for Mozilla, based in Berlin, Germany.</p>
 
 <h2>Here are the rules for this meme:</h2>
@@ -453,14 +453,14 @@ target - the browser associated with the content that this
   
   <entry>
     <title type="html"><![CDATA[Firefox Panorama: Deferred loading of inactive groups]]></title>
-    <link href="http://timtaubert.de//blog/2011/05/firefox-panorama-deferred-loading-of-inactive-groups/"/>
+    <link href="http://timtaubert.de/blog/2011/05/firefox-panorama-deferred-loading-of-inactive-groups/"/>
     <updated>2011-05-20T17:59:00+02:00</updated>
-    <id>http://timtaubert.de//blog/2011/05/firefox-panorama-deferred-loading-of-inactive-groups</id>
+    <id>http://timtaubert.de/blog/2011/05/firefox-panorama-deferred-loading-of-inactive-groups</id>
     <content type="html"><![CDATA[<p>Starting with tomorrow’s Nightly hidden tabs are not anymore restored by default when starting Firefox. That means tabs from inactive Panorama groups will not load until these groups/tabs are shown. Finally we have a part of the behavior everyone actually expects when using Panorama.</p>
 
 <p>If you have lots of tabs and tab groups like me (~120 tabs in 12 groups) the landing of <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=595601" title="Bug 595601 - Option to not load tabs from inactive groups on initial browser startup (and until such time as the tab(s) become part of an active group)">bug 595601</a> for Firefox 6 is going to be a huge win in terms of (perceived) startup speed and memory usage. But let’s check the numbers.</p>
 
-<p><img src="http://timtaubert.de//images/panorama.png" title="Screenshot of Panorama with lots of groups" ></p>
+<p><img src="http://timtaubert.de/images/panorama.png" title="Screenshot of Panorama with lots of groups" ></p>
 
 <h2>Memory Usage (with hidden tabs restored)</h2>
 
@@ -537,9 +537,9 @@ Startup time (after)   - 13.5s (avg)
   
   <entry>
     <title type="html"><![CDATA[Firefox Panorama: Sync Integration with the Add-on-SDK]]></title>
-    <link href="http://timtaubert.de//blog/2011/05/firefox-panorama-sync-integration-with-the-add-on-sdk/"/>
+    <link href="http://timtaubert.de/blog/2011/05/firefox-panorama-sync-integration-with-the-add-on-sdk/"/>
     <updated>2011-05-19T17:53:00+02:00</updated>
-    <id>http://timtaubert.de//blog/2011/05/firefox-panorama-sync-integration-with-the-add-on-sdk</id>
+    <id>http://timtaubert.de/blog/2011/05/firefox-panorama-sync-integration-with-the-add-on-sdk</id>
     <content type="html"><![CDATA[<p>Back in early April 2011 I started to write a small prototype add-on that allows to see tabs from your synchronized mobile devices as special groups in Panorama. While I’m not quite sure how these groups should behave (Should the be immutable? Should that synchronization be bi-directional?) it simply works as described.</p>
 
 <p>This serves as a good example on how to write extensions using the great Add-on SDK that combine the powers of Panorama and Sync. Feel free to ask me anything about it or just send some pull requests:</p>
@@ -552,9 +552,9 @@ Startup time (after)   - 13.5s (avg)
   
   <entry>
     <title type="html"><![CDATA[Using Xvfb on Linux to run mochitests in the background]]></title>
-    <link href="http://timtaubert.de//blog/2011/05/using-xvfb-on-linux-to-run-mochitests-in-the-background/"/>
+    <link href="http://timtaubert.de/blog/2011/05/using-xvfb-on-linux-to-run-mochitests-in-the-background/"/>
     <updated>2011-05-01T14:08:00+02:00</updated>
-    <id>http://timtaubert.de//blog/2011/05/using-xvfb-on-linux-to-run-mochitests-in-the-background</id>
+    <id>http://timtaubert.de/blog/2011/05/using-xvfb-on-linux-to-run-mochitests-in-the-background</id>
     <content type="html"><![CDATA[<p>Seeing mochitests run for the first time is awesome but gets pretty annoying at the 50th time, especially when executing whole test suites. I’ve always wanted to be able to do some bug triage or catch up with the mailing lists while letting mochitests run in the background.</p>
 
 <p>Spawning a second XServer seemed a bit too much but fortunately there is another solution: Xvfb – a virtual frame buffer. Xvfb spawns a virtual XServer on the specified display and runs purely in memory.</p>
@@ -574,14 +574,14 @@ me@host:~$ xvfb-run make -C $(OBJDIR) mochitest-browser-chrome
   
   <entry>
     <title type="html"><![CDATA[Firefox Add-on: Customizable Shortcuts]]></title>
-    <link href="http://timtaubert.de//blog/2011/04/firefox-add-on-customizable-shortcuts/"/>
+    <link href="http://timtaubert.de/blog/2011/04/firefox-add-on-customizable-shortcuts/"/>
     <updated>2011-04-21T14:03:00+02:00</updated>
-    <id>http://timtaubert.de//blog/2011/04/firefox-add-on-customizable-shortcuts</id>
+    <id>http://timtaubert.de/blog/2011/04/firefox-add-on-customizable-shortcuts</id>
     <content type="html"><![CDATA[<p>As you probably know, in Firefox there is unfortunately no way to configure existing shortcuts. All I found is the <a href="http://forums.mozillazine.org/viewtopic.php?t=72994">keyconfig</a> add-on, that seems really old and very hard to configure (there is no UI, only about:config). That’s why I finally decided to write an add-on with a neat UI (not only) for casual users in mind. I would love to see such a feature directly delivered with Firefox some day because it enables you not only to modify shortcuts to your needs but also to easily discover new ones you haven’t heard of, yet.</p>
 
 <p>The add-on’s current version is 0.5.8 – so I already invested a decent amount of time. Unfortunately I’m still waiting for full review from the AMO team as their backlog is pretty high after the Firefox 4 release. If you have any thoughts or bugs feel free to comment.</p>
 
-<p><img src="http://timtaubert.de//images/customizable-shortcuts.png" title="Screenshot of the Customizable Shortcuts add-on" ></p>
+<p><img src="http://timtaubert.de/images/customizable-shortcuts.png" title="Screenshot of the Customizable Shortcuts add-on" ></p>
 
 <p>Download: <a href="https://addons.mozilla.org/en-US/firefox/addon/customizable-shortcuts/">https://addons.mozilla.org/en-US/firefox/addon/customizable-shortcuts/</a><br/>
 GitHub: <a href="https://github.com/ttaubert/customizable-shortcuts">https://github.com/ttaubert/customizable-shortcuts</a><br/>
