@@ -178,6 +178,8 @@ pre code{padding:0;color:inherit;background-color:transparent;border:0;}
 body{padding:20px;overflow-y:scroll;}
 h1>a,h2>a{color:#333333;}
 h1,h2,time{font-family:"Droid Sans";text-transform:uppercase;}
+h2{font-weight:400;}
+h3{font-size:17px;}
 p{-webkit-hyphens:auto;-moz-hyphens:auto;-o-hyphens:auto;hyphens:auto;text-rendering:optimizeLegibility;font-family:"PT Sans",Helvetica,Arial,sans-serif;}
 .col{margin-top:20px;}
 #header{min-height:80px;overflow:hidden;}
