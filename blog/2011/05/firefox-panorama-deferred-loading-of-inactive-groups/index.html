@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Firefox Panorama: Deferred loading of inactive groups - Tim Taubert</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    
+    <meta name="description" content="Firefox Panorama: Deferred loading of inactive groups May, 20th 2011 Starting with tomorrow’s Nightly hidden tabs are not anymore restored by &hellip;">
+    <meta content="Tim Taubert" name="author">
+    <link href="http://fonts.googleapis.com/css?family=Droid+Sans|PT+Sans" media="screen" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/screen.css" media="screen" rel="stylesheet" type="text/css">
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+    <link href="/favicon.ico" rel="icon" type="image/ico">
+    <link href="/feed/" rel="alternate" title="Tim Taubert" type="application/atom+xml">
+  </head>
+
+
+<body>
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="col span3">
+        <header id="header">
+  <h1><a href="/">Tim Taubert</a></h1>
+  <a href="https://twitter.com/ttaubert" class="twitter-follow-button" data-show-count="false">Follow @ttaubert</a>
+  <script defer>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</header>
+
+        <section id="about">
+  <h1 class="hidden">About me</h1>
+  <strong>Open Source enthusiast.</strong>
+  <strong>JavaScript lover.</strong>
+  <strong>Mozillian.</strong>
+</section>
+
+        <nav>
+  <h1 class="hidden">Main Navigation</h1>
+  <ul class="nav-main">
+    <li><a class="nav-main-link" title="About me" href="/about-me">about me</a></li>
+    <li><a class="nav-main-link" title="Archives" href="/blog/archives">Archives</a></li>
+    <li><a class="nav-main-link" title="Imprint" href="/imprint">imprint</a></li>
+  </ul>
+</nav>
+
+      </div>
+      <div id="main" class="col span6">
+        <section>
+          <h1 class="hidden">Content</h1>
+          <article class="post">
+  <header class="article-header">
+    
+      <h1>Firefox Panorama: Deferred loading of inactive groups</h1>
+    
+    
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-05-20T17:59:00+02:00" pubdate data-updated="true">May, 20<span>th</span> 2011</time>
+  </header>
+  <p>Starting with tomorrow’s Nightly hidden tabs are not anymore restored by default when starting Firefox. That means tabs from inactive Panorama groups will not load until these groups/tabs are shown. Finally we have a part of the behavior everyone actually expects when using Panorama.</p>
+
+<p>If you have lots of tabs and tab groups like me (~120 tabs in 12 groups) the landing of <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=595601" title="Bug 595601 - Option to not load tabs from inactive groups on initial browser startup (and until such time as the tab(s) become part of an active group)">bug 595601</a> for Firefox 6 is going to be a huge win in terms of (perceived) startup speed and memory usage. But let’s check the numbers.</p>
+
+<p><img src="/images/panorama.png" title="Screenshot of Panorama with lots of groups" ></p>
+
+<h2>Memory Usage (with hidden tabs restored)</h2>
+
+<p>Remember: all tabs are restored and rendered regardless of whether they’re hidden or not. JavaScripts, plugins and the like are executed, too.</p>
+
+<figure class='code'> <div class="highlight"><pre>Mapped Memory
+2,066.92 MB (100.0%) -- mapped
+├──1,288.00 MB (62.31%) -- heap
+├────679.80 MB (32.89%) -- other
+└─────99.12 MB (04.80%) -- js
+├──94.49 MB (04.57%) -- mjit-code
+└───4.63 MB (00.22%) -- tjit-code
+
+Used Heap Memory
+1,264.93 MB (100.0%) -- heap-used
+├────574.40 MB (45.41%) -- other
+├────405.63 MB (32.07%) -- js
+├────199.56 MB (15.78%) -- images
+├─────61.39 MB (04.85%) -- layout
+├─────21.25 MB (01.68%) -- storage
+└──────2.70 MB (00.21%) -- gfx
+└──2.70 MB (00.21%) -- surface
+└──2.70 MB (00.21%) -- image
+</pre>
+</div>
+</figure>
+
+
+<h2>Memory Usage (no hidden tabs restored)</h2>
+
+<p>The tabs are technically still present but haven’t been restored and therefore they’re not loaded or rendered and no JavaScripts and plugins are executed until they’re shown.</p>
+
+<figure class='code'> <div class="highlight"><pre>Mapped Memory
+920.39 MB (100.0%) -- mapped
+├──586.25 MB (63.70%) -- other
+├──317.00 MB (34.44%) -- heap
+└───17.14 MB (01.86%) -- js
+├──16.52 MB (01.79%) -- mjit-code
+└───0.63 MB (00.07%) -- tjit-code
+
+Used Heap Memory
+283.59 MB (100.0%) -- heap-used
+├──146.84 MB (51.78%) -- other
+├──119.16 MB (42.02%) -- js
+├────6.74 MB (02.38%) -- layout
+├────5.40 MB (01.91%) -- storage
+├────5.33 MB (01.88%) -- images
+└────0.12 MB (00.04%) -- (1 omitted)
+</pre>
+</div>
+</figure>
+
+
+<h2>Startup Time</h2>
+
+<p>When we would try to measure startup times with <a href="https://addons.mozilla.org/en-US/firefox/addon/about-startup/">about:startup</a> we would probably see no big difference. This is because the patch does not change how the whole session is restored but when every single tab is. So our visible tabs get restored a bit faster and they are earlier available for user interaction (because no tab in the background disturbs with network or CPU usage). Bonus: hidden tabs with auto-play stuff can’t annoy you anymore (looking at you, Youtube!).</p>
+
+<p>The test setup includes a visible group (out of 12) with 4 normal tabs (out of 120) and 4 pinned tabs (including Google Groups, Twitter and Facebook). I simply started the timer when I could see the browser window and stopped it when every visible tab finished loading.</p>
+
+<figure class='code'> <div class="highlight"><pre>Startup time (before)  - 17.5s (avg)
+Startup time (after)   - 13.5s (avg)
+</pre>
+</div>
+</figure>
+
+
+<p>We only see a small win here but that’s no surprise as the session restore component already does a pretty clever job in prioritizing visible tabs higher than hidden tabs and we have also a lot of prioritization at networking level.</p>
+
+<h2>What’s next?</h2>
+
+<p>The next thing we probably should address is the hibernation of entire tab groups that haven’t been used for a while because there are lots of people out there who tend to never close their browsers (like me, yeah) – but that’s another bug.</p>
+
+</article>
+
+
+<section class="well">
+  <h1 class="hidden">Feedback</h1>
+  <p class="feedback">
+    Comments, questions, suggestions? Just tweet <a href="https://twitter.com/ttaubert">@ttaubert</a>.
+  </p>
+</section>
+
+        </section>
+      </div>
+      <div class="col span1"></div>
+      <div class="col span2">
+        <section class="well">
+  <h1 class="sidebar-header">Recent posts</h1>
+  <ul class="nav nav-list" id="recent-posts">
+    
+      <li><a title="Are we small, yet?" href="/blog/2012/04/are-we-small-yet/">Are we small, yet?</a></li>
+    
+      <li><a title="One year at Mozilla" href="/blog/2012/04/one-year-at-mozilla/">One year at Mozilla</a></li>
+    
+      <li><a title="Fighting DocShell and DOMWindow leaks" href="/blog/2012/02/fighting-docshell-and-domwindow-leaks/">Fighting DocShell and DOMWindow leaks</a></li>
+    
+      <li><a title="Help us test the New Tab Page!" href="/blog/2012/02/help-us-test-the-new-tab-page/">Help us test the New Tab Page!</a></li>
+    
+      <li><a title="How I became a Firefox contributor" href="/blog/2012/01/how-i-became-a-firefox-contributor/">How I became a Firefox contributor</a></li>
+    
+  </ul>
+</section>
+<section class="well">
+  <h1 class="sidebar-header">Disclaimer</h1>
+  <p id="disclaimer">The opinions expressed here are my own and do not necessarily represent those of current or past employers.</p>
+</section>
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

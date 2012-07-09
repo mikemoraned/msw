@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Firefox | Tim Taubert]]></title>
+  <link href="http://timtaubert.de//blog/categories/firefox/atom.xml" rel="self"/>
+  <link href="http://timtaubert.de//"/>
+  <updated>2012-07-09T20:16:13+02:00</updated>
+  <id>http://timtaubert.de//</id>
+  <author>
+    <name><![CDATA[Tim Taubert]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Are we small, yet?]]></title>
+    <link href="http://timtaubert.de//blog/2012/04/are-we-small-yet/"/>
+    <updated>2012-04-11T00:22:00+02:00</updated>
+    <id>http://timtaubert.de//blog/2012/04/are-we-small-yet</id>
+    <content type="html"><![CDATA[<p>Lately, <a href="http://weblogs.mozillazine.org/asa/">Asa Dotzler</a> <a href="https://groups.google.com/forum/#!topic/mozilla.dev.apps.firefox/k7fzkhdt9io">posted to dev.apps.firefox</a> regarding the download size of Firefox:</p>
+
+<blockquote><p>This evening I noticed that my full win32 mar update for Firefox was 21MB. That caused me to look at what our full win32 installer size was. I was a bit surprised to see it’s up to 17MB. When we shipped Firefox 1, our Windows installer build was 4.7MB. [...]</p>
+
+<p>Firefox 12 is a 16.1 MB download.
+Firefox 4 was a 12.0 MB download.
+Firefox 3.6 was a 7.7 MB download.</p>
+
+<p>In less than three years we’ve more than doubled in size. (fuller chart here <a href="http://grab.by/cSHA">http://grab.by/cSHA</a>)</p></blockquote>
+
+<p>While there’s no doubt that adding new features and supporting new platforms are good reasons for increasing the build size it’s definitely a metric that impacts users. It hits them the hardest when downloading Firefox the first time, especially with slow internet connections. It still hits them every time we provide application updates.</p>
+
+<p>To better illustrate the steady growth over the last few years I created <a href="http://www.arewesmallyet.com/">http://www.arewesmallyet.com/</a>. It’s updated daily, shows differences between nightly builds and links to the corresponding changelog if one would like to investigate the cause of increasing build sizes.</p>
+
+<p><img src="/images/arewesmallyet.png" title="Screenshot of arewesmallyet.com" ></p>
+
+<p>While this surely isn’t the most important battle we have right now I hope this will turn out useful to anyone willing to pick this up and tackle some build size optimizations.</p>
+
+<p>GitHub: <a href="https://github.com/ttaubert/arewesmallyet">https://github.com/ttaubert/arewesmallyet</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Firefox Add-on: Customizable Shortcuts]]></title>
+    <link href="http://timtaubert.de//blog/2011/04/firefox-add-on-customizable-shortcuts/"/>
+    <updated>2011-04-21T14:03:00+02:00</updated>
+    <id>http://timtaubert.de//blog/2011/04/firefox-add-on-customizable-shortcuts</id>
+    <content type="html"><![CDATA[<p>As you probably know, in Firefox there is unfortunately no way to configure existing shortcuts. All I found is the <a href="http://forums.mozillazine.org/viewtopic.php?t=72994">keyconfig</a> add-on, that seems really old and very hard to configure (there is no UI, only about:config). That’s why I finally decided to write an add-on with a neat UI (not only) for casual users in mind. I would love to see such a feature directly delivered with Firefox some day because it enables you not only to modify shortcuts to your needs but also to easily discover new ones you haven’t heard of, yet.</p>
+
+<p>The add-on’s current version is 0.5.8 – so I already invested a decent amount of time. Unfortunately I’m still waiting for full review from the AMO team as their backlog is pretty high after the Firefox 4 release. If you have any thoughts or bugs feel free to comment.</p>
+
+<p><img src="/images/customizable-shortcuts.png" title="Screenshot of the Customizable Shortcuts add-on" ></p>
+
+<p>Download: <a href="https://addons.mozilla.org/en-US/firefox/addon/customizable-shortcuts/">https://addons.mozilla.org/en-US/firefox/addon/customizable-shortcuts/</a><br/>
+GitHub: <a href="https://github.com/ttaubert/customizable-shortcuts">https://github.com/ttaubert/customizable-shortcuts</a><br/>
+Bugs: <a href="https://github.com/ttaubert/customizable-shortcuts/issues">https://github.com/ttaubert/customizable-shortcuts/issues</a></p>
+]]></content>
+  </entry>
+  
+</feed>
