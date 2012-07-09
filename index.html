@@ -159,9 +159,13 @@ Firefox 3.6 was a 7.7 MB download.</p>
 
 <p>We implemented a threshold of (currently) 130 leaks that must not be exceeded. If a test run leaks more than the limit we configured it goes orange and the patch should be backed out from the tree. These are the current numbers:</p>
 
-<p>Linux (64): 116 (116)<br/>
-OS X (64): 79 (89)<br/>
-Windows (XP): 120 (118)</p>
+<figure class='code'> <div class="highlight"><pre>Linux (64): 116 (116) leaks
+OS X (64): 79 (89) leaks
+Windows (XP): 120 (118) leaks
+</pre>
+</div>
+</figure>
+
 
 <p>Additionally, I filed <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=730797" title="Bug 730797 - Track number of DOMWindow/DocShell leaks and report improvements/regressions">bug 730797</a> to integrate these leaks statistics into our Talos infrastructure. So the leak count for each push will be recorded and compared to previous runs to make sure the numbers don’t regress. As the leak numbers differ quite heavily between OSes it makes sense to apply a custom threshold per OS, this will be implemented in <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=730800" title="Bug 730800 - Apply per-OS threshold for shutdown leaks">bug 730800</a>.</p>
 
