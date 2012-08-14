@@ -4,7 +4,7 @@
   <title><![CDATA[Tim Taubert]]></title>
   <link href="http://timtaubert.de/atom.xml" rel="self"/>
   <link href="http://timtaubert.de/"/>
-  <updated>2012-07-09T23:45:20+02:00</updated>
+  <updated>2012-08-14T11:19:43-07:00</updated>
   <id>http://timtaubert.de/</id>
   <author>
     <name><![CDATA[Tim Taubert]]></name>
@@ -14,9 +14,54 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Snappy: Fixing new tab page performance regressions]]></title>
+    <link href="http://timtaubert.de/blog/2012/08/snappy-fixing-new-tab-page-performance-regressions/"/>
+    <updated>2012-08-14T12:00:00-07:00</updated>
+    <id>http://timtaubert.de/blog/2012/08/snappy-fixing-new-tab-page-performance-regressions</id>
+    <content type="html"><![CDATA[<p>As you probably already know, Firefox 13 introduced a neat new feature - the
+<a href="http://timtaubert.de/blog/2012/02/help-us-test-the-new-tab-page/">new tab page</a>.
+We replaced the old blank page with a list of thumbnails of recently visited
+sites. While the feature itself works great for many people it has definitely
+made opening new tabs a little more noisy.</p>
+
+<h2>Do not show loading indicators</h2>
+
+<p>As we are now loading a real (although local) page, there are loading indicators
+when opening a new tab. The throbber starts to spin and the tab title changes
+to &#8220;Connecting…&#8221; until the page has loaded. That is a lot of unnecessary noise.</p>
+
+<p>In <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=716108" title="Bug 716108 - [New Tab Page] Connecting… should not briefly flicker in the tab title when a new tab is opened">bug 716108</a>
+(Firefox 17) we removed loading indicators for newly opened tabs. No spinning
+throbber, no flickering tab label. It only is a very subtle change but the whole
+action of opening a new tab feels a lot smoother again.</p>
+
+<h2>Preload new tab pages in the background</h2>
+
+<p>If you happen to have a slower machine you will notice that loading the new tab
+page takes a little while. It is a normal HTML (and partly XUL) page that we
+need to parse and render. As all tabs start out with an blank docShell you will
+first see a white canvas that then is replaced by &#8220;about:newtab&#8221;. As a last step
+all thumbnails will be loaded and drawn progressively.</p>
+
+<p>Opening a new tab is a very frequent action so it should feel snappy and not get
+in your way at all. As optimizing the parsing and rendering stages any further
+is more than a non-trivial task I came up with a little trick in
+<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=753448" title="Bug 753448 - [New Tab Page] preload newtab pages in the background and swap them in when opening a new tab">bug 753448</a>.
+The idea is to preload the new tab page in the background so it has already
+loaded when users open a new tab. All we now have to do is switch docShells
+and the new tab page gets shown instantly.</p>
+
+<p>You can give it a try as it landed in yesterday&#8217;s Nightly (2012-08-14). Just go
+to &#8220;about:config&#8221; and set &#8220;browser.newtab.preload&#8221; to &#8220;true&#8221;. This option is
+not yet enabled by default as we first have to figure out some minor talos
+regressions until it is ready for prime time.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Are we small, yet?]]></title>
     <link href="http://timtaubert.de/blog/2012/04/are-we-small-yet/"/>
-    <updated>2012-04-11T00:22:00+02:00</updated>
+    <updated>2012-04-11T00:22:00-07:00</updated>
     <id>http://timtaubert.de/blog/2012/04/are-we-small-yet</id>
     <content type="html"><![CDATA[<p>Lately, <a href="http://weblogs.mozillazine.org/asa/">Asa Dotzler</a> <a href="https://groups.google.com/forum/#!topic/mozilla.dev.apps.firefox/k7fzkhdt9io">posted to dev.apps.firefox</a> regarding the download size of Firefox:</p>
 
@@ -43,7 +88,7 @@ Firefox 3.6 was a 7.7 MB download.</p>
   <entry>
     <title type="html"><![CDATA[One year at Mozilla]]></title>
     <link href="http://timtaubert.de/blog/2012/04/one-year-at-mozilla/"/>
-    <updated>2012-04-09T13:28:00+02:00</updated>
+    <updated>2012-04-09T13:28:00-07:00</updated>
     <id>http://timtaubert.de/blog/2012/04/one-year-at-mozilla</id>
     <content type="html"><![CDATA[<p>You may already know the story of <a href="http://timtaubert.de/blog/2012/01/how-i-became-a-firefox-contributor/">how I became a Firefox contributor</a>. Back in early April of 2011, having volunteered full-time for three months (a rather short time compared to other core contributors), I was given the opportunity to start as a paid contributor working for Mozilla.</p>
 
@@ -60,7 +105,7 @@ Firefox 3.6 was a 7.7 MB download.</p>
   <entry>
     <title type="html"><![CDATA[Fighting DocShell and DOMWindow leaks]]></title>
     <link href="http://timtaubert.de/blog/2012/02/fighting-docshell-and-domwindow-leaks/"/>
-    <updated>2012-02-27T19:13:00+01:00</updated>
+    <updated>2012-02-27T19:13:00-08:00</updated>
     <id>http://timtaubert.de/blog/2012/02/fighting-docshell-and-domwindow-leaks</id>
     <content type="html"><![CDATA[<p>In my post <a href="http://timtaubert.de/blog/2011/09/leak-hunting-in-browser-chrome-mochitests/">Leak hunting in browser-chrome mochitests</a> I wrote about the measures we were considering to prevent regressing efforts to get rid of leaks in Firefox. Now that <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=683953" title="Bug 683953 - Browser-chrome mochitests should show statistics about leaked DOMWindows and DocShells">bug 683953</a> has landed we finally have a way to detect the leakage of whole DocShells and DOMWindows for the lifetime of the browser when running the browser-chrome mochitest suite.</p>
 
@@ -93,7 +138,7 @@ Windows (XP): 120 (118) leaks
   <entry>
     <title type="html"><![CDATA[Help us test the New Tab Page!]]></title>
     <link href="http://timtaubert.de/blog/2012/02/help-us-test-the-new-tab-page/"/>
-    <updated>2012-02-10T19:11:00+01:00</updated>
+    <updated>2012-02-10T19:11:00-08:00</updated>
     <id>http://timtaubert.de/blog/2012/02/help-us-test-the-new-tab-page</id>
     <content type="html"><![CDATA[<p>Over the last weeks we worked hard on getting the New Tab Page into Firefox. It’s not quite ready yet but we need your help testing it. We enabled it by default on Nightly and decided to give it a week on Aurora to get feedback from those users as well.</p>
 
@@ -113,7 +158,7 @@ Aurora: <a href="https://www.mozilla.org/en-US/firefox/aurora/">https://www.mozi
   <entry>
     <title type="html"><![CDATA[How I became a Firefox contributor]]></title>
     <link href="http://timtaubert.de/blog/2012/01/how-i-became-a-firefox-contributor/"/>
-    <updated>2012-01-19T19:04:00+01:00</updated>
+    <updated>2012-01-19T19:04:00-08:00</updated>
     <id>http://timtaubert.de/blog/2012/01/how-i-became-a-firefox-contributor</id>
     <content type="html"><![CDATA[<p>December 2009. I’ve been a freelancer for quite some time now and decided to dedicate some weeks to something that always fascinated me: contributing to a big open source project. I started some smaller open source projects in the past (like <a href="https://github.com/ttaubert/video4linux-net">Video4Linux.Net</a> and <a href="https://github.com/ttaubert/ViGedit-Plus">ViGedit+</a>) and contributed every so often to Gentoo and the Linux kernel. I’ve always been a great fan of the open source movement and I felt that it’s time to give back some love.</p>
 
@@ -128,7 +173,7 @@ Aurora: <a href="https://www.mozilla.org/en-US/firefox/aurora/">https://www.mozi
   <entry>
     <title type="html"><![CDATA[Firefox Add-on: Websockets for IRCCloud]]></title>
     <link href="http://timtaubert.de/blog/2011/12/firefox-add-on-websockets-for-irccloud/"/>
-    <updated>2011-12-07T19:00:00+01:00</updated>
+    <updated>2011-12-07T19:00:00-08:00</updated>
     <id>http://timtaubert.de/blog/2011/12/firefox-add-on-websockets-for-irccloud</id>
     <content type="html"><![CDATA[<p>If you don’t know <a href="https://irccloud.com/">IRCCloud</a>, check it out. It’s become a very important tool for my every day work and I really don’t want to miss it. The one thing I never liked about it is that is currently uses a Flash fallback if it detects that the browser doesn’t support the WebSocket API.</p>
 
@@ -142,7 +187,7 @@ Source: <a href="https://github.com/ttaubert/irccloud-websockets">https://github
   <entry>
     <title type="html"><![CDATA[Firefox Add-on: Facebook Auto-Logout]]></title>
     <link href="http://timtaubert.de/blog/2011/10/firefox-add-on-facebook-auto-logout/"/>
-    <updated>2011-10-29T18:56:00+02:00</updated>
+    <updated>2011-10-29T18:56:00-07:00</updated>
     <id>http://timtaubert.de/blog/2011/10/firefox-add-on-facebook-auto-logout</id>
     <content type="html"><![CDATA[<p>While talking to a friend of mine recently I got to know that he really dislikes that Facebook hides the Logout link in a sub-menu. He told me that he even uses a separate browser only for Facebook because he is very well aware of Facebook’s business model relying on tracking users wherever they are (this is not a big issue for me because I’m very happy with <a href="https://addons.mozilla.org/de/firefox/addon/ghostery/">Ghostery</a>).</p>
 
@@ -158,7 +203,7 @@ Source: <a href="https://github.com/ttaubert/facebook-auto-logout">https://githu
   <entry>
     <title type="html"><![CDATA[Leak hunting in browser-chrome mochitests]]></title>
     <link href="http://timtaubert.de/blog/2011/09/leak-hunting-in-browser-chrome-mochitests/"/>
-    <updated>2011-09-09T18:49:00+02:00</updated>
+    <updated>2011-09-09T18:49:00-07:00</updated>
     <id>http://timtaubert.de/blog/2011/09/leak-hunting-in-browser-chrome-mochitests</id>
     <content type="html"><![CDATA[<p>Some weeks (even months) ago <a href="http://design-noir.de/">Dão Gottwald</a> started the hunt for leaked DOMWindows and DocShells while running our browser-chrome mochitest suite (see <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=658738" title="Bug 658738 - (bc-leaks) [meta] We seem to be leaking hundreds of windows until shutdown during browser-chrome tests">bug 658738</a>). That means that there are some expensive objects whose lifetimes are longer than they should be – they are kept alive until the test runner shuts down. Sometimes these are caused by only a little typo in the test and sometimes they unveil bigger problems in the core.</p>
 
@@ -192,7 +237,7 @@ Source: <a href="https://github.com/ttaubert/facebook-auto-logout">https://githu
   <entry>
     <title type="html"><![CDATA[Firefox Electrolysis 101]]></title>
     <link href="http://timtaubert.de/blog/2011/08/firefox-electrolysis-101/"/>
-    <updated>2011-08-10T18:21:00+02:00</updated>
+    <updated>2011-08-10T18:21:00-07:00</updated>
     <id>http://timtaubert.de/blog/2011/08/firefox-electrolysis-101</id>
     <content type="html"><![CDATA[<p>You probably have all heard of this weird new thing called <a href="https://wiki.mozilla.org/Electrolysis">Electrolysis (a.k.a. e10s)</a>. Basically it’s all about running the browser UI and its tabs in separated processes. I recently rewrote a part of Panorama to be e10s-future-proof and thought I should share what I’ve learned so far…</p>
 
@@ -411,7 +456,7 @@ target - the browser associated with the content that this
   <entry>
     <title type="html"><![CDATA[Seven things you may not know about me]]></title>
     <link href="http://timtaubert.de/blog/2011/08/seven-things-you-may-not-know-about-me/"/>
-    <updated>2011-08-04T18:16:00+02:00</updated>
+    <updated>2011-08-04T18:16:00-07:00</updated>
     <id>http://timtaubert.de/blog/2011/08/seven-things-you-may-not-know-about-me</id>
     <content type="html"><![CDATA[<p>My name is Tim Taubert (ttaubert on IRC and Twitter). I work as a Firefox Engineer for Mozilla, based in Berlin, Germany.</p>
 
@@ -454,7 +499,7 @@ target - the browser associated with the content that this
   <entry>
     <title type="html"><![CDATA[Firefox Panorama: Deferred loading of inactive groups]]></title>
     <link href="http://timtaubert.de/blog/2011/05/firefox-panorama-deferred-loading-of-inactive-groups/"/>
-    <updated>2011-05-20T17:59:00+02:00</updated>
+    <updated>2011-05-20T17:59:00-07:00</updated>
     <id>http://timtaubert.de/blog/2011/05/firefox-panorama-deferred-loading-of-inactive-groups</id>
     <content type="html"><![CDATA[<p>Starting with tomorrow’s Nightly hidden tabs are not anymore restored by default when starting Firefox. That means tabs from inactive Panorama groups will not load until these groups/tabs are shown. Finally we have a part of the behavior everyone actually expects when using Panorama.</p>
 
@@ -538,7 +583,7 @@ Startup time (after)   - 13.5s (avg)
   <entry>
     <title type="html"><![CDATA[Firefox Panorama: Sync Integration with the Add-on-SDK]]></title>
     <link href="http://timtaubert.de/blog/2011/05/firefox-panorama-sync-integration-with-the-add-on-sdk/"/>
-    <updated>2011-05-19T17:53:00+02:00</updated>
+    <updated>2011-05-19T17:53:00-07:00</updated>
     <id>http://timtaubert.de/blog/2011/05/firefox-panorama-sync-integration-with-the-add-on-sdk</id>
     <content type="html"><![CDATA[<p>Back in early April 2011 I started to write a small prototype add-on that allows to see tabs from your synchronized mobile devices as special groups in Panorama. While I’m not quite sure how these groups should behave (Should the be immutable? Should that synchronization be bi-directional?) it simply works as described.</p>
 
@@ -553,7 +598,7 @@ Startup time (after)   - 13.5s (avg)
   <entry>
     <title type="html"><![CDATA[Using Xvfb on Linux to run mochitests in the background]]></title>
     <link href="http://timtaubert.de/blog/2011/05/using-xvfb-on-linux-to-run-mochitests-in-the-background/"/>
-    <updated>2011-05-01T14:08:00+02:00</updated>
+    <updated>2011-05-01T14:08:00-07:00</updated>
     <id>http://timtaubert.de/blog/2011/05/using-xvfb-on-linux-to-run-mochitests-in-the-background</id>
     <content type="html"><![CDATA[<p>Seeing mochitests run for the first time is awesome but gets pretty annoying at the 50th time, especially when executing whole test suites. I’ve always wanted to be able to do some bug triage or catch up with the mailing lists while letting mochitests run in the background.</p>
 
@@ -575,7 +620,7 @@ me@host:~$ xvfb-run make -C $(OBJDIR) mochitest-browser-chrome
   <entry>
     <title type="html"><![CDATA[Firefox Add-on: Customizable Shortcuts]]></title>
     <link href="http://timtaubert.de/blog/2011/04/firefox-add-on-customizable-shortcuts/"/>
-    <updated>2011-04-21T14:03:00+02:00</updated>
+    <updated>2011-04-21T14:03:00-07:00</updated>
     <id>http://timtaubert.de/blog/2011/04/firefox-add-on-customizable-shortcuts</id>
     <content type="html"><![CDATA[<p>As you probably know, in Firefox there is unfortunately no way to configure existing shortcuts. All I found is the <a href="http://forums.mozillazine.org/viewtopic.php?t=72994">keyconfig</a> add-on, that seems really old and very hard to configure (there is no UI, only about:config). That’s why I finally decided to write an add-on with a neat UI (not only) for casual users in mind. I would love to see such a feature directly delivered with Firefox some day because it enables you not only to modify shortcuts to your needs but also to easily discover new ones you haven’t heard of, yet.</p>
 

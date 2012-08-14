@@ -3,10 +3,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Category: Mozilla - Tim Taubert</title>
+    <title>Snappy: Fixing new tab page performance regressions - Tim Taubert</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     
-    <meta name="description" content="Category: Mozilla">
+    <meta name="description" content="Snappy: Fixing new tab page performance regressions August, 14th 2012 As you probably already know, Firefox 13 introduced a neat new feature - the &hellip;">
     <meta content="Tim Taubert" name="author">
     <link href="http://fonts.googleapis.com/css?family=Droid+Sans|PT+Sans" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/screen.css" media="screen" rel="stylesheet" type="text/css">
@@ -48,63 +48,73 @@
       <div id="main" class="col span6">
         <section>
           <h1 class="hidden">Content</h1>
-          <article>
+          <article class="post">
   <header class="article-header">
-    <h1>Category: Mozilla</h1>
+    
+      <h1>Snappy: Fixing new tab page performance regressions</h1>
+    
+    
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2012-08-14T12:00:00-07:00" pubdate data-updated="true">August, 14<span>th</span> 2012</time>
   </header>
-  <div id="blog-archives" class="category">
+  <p>As you probably already know, Firefox 13 introduced a neat new feature - the
+<a href="/blog/2012/02/help-us-test-the-new-tab-page/">new tab page</a>.
+We replaced the old blank page with a list of thumbnails of recently visited
+sites. While the feature itself works great for many people it has definitely
+made opening new tabs a little more noisy.</p>
 
+<h2>Do not show loading indicators</h2>
 
+<p>As we are now loading a real (although local) page, there are loading indicators
+when opening a new tab. The throbber starts to spin and the tab title changes
+to &#8220;Connecting…&#8221; until the page has loaded. That is a lot of unnecessary noise.</p>
 
-  
-  <h2>2012</h2>
+<p>In <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=716108" title="Bug 716108 - [New Tab Page] Connecting… should not briefly flicker in the tab title when a new tab is opened">bug 716108</a>
+(Firefox 17) we removed loading indicators for newly opened tabs. No spinning
+throbber, no flickering tab label. It only is a very subtle change but the whole
+action of opening a new tab feels a lot smoother again.</p>
 
-<article>
-  
-<h1><a href="/blog/2012/04/are-we-small-yet/">Are we small, yet?</a></h1>
-<time datetime="2012-04-11T00:22:00-07:00" pubdate><span class='month'>Apr</span> <span class='day'>11</span> <span class='year'>2012</span></time>
+<h2>Preload new tab pages in the background</h2>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/firefox/'>Firefox</a>, <a class='category' href='/blog/categories/mozilla/'>Mozilla</a></span>
-</footer>
+<p>If you happen to have a slower machine you will notice that loading the new tab
+page takes a little while. It is a normal HTML (and partly XUL) page that we
+need to parse and render. As all tabs start out with an blank docShell you will
+first see a white canvas that then is replaced by &#8220;about:newtab&#8221;. As a last step
+all thumbnails will be loaded and drawn progressively.</p>
 
+<p>Opening a new tab is a very frequent action so it should feel snappy and not get
+in your way at all. As optimizing the parsing and rendering stages any further
+is more than a non-trivial task I came up with a little trick in
+<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=753448" title="Bug 753448 - [New Tab Page] preload newtab pages in the background and swap them in when opening a new tab">bug 753448</a>.
+The idea is to preload the new tab page in the background so it has already
+loaded when users open a new tab. All we now have to do is switch docShells
+and the new tab page gets shown instantly.</p>
 
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012/04/one-year-at-mozilla/">One year at Mozilla</a></h1>
-<time datetime="2012-04-09T13:28:00-07:00" pubdate><span class='month'>Apr</span> <span class='day'>09</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/mozilla/'>Mozilla</a></span>
-</footer>
-
-
-</article>
-
-
-
-  
-  <h2>2011</h2>
-
-<article>
-  
-<h1><a href="/blog/2011/04/firefox-add-on-customizable-shortcuts/">Firefox Add-on: Customizable Shortcuts</a></h1>
-<time datetime="2011-04-21T14:03:00-07:00" pubdate><span class='month'>Apr</span> <span class='day'>21</span> <span class='year'>2011</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/addon/'>Addon</a>, <a class='category' href='/blog/categories/firefox/'>Firefox</a>, <a class='category' href='/blog/categories/mozilla/'>Mozilla</a></span>
-</footer>
-
+<p>You can give it a try as it landed in yesterday&#8217;s Nightly (2012-08-14). Just go
+to &#8220;about:config&#8221; and set &#8220;browser.newtab.preload&#8221; to &#8220;true&#8221;. This option is
+not yet enabled by default as we first have to figure out some minor talos
+regressions until it is ready for prime time.</p>
 
 </article>
 
-</div>
 
-</article>
+<section class="well">
+  <h1 class="hidden">Feedback</h1>
+  <p class="feedback">
+    Comments, questions, suggestions? Just tweet <a href="https://twitter.com/ttaubert">@ttaubert</a>.
+  </p>
+</section>
 
         </section>
       </div>

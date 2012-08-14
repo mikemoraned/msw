@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Mozilla | Tim Taubert]]></title>
   <link href="http://timtaubert.de/blog/categories/mozilla/atom.xml" rel="self"/>
   <link href="http://timtaubert.de/"/>
-  <updated>2012-07-09T23:45:20+02:00</updated>
+  <updated>2012-08-14T11:19:43-07:00</updated>
   <id>http://timtaubert.de/</id>
   <author>
     <name><![CDATA[Tim Taubert]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Are we small, yet?]]></title>
     <link href="http://timtaubert.de/blog/2012/04/are-we-small-yet/"/>
-    <updated>2012-04-11T00:22:00+02:00</updated>
+    <updated>2012-04-11T00:22:00-07:00</updated>
     <id>http://timtaubert.de/blog/2012/04/are-we-small-yet</id>
     <content type="html"><![CDATA[<p>Lately, <a href="http://weblogs.mozillazine.org/asa/">Asa Dotzler</a> <a href="https://groups.google.com/forum/#!topic/mozilla.dev.apps.firefox/k7fzkhdt9io">posted to dev.apps.firefox</a> regarding the download size of Firefox:</p>
 
@@ -43,7 +43,7 @@ Firefox 3.6 was a 7.7 MB download.</p>
   <entry>
     <title type="html"><![CDATA[One year at Mozilla]]></title>
     <link href="http://timtaubert.de/blog/2012/04/one-year-at-mozilla/"/>
-    <updated>2012-04-09T13:28:00+02:00</updated>
+    <updated>2012-04-09T13:28:00-07:00</updated>
     <id>http://timtaubert.de/blog/2012/04/one-year-at-mozilla</id>
     <content type="html"><![CDATA[<p>You may already know the story of <a href="/blog/2012/01/how-i-became-a-firefox-contributor/">how I became a Firefox contributor</a>. Back in early April of 2011, having volunteered full-time for three months (a rather short time compared to other core contributors), I was given the opportunity to start as a paid contributor working for Mozilla.</p>
 
@@ -60,7 +60,7 @@ Firefox 3.6 was a 7.7 MB download.</p>
   <entry>
     <title type="html"><![CDATA[Firefox Add-on: Customizable Shortcuts]]></title>
     <link href="http://timtaubert.de/blog/2011/04/firefox-add-on-customizable-shortcuts/"/>
-    <updated>2011-04-21T14:03:00+02:00</updated>
+    <updated>2011-04-21T14:03:00-07:00</updated>
     <id>http://timtaubert.de/blog/2011/04/firefox-add-on-customizable-shortcuts</id>
     <content type="html"><![CDATA[<p>As you probably know, in Firefox there is unfortunately no way to configure existing shortcuts. All I found is the <a href="http://forums.mozillazine.org/viewtopic.php?t=72994">keyconfig</a> add-on, that seems really old and very hard to configure (there is no UI, only about:config). That’s why I finally decided to write an add-on with a neat UI (not only) for casual users in mind. I would love to see such a feature directly delivered with Firefox some day because it enables you not only to modify shortcuts to your needs but also to easily discover new ones you haven’t heard of, yet.</p>
 

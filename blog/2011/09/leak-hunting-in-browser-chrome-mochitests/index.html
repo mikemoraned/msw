@@ -66,7 +66,7 @@
 
 
 
-<time datetime="2011-09-09T18:49:00+02:00" pubdate data-updated="true">September, 9<span>th</span> 2011</time>
+<time datetime="2011-09-09T18:49:00-07:00" pubdate data-updated="true">September, 9<span>th</span> 2011</time>
   </header>
   <p>Some weeks (even months) ago <a href="http://design-noir.de/">Dão Gottwald</a> started the hunt for leaked DOMWindows and DocShells while running our browser-chrome mochitest suite (see <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=658738" title="Bug 658738 - (bc-leaks) [meta] We seem to be leaking hundreds of windows until shutdown during browser-chrome tests">bug 658738</a>). That means that there are some expensive objects whose lifetimes are longer than they should be – they are kept alive until the test runner shuts down. Sometimes these are caused by only a little typo in the test and sometimes they unveil bigger problems in the core.</p>
 
@@ -113,6 +113,8 @@
   <h1 class="sidebar-header">Recent posts</h1>
   <ul class="nav nav-list" id="recent-posts">
     
+      <li><a title="Snappy: Fixing new tab page performance regressions" href="/blog/2012/08/snappy-fixing-new-tab-page-performance-regressions/">Snappy: Fixing new tab page performance regressions</a></li>
+    
       <li><a title="Are we small, yet?" href="/blog/2012/04/are-we-small-yet/">Are we small, yet?</a></li>
     
       <li><a title="One year at Mozilla" href="/blog/2012/04/one-year-at-mozilla/">One year at Mozilla</a></li>
@@ -120,8 +122,6 @@
       <li><a title="Fighting DocShell and DOMWindow leaks" href="/blog/2012/02/fighting-docshell-and-domwindow-leaks/">Fighting DocShell and DOMWindow leaks</a></li>
     
       <li><a title="Help us test the New Tab Page!" href="/blog/2012/02/help-us-test-the-new-tab-page/">Help us test the New Tab Page!</a></li>
-    
-      <li><a title="How I became a Firefox contributor" href="/blog/2012/01/how-i-became-a-firefox-contributor/">How I became a Firefox contributor</a></li>
     
   </ul>
 </section>
