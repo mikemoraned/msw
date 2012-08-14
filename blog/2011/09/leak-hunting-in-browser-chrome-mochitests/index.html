@@ -66,7 +66,7 @@
 
 
 
-<time datetime="2011-09-09T18:49:00-07:00" pubdate data-updated="true">September, 9<span>th</span> 2011</time>
+<time datetime="2011-09-09T18:49:00+02:00" pubdate data-updated="true">September, 9<span>th</span> 2011</time>
   </header>
   <p>Some weeks (even months) ago <a href="http://design-noir.de/">Dão Gottwald</a> started the hunt for leaked DOMWindows and DocShells while running our browser-chrome mochitest suite (see <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=658738" title="Bug 658738 - (bc-leaks) [meta] We seem to be leaking hundreds of windows until shutdown during browser-chrome tests">bug 658738</a>). That means that there are some expensive objects whose lifetimes are longer than they should be – they are kept alive until the test runner shuts down. Sometimes these are caused by only a little typo in the test and sometimes they unveil bigger problems in the core.</p>
 
