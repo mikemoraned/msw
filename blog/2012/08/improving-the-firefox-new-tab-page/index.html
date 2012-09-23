@@ -3,10 +3,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Firefox Add-on: Facebook Auto-Logout - Tim Taubert</title>
+    <title>Improving the Firefox new tab page - Tim Taubert</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     
-    <meta name="description" content="Firefox Add-on: Facebook Auto-Logout October, 29th 2011 While talking to a friend of mine recently I got to know that he really dislikes that &hellip;">
+    <meta name="description" content="Improving the Firefox new tab page August, 23rd 2012 Firefox 17 (Nightly, that soon becomes Aurora) includes two improvements for
+the new tab page &hellip;">
     <meta content="Tim Taubert" name="author">
     <link href="http://fonts.googleapis.com/css?family=Droid+Sans|PT+Sans" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/screen.css" media="screen" rel="stylesheet" type="text/css">
@@ -51,7 +52,7 @@
           <article class="post">
   <header class="article-header">
     
-      <h1>Firefox Add-on: Facebook Auto-Logout</h1>
+      <h1>Improving the Firefox new tab page</h1>
     
     
 
@@ -66,16 +67,40 @@
 
 
 
-<time datetime="2011-10-29T18:56:00+02:00" pubdate data-updated="true">October, 29<span>th</span> 2011</time>
+<time datetime="2012-08-23T12:00:00+02:00" pubdate data-updated="true">August, 23<span>rd</span> 2012</time>
   </header>
-  <p>While talking to a friend of mine recently I got to know that he really dislikes that Facebook hides the Logout link in a sub-menu. He told me that he even uses a separate browser only for Facebook because he is very well aware of Facebook’s business model relying on tracking users wherever they are (this is not a big issue for me because I’m very happy with <a href="https://addons.mozilla.org/de/firefox/addon/ghostery/">Ghostery</a>).</p>
+  <p>Firefox 17 (Nightly, that soon becomes Aurora) includes two improvements for
+the new tab page introduced by version 13.</p>
 
-<p>A quick search revealed that there seem to be lot more users than I expected that would find an auto-logout of Facebook very useful. If not for privacy issues it’s also quite useful if someone else uses your computer and wants to post weird status updates.</p>
+<h2>Customize the number of tiles</h2>
 
-<p>So I wrote a Firefox add-on that logs the user out of Facebook when quitting Firefox or after a configurable amount of time has passed since he last closed a Facebook page (and there’s no active tab). It removes all cookies belonging to facebook.com so even tracking should not be an issue anymore (unless Facebook implements alternative tracking techniques).</p>
+<p><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=752841" title="Bug 752841 - [New Tab Page] make the number of tabs adjustable">Bug 752841</a>
+introduced two preferences that allow you to adjust the number of tiles on your
+new tab page to your likings. All you have to do is open &#8220;about:config&#8221; and
+modify one or both of the following preferences:</p>
 
-<p>Add-on: <a href="https://addons.mozilla.org/en-US/firefox/addon/facebook-auto-logout/">https://addons.mozilla.org/en-US/firefox/addon/facebook-auto-logout/</a><br/>
-Source: <a href="https://github.com/ttaubert/facebook-auto-logout">https://github.com/ttaubert/facebook-auto-logout</a></p>
+<figure class='code'> <div class="highlight"><pre>browser.newtabpage.rows [default=3]
+browser.newtabpage.columns [default=3]
+</pre>
+</div>
+</figure>
+
+
+<h3>TODO [add image(s) of modified new tab page]</h3>
+
+<p>Your changes will be applied instantly and all open new tab pages will be
+updated. There is no positive limit to the number of rows and columns so feel
+free to experiment with those values.</p>
+
+<h2>Restore sites you removed from the grid</h2>
+
+<p>With the landing of <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=722234" title="Bug 722234 - [New Tab Page] provide an option to undo remove a site">bug 722234</a>
+you will finally be able to undo the removal of sites from your new tab page.
+As soon as you remove a site from the grid we will show you a dialog that ask
+whether you want to undo the last change or to restore all sites you ever
+removed from the grid.</p>
+
+<h3>TODO [add image with undo dialog]</h3>
 
 </article>
 

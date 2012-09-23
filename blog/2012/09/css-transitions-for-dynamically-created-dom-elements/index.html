@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>CSS transitions for dynamically created DOM elements - Tim Taubert</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    
+    <meta name="description" content="CSS transitions for dynamically created DOM elements September, 23rd 2012 CSS transitions are
+awesome. You can use them to easily animate the &hellip;">
+    <meta content="Tim Taubert" name="author">
+    <link href="http://fonts.googleapis.com/css?family=Droid+Sans|PT+Sans" media="screen" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/screen.css" media="screen" rel="stylesheet" type="text/css">
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+    <link href="/favicon.ico" rel="icon" type="image/ico">
+    <link href="/atom.xml" rel="alternate" title="Tim Taubert" type="application/atom+xml">
+    <script defer src="/javascripts/main.js"></script>
+  </head>
+
+
+<body>
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="col span3">
+        <header id="header">
+  <h1><a href="/">Tim Taubert</a></h1>
+  <a href="https://twitter.com/ttaubert" class="twitter-follow-button" data-show-count="false">Follow @ttaubert</a>
+  <script defer>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</header>
+
+        <section id="about">
+  <h1 class="hidden">About me</h1>
+  <strong>Open Source enthusiast.</strong>
+  <strong>JavaScript lover.</strong>
+  <strong>Mozillian.</strong>
+</section>
+
+        <nav>
+  <h1 class="hidden">Main Navigation</h1>
+  <ul class="nav-main">
+    <li><a class="nav-main-link" title="About me" href="/about-me">about me</a></li>
+    <li><a class="nav-main-link" title="Imprint" href="/imprint">imprint</a></li>
+  </ul>
+</nav>
+
+      </div>
+      <div id="main" class="col span6">
+        <section>
+          <h1 class="hidden">Content</h1>
+          <article class="post">
+  <header class="article-header">
+    
+      <h1>CSS transitions for dynamically created DOM elements</h1>
+    
+    
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2012-09-23T20:00:00+02:00" pubdate data-updated="true">September, 23<span>rd</span> 2012</time>
+  </header>
+  <p><a href="https://developer.mozilla.org/en/CSS/CSS_transitions">CSS transitions</a> are
+awesome. You can use them to easily animate the transition of one or multiple
+CSS properties from a given state to another. But how does that work if your
+element has just been created and inserted into the DOM dynamically?</p>
+
+<p>Let&#8217;s take a look at this simple example:</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="nt">div</span> <span class="p">{</span>
+  <span class="c">/* ... */</span>
+  <span class="n">transition</span><span class="o">:</span> <span class="k">opacity</span> <span class="m">500</span><span class="n">ms</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+</div>
+</figure>
+
+
+
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">var</span> <span class="nx">elem</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">);</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">elem</span><span class="p">);</span>
+
+<span class="c1">// Make the element fully transparent.</span>
+<span class="nx">elem</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">opacity</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="c1">// Fade it in.</span>
+<span class="nx">elem</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">opacity</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</pre>
+</div>
+</figure>
+
+
+<p>We dynamically insert a new &lt;div> element into the DOM with its initial
+opacity set to zero. Subsequently we want it to fade to full opacity.
+This - as you might have guessed - does of course not work that way.</p>
+
+<h2>How about a timeout?</h2>
+
+<p>It is clear that we somehow need to make sure the initial state with zero
+opacity is &#8220;applied&#8221; before trying to fade in:</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">var</span> <span class="nx">elem</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">);</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">elem</span><span class="p">);</span>
+
+<span class="c1">// Make the element fully transparent.</span>
+<span class="nx">elem</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">opacity</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="c1">// Make sure the initial opacity value is applied.</span>
+<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// Fade it in.</span>
+  <span class="nx">elem</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">opacity</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">},</span> <span class="mi">0</span><span class="p">);</span>
+</pre>
+</div>
+</figure>
+
+
+<p>This is only marginally better. It seems to work with Webkit and Opera (and
+maybe even IE) but not in Firefox (in 99% of the cases). Using setTimeout()
+is a little too much overhead and nobody garantuees you that the style has
+really been applied after some milliseconds. It may be unsupported and
+unreliable, we need something better.</p>
+
+<h2>getComputedStyle to the rescue</h2>
+
+<p>There is another way to apply the element&#8217;s current style that even works
+synchronously:</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">var</span> <span class="nx">elem</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">);</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">elem</span><span class="p">);</span>
+
+<span class="c1">// Make the element fully transparent.</span>
+<span class="nx">elem</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">opacity</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="c1">// Make sure the initial state is applied.</span>
+<span class="nb">window</span><span class="p">.</span><span class="nx">getComputedStyle</span><span class="p">(</span><span class="nx">elem</span><span class="p">).</span><span class="nx">opacity</span><span class="p">;</span>
+
+<span class="c1">// Fade it in.</span>
+<span class="nx">elem</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">opacity</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</pre>
+</div>
+</figure>
+
+
+<p>Although it looks like we only query the current opacity value, getComputedStyle()
+in combination with accessing a property value actually flushes all pending
+style changes and forces the layout engine to compute our &lt;div>&#8217;s current
+state. This workaround works in all major browsers and does not yield different
+results like the setTimeout() approach.</p>
+
+</article>
+
+
+<section class="well">
+  <h1 class="hidden">Feedback</h1>
+  <p class="feedback">
+    Comments, questions, suggestions? Just tweet <a href="https://twitter.com/ttaubert">@ttaubert</a>.
+  </p>
+</section>
+
+        </section>
+      </div>
+      <div class="col span1"></div>
+      <div class="col span2">
+        <section class="well">
+  <h1 class="sidebar-header">Recent posts</h1>
+  <ul class="nav nav-list" id="recent-posts">
+    
+      <li><a title="CSS transitions for dynamically created DOM elements" href="/blog/2012/09/css-transitions-for-dynamically-created-dom-elements/">CSS transitions for dynamically created DOM elements</a></li>
+    
+      <li><a title="Improving the Firefox new tab page" href="/blog/2012/08/improving-the-firefox-new-tab-page/">Improving the Firefox new tab page</a></li>
+    
+      <li><a title="Snappy: Fixing new tab page performance regressions" href="/blog/2012/08/snappy-fixing-new-tab-page-performance-regressions/">Snappy: Fixing new tab page performance regressions</a></li>
+    
+      <li><a title="Are we small, yet?" href="/blog/2012/04/are-we-small-yet/">Are we small, yet?</a></li>
+    
+      <li><a title="One year at Mozilla" href="/blog/2012/04/one-year-at-mozilla/">One year at Mozilla</a></li>
+    
+  </ul>
+</section>
+<section class="well">
+  <h1 class="sidebar-header">Disclaimer</h1>
+  <p id="disclaimer">The opinions expressed here are my own and do not necessarily represent those of current or past employers.</p>
+</section>
+
+      </div>
+    </div>
+  </div>
+
+  <script defer>
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-5257191-3']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = 'http://www.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</body>
+</html>
