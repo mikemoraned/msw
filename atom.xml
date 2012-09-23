@@ -4,7 +4,7 @@
   <title><![CDATA[Tim Taubert]]></title>
   <link href="http://timtaubert.de/atom.xml" rel="self"/>
   <link href="http://timtaubert.de/"/>
-  <updated>2012-09-23T20:45:03+02:00</updated>
+  <updated>2012-09-23T20:49:02+02:00</updated>
   <id>http://timtaubert.de/</id>
   <author>
     <name><![CDATA[Tim Taubert]]></name>
@@ -76,7 +76,7 @@ opacity is &#8220;applied&#8221; before trying to fade in:</p>
 
 <p>This is only marginally better. It seems to work with Webkit and Opera (and
 maybe even IE) but not in Firefox (in 99% of the cases). Using setTimeout()
-is a little too much overhead and nobody garantuees you that the style has
+is a little too much overhead and nobody guarantees you that the style has
 really been applied after some milliseconds. It may be unsupported and
 unreliable, we need something better.</p>
 
@@ -106,46 +106,6 @@ in combination with accessing a property value actually flushes all pending
 style changes and forces the layout engine to compute our &lt;div>&#8217;s current
 state. This workaround works in all major browsers and does not yield different
 results like the setTimeout() approach.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Improving the Firefox new tab page]]></title>
-    <link href="http://timtaubert.de/blog/2012/08/improving-the-firefox-new-tab-page/"/>
-    <updated>2012-08-23T12:00:00+02:00</updated>
-    <id>http://timtaubert.de/blog/2012/08/improving-the-firefox-new-tab-page</id>
-    <content type="html"><![CDATA[<p>Firefox 17 (Nightly, that soon becomes Aurora) includes two improvements for
-the new tab page introduced by version 13.</p>
-
-<h2>Customize the number of tiles</h2>
-
-<p><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=752841" title="Bug 752841 - [New Tab Page] make the number of tabs adjustable">Bug 752841</a>
-introduced two preferences that allow you to adjust the number of tiles on your
-new tab page to your likings. All you have to do is open &#8220;about:config&#8221; and
-modify one or both of the following preferences:</p>
-
-<figure class='code'> <div class="highlight"><pre>browser.newtabpage.rows [default=3]
-browser.newtabpage.columns [default=3]
-</pre>
-</div>
-</figure>
-
-
-<h3>TODO [add image(s) of modified new tab page]</h3>
-
-<p>Your changes will be applied instantly and all open new tab pages will be
-updated. There is no positive limit to the number of rows and columns so feel
-free to experiment with those values.</p>
-
-<h2>Restore sites you removed from the grid</h2>
-
-<p>With the landing of <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=722234" title="Bug 722234 - [New Tab Page] provide an option to undo remove a site">bug 722234</a>
-you will finally be able to undo the removal of sites from your new tab page.
-As soon as you remove a site from the grid we will show you a dialog that ask
-whether you want to undo the last change or to restore all sites you ever
-removed from the grid.</p>
-
-<h3>TODO [add image with undo dialog]</h3>
 ]]></content>
   </entry>
   
