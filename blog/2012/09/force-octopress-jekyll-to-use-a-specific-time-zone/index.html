@@ -3,10 +3,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Category: Addon - Tim Taubert</title>
+    <title>Force Octopress/Jekyll to use a specific time zone - Tim Taubert</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     
-    <meta name="description" content="Category: Addon">
+    <meta name="description" content="Force Octopress/Jekyll to use a specific time zone September, 25th 2012 I could not be happier ever since I switched from Wordpress to Octopress.
+I &hellip;">
     <meta content="Tim Taubert" name="author">
     <link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700|PT+Sans" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/screen.css" media="screen" rel="stylesheet" type="text/css">
@@ -48,32 +49,58 @@
       <div id="main" class="col span6">
         <section>
           <h1 class="hidden">Content</h1>
-          <article>
+          <article class="post">
   <header class="article-header">
-    <h1>Category: Addon</h1>
+    
+      <h1>Force Octopress/Jekyll to use a specific time zone</h1>
+    
+    
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2012-09-25T12:18:00+02:00" pubdate data-updated="true">September, 25<span>th</span> 2012</time>
   </header>
-  <div id="blog-archives" class="category">
+  <p>I could not be happier ever since I switched from Wordpress to Octopress.
+I usually write and publish blog posts from where I live, Berlin. The time zone
+here is CET (UTC+1). While recently visiting Mozilla&#8217;s HQ in Mountain View I
+wrote another blog post just as usual and typed &#8220;rake generate&#8221; to turn my
+Markdown files into static HTML files.</p>
 
+<p>Looking at the output though, got me a little puzzled. All timestamps were
+changed to be calculated off the PDT time zone. While certainly that is not a
+big deal as they are still the same timestamps, I did not feel like changing
+all of those every now and then I am somewhere in a different time zone.</p>
 
+<p>If you want to use a &#8220;static&#8221; time zone when generating your page, do it like
+this:</p>
 
-  
-  <h2>2011</h2>
-
-<article>
-  
-<h1><a href="/blog/2011/04/firefox-add-on-customizable-shortcuts/">Firefox Add-on: Customizable Shortcuts</a></h1>
-<time datetime="2011-04-21T14:03:00+02:00" pubdate><span class='month'>Apr</span> <span class='day'>21</span> <span class='year'>2011</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/addon/'>Addon</a>, <a class='category' href='/blog/categories/firefox/'>Firefox</a>, <a class='category' href='/blog/categories/mozilla/'>Mozilla</a></span>
-</footer>
-
-
-</article>
-
+<figure class='code'> <div class="highlight"><pre>TZ=CET rake generate
+</pre>
 </div>
+</figure>
+
+
+<p><strong>TL;DR</strong> - put your time zone into the TZ variable if you want to force Jekyll
+to use a specific time zone when generating your HTML files.</p>
 
 </article>
+
+
+<section class="well">
+  <h1 class="hidden">Feedback</h1>
+  <p class="feedback">
+    Comments, questions, suggestions? Just tweet <a href="https://twitter.com/ttaubert">@ttaubert</a>.
+  </p>
+</section>
 
         </section>
       </div>
