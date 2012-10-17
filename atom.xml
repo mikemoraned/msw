@@ -4,7 +4,7 @@
   <title><![CDATA[Tim Taubert]]></title>
   <link href="http://timtaubert.de/atom.xml" rel="self"/>
   <link href="http://timtaubert.de/"/>
-  <updated>2012-09-25T15:32:33+02:00</updated>
+  <updated>2012-10-17T17:57:58+02:00</updated>
   <id>http://timtaubert.de/</id>
   <author>
     <name><![CDATA[Tim Taubert]]></name>
@@ -12,6 +12,126 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Building a live green screen with getUserMedia() and MediaStreams]]></title>
+    <link href="http://timtaubert.de/blog/2012/10/building-a-live-green-screen-with-getusermedia-and-mediastreams/"/>
+    <updated>2012-10-17T20:00:00+02:00</updated>
+    <id>http://timtaubert.de/blog/2012/10/building-a-live-green-screen-with-getusermedia-and-mediastreams</id>
+    <content type="html"><![CDATA[<p>While recently watching a talk about the new WebRTC features I was reminded of
+Paul Rouget&#8217;s great
+<a href="https://developer.mozilla.org/samples/video/chroma-key/index.xhtml">green screen demo</a>
+and thought that this would be a cool thing to have for live video as well.
+Let&#8217;s build a live green screen!</p>
+
+<h2>The markup</h2>
+
+<figure class='code'> <div class="highlight"><pre><span class="nt">&lt;body</span> <span class="na">onload=</span><span class="s">&quot;GreenScreen.start()&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;video</span> <span class="na">id=</span><span class="s">&quot;v&quot;</span> <span class="na">width=</span><span class="s">&quot;320&quot;</span> <span class="na">height=</span><span class="s">&quot;240&quot;</span><span class="nt">&gt;&lt;/video&gt;</span>
+  <span class="nt">&lt;canvas</span> <span class="na">id=</span><span class="s">&quot;c&quot;</span> <span class="na">width=</span><span class="s">&quot;320&quot;</span> <span class="na">height=</span><span class="s">&quot;240&quot;</span><span class="nt">&gt;&lt;/canvas&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+</pre>
+</div>
+</figure>
+
+
+<p>Those are the parts we need. A &lt;video> element that plays the media stream
+and a canvas we will use to read and transform image data.</p>
+
+<h2>The JavaScript</h2>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">let</span> <span class="nx">GreenScreen</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">start</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Get the video stream.</span>
+    <span class="nx">navigator</span><span class="p">.</span><span class="nx">mozGetUserMedia</span><span class="p">({</span><span class="nx">video</span><span class="o">:</span> <span class="kc">true</span><span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">stream</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">video</span><span class="p">.</span><span class="nx">mozSrcObject</span> <span class="o">=</span> <span class="nx">stream</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">video</span><span class="p">.</span><span class="nx">play</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">requestAnimationFrame</span><span class="p">();</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">),</span> <span class="kd">function</span> <span class="nx">err</span><span class="p">()</span> <span class="p">{});</span>
+  <span class="p">},</span>
+</pre>
+</div>
+</figure>
+
+
+<p>We call getUserMedia() and pass <em>{video: true}</em> as the first argument which
+indicates that we want to receive a video stream. We assign the MediaStream
+to the video&#8217;s <em>.src</em> property to connect it to the &lt;video> element.</p>
+
+<p>The video starts playing (which means the camera will be activated and you will
+see your webcam&#8217;s live video) and we request an animation frame using the
+<a href="https://developer.mozilla.org/en-US/docs/DOM/window.requestAnimationFrame">requestAnimationFrame() API</a>:</p>
+
+<figure class='code'> <div class="highlight"><pre>  <span class="nx">requestAnimationFrame</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nx">mozRequestAnimationFrame</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">draw</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  <span class="p">},</span>
+</pre>
+</div>
+</figure>
+
+
+<p>requestAnimationFrame() is perfect for updating/ drawing to our canvas as the
+browser schedules the next repaint and we will be called immediately before
+that happens. Now for the last and most important part of our green screen:</p>
+
+<figure class='code'> <div class="highlight"><pre>  <span class="nx">draw</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">context</span><span class="p">.</span><span class="nx">drawImage</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">video</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">height</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">frame</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">context</span><span class="p">.</span><span class="nx">getImageData</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">height</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">length</span> <span class="o">/</span> <span class="mi">4</span><span class="p">;</span>
+
+    <span class="c1">// Iterate over all pixels in the current frame.</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">let</span> <span class="nx">r</span> <span class="o">=</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">0</span><span class="p">];</span>
+      <span class="kd">let</span> <span class="nx">g</span> <span class="o">=</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+      <span class="kd">let</span> <span class="nx">b</span> <span class="o">=</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">2</span><span class="p">];</span>
+
+      <span class="c1">// Convert from RGB to HSL...</span>
+      <span class="kd">let</span> <span class="p">[</span><span class="nx">h</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">l</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">rgb2hsl</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">);</span>
+
+      <span class="c1">// ... and check if we have a somewhat green pixel.</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">h</span> <span class="o">&gt;=</span> <span class="mi">90</span> <span class="o">&amp;&amp;</span> <span class="nx">h</span> <span class="o">&lt;=</span> <span class="mi">160</span> <span class="o">&amp;&amp;</span>
+          <span class="nx">s</span> <span class="o">&gt;=</span> <span class="mi">25</span> <span class="o">&amp;&amp;</span> <span class="nx">s</span> <span class="o">&lt;=</span> <span class="mi">90</span> <span class="o">&amp;&amp;</span>
+          <span class="nx">l</span> <span class="o">&gt;=</span> <span class="mi">20</span> <span class="o">&amp;&amp;</span> <span class="nx">l</span> <span class="o">&lt;=</span> <span class="mi">75</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">frame</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">context</span><span class="p">.</span><span class="nx">putImageData</span><span class="p">(</span><span class="nx">frame</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">requestAnimationFrame</span><span class="p">();</span>
+  <span class="p">},</span>
+</pre>
+</div>
+</figure>
+
+
+<p>What happens here is actually quite simple: we draw the current video frame
+to our canvas and extract its image data. We then iterate over all pixels in
+the frame and check if we found a green pixel - if so its opacity byte is set
+to zero, which means fully transparent. The manipulated image data is put back
+into the canvas and we are done for now until the next animation frame is ready.</p>
+
+<h2>The demo</h2>
+
+<p>Take a look a the <a href="http://timtaubert.de/demos/green-screen/">live demo</a>. You will need Firefox 18+
+and thus Nightly or Aurora as of the time of writing. Make sure that
+<em>media.navigator.enabled</em> is set to <em>true</em>. Hold a green object in front of the
+the camera and try it out yourself. Your camera and light setup is probably very
+different from mine so you might need to adjust the color check a little to
+make it work. Alternatively, here is a screencast of the demo:</p>
+
+<iframe class="embed"
+ src="http://player.vimeo.com/video/51593914?title=1&amp;byline=1&amp;portrait=1"
+ width="500" height="191" frameborder="0"
+ webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+
+
+<h2>The end</h2>
+
+<p>This is an admittedly very simple example of a green screen but you can use
+this little template to manipulate your webcam&#8217;s live video stream and build all
+kinds of fancy demos with it.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Force Octopress/Jekyll to use a specific time zone]]></title>

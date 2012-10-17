@@ -6,7 +6,7 @@
     <title>Tim Taubert - Open Source enthusiast. JavaScript lover. Mozillian.</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     
-    <meta name="description" content="Leak hunting in browser-chrome mochitests September, 9th 2011 Some weeks (even months) ago Dão Gottwald started the hunt for leaked DOMWindows and &hellip;">
+    <meta name="description" content="Firefox Add-on: Facebook Auto-Logout October, 29th 2011 While talking to a friend of mine recently I got to know that he really dislikes that &hellip;">
     <meta content="Tim Taubert" name="author">
     <link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700|PT+Sans" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/screen.css" media="screen" rel="stylesheet" type="text/css">
@@ -49,6 +49,39 @@
         <section>
           <h1 class="hidden">Content</h1>
           
+
+
+  <article class="post">
+  <header class="article-header">
+    
+      <h1><a href="/blog/2011/10/firefox-add-on-facebook-auto-logout/" title="Firefox Add-on: Facebook Auto-Logout">Firefox Add-on: Facebook Auto-Logout</a></h1>
+    
+    
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-10-29T18:56:00+02:00" pubdate data-updated="true">October, 29<span>th</span> 2011</time>
+  </header>
+  <p>While talking to a friend of mine recently I got to know that he really dislikes that Facebook hides the Logout link in a sub-menu. He told me that he even uses a separate browser only for Facebook because he is very well aware of Facebook’s business model relying on tracking users wherever they are (this is not a big issue for me because I’m very happy with <a href="https://addons.mozilla.org/de/firefox/addon/ghostery/">Ghostery</a>).</p>
+
+<p>A quick search revealed that there seem to be lot more users than I expected that would find an auto-logout of Facebook very useful. If not for privacy issues it’s also quite useful if someone else uses your computer and wants to post weird status updates.</p>
+
+<p>So I wrote a Firefox add-on that logs the user out of Facebook when quitting Firefox or after a configurable amount of time has passed since he last closed a Facebook page (and there’s no active tab). It removes all cookies belonging to facebook.com so even tracking should not be an issue anymore (unless Facebook implements alternative tracking techniques).</p>
+
+<p>Add-on: <a href="https://addons.mozilla.org/en-US/firefox/addon/facebook-auto-logout/">https://addons.mozilla.org/en-US/firefox/addon/facebook-auto-logout/</a><br/>
+Source: <a href="https://github.com/ttaubert/facebook-auto-logout">https://github.com/ttaubert/facebook-auto-logout</a></p>
+
+</article>
+
 
 
   <article class="post">
@@ -619,6 +652,8 @@ Bugs: <a href="https://github.com/ttaubert/customizable-shortcuts/issues">https:
   <h1 class="sidebar-header">Recent posts</h1>
   <ul class="nav nav-list" id="recent-posts">
     
+      <li><a title="Building a live green screen with getUserMedia() and MediaStreams" href="/blog/2012/10/building-a-live-green-screen-with-getusermedia-and-mediastreams/">Building a live green screen with getUserMedia() and MediaStreams</a></li>
+    
       <li><a title="Force Octopress/Jekyll to use a specific time zone" href="/blog/2012/09/force-octopress-jekyll-to-use-a-specific-time-zone/">Force Octopress/Jekyll to use a specific time zone</a></li>
     
       <li><a title="CSS transitions for dynamically created DOM elements" href="/blog/2012/09/css-transitions-for-dynamically-created-dom-elements/">CSS transitions for dynamically created DOM elements</a></li>
@@ -626,8 +661,6 @@ Bugs: <a href="https://github.com/ttaubert/customizable-shortcuts/issues">https:
       <li><a title="Snappy: Fixing new tab page performance regressions" href="/blog/2012/08/snappy-fixing-new-tab-page-performance-regressions/">Snappy: Fixing new tab page performance regressions</a></li>
     
       <li><a title="Are we small, yet?" href="/blog/2012/04/are-we-small-yet/">Are we small, yet?</a></li>
-    
-      <li><a title="One year at Mozilla" href="/blog/2012/04/one-year-at-mozilla/">One year at Mozilla</a></li>
     
   </ul>
 </section>
