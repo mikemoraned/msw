@@ -4,7 +4,7 @@
   <title><![CDATA[Tim Taubert]]></title>
   <link href="http://timtaubert.de/atom.xml" rel="self"/>
   <link href="http://timtaubert.de/"/>
-  <updated>2012-10-17T17:57:58+02:00</updated>
+  <updated>2012-10-18T22:11:41+02:00</updated>
   <id>http://timtaubert.de/</id>
   <author>
     <name><![CDATA[Tim Taubert]]></name>
@@ -12,6 +12,86 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[getUserMedia() part 2: building an EyeToy-like mini-game]]></title>
+    <link href="http://timtaubert.de/blog/2012/10/getusermedia-part-2-building-an-eyetoy-like-mini-game/"/>
+    <updated>2012-10-18T22:00:00+02:00</updated>
+    <id>http://timtaubert.de/blog/2012/10/getusermedia-part-2-building-an-eyetoy-like-mini-game</id>
+    <content type="html"><![CDATA[<p>This post is a follow-up to my previous one about
+<a href="http://timtaubert.de/blog/2012/10/building-a-live-green-screen-with-getusermedia-and-mediastreams/">building a live green screen with getUserMedia() and MediaStreams</a>.
+If you have not read it yet, this might be a good time. We will extend the small
+example to build an EyeToy-like mini-game.</p>
+
+<h2>Some additions</h2>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">let</span> <span class="nx">GreenScreen</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="c1">// Keep track of revealed pixels.</span>
+  <span class="nx">revealed</span><span class="o">:</span> <span class="k">new</span> <span class="nx">Set</span><span class="p">(),</span>
+
+  <span class="nx">start</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</pre>
+</div>
+</figure>
+
+
+<p>Let us add a
+<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Set">Set</a>
+to <em>GreenScreen</em> that keeps track of all pixels that have already been
+revealed by holding a green object in front of the camera.</p>
+
+<figure class='code'> <div class="highlight"><pre>    <span class="c1">// Iterate over all pixels in the current frame.</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// This pixel has already been revealed.</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">revealed</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">i</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">frame</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">continue</span><span class="p">;</span>
+      <span class="p">}</span>
+</pre>
+</div>
+</figure>
+
+
+<p>When iterating over all of the canvas&#8217; pixels we check if the current index is
+contained in the set. If so we do not need to check its color but set its
+opacity to zero and continue with the next iteration.</p>
+
+<figure class='code'> <div class="highlight"><pre>      <span class="c1">// Convert from RGB to HSL...</span>
+      <span class="kd">let</span> <span class="p">[</span><span class="nx">h</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">l</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">rgb2hsl</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">);</span>
+
+      <span class="c1">// ... and check if we have a somewhat green pixel.</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">h</span> <span class="o">&gt;=</span> <span class="mi">90</span> <span class="o">&amp;&amp;</span> <span class="nx">h</span> <span class="o">&lt;=</span> <span class="mi">160</span> <span class="o">&amp;&amp;</span>
+          <span class="nx">s</span> <span class="o">&gt;=</span> <span class="mi">25</span> <span class="o">&amp;&amp;</span> <span class="nx">s</span> <span class="o">&lt;=</span> <span class="mi">90</span> <span class="o">&amp;&amp;</span>
+          <span class="nx">l</span> <span class="o">&gt;=</span> <span class="mi">20</span> <span class="o">&amp;&amp;</span> <span class="nx">l</span> <span class="o">&lt;=</span> <span class="mi">75</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">frame</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">revealed</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+      <span class="p">}</span>
+</pre>
+</div>
+</figure>
+
+
+<p>If the pixel is not in the set but is a green one, we make it transparent like
+before and add it to the set to make it stay that way.</p>
+
+<h2>Demo and screencast</h2>
+
+<p>That is all! Take a look at the <a href="http://timtaubert.de/demos/eye-toy/">live demo</a> or watch the
+screencast below:</p>
+
+<iframe class="embed"
+ src="http://player.vimeo.com/video/51703468?title=1&amp;byline=1&amp;portrait=1"
+ width="500" height="195" frameborder="0"
+ webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+
+
+<h2>I know&#8230;</h2>
+
+<p>&#8230; this is not much of a game but rather a small demo one could turn into a
+mini-game with little effort. Play around with the code and see what you can
+come up with!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Building a live green screen with getUserMedia() and MediaStreams]]></title>
@@ -256,6 +336,46 @@ in combination with accessing a property value actually flushes all pending
 style changes and forces the layout engine to compute our &lt;div>&#8217;s current
 state. This workaround works in all major browsers and does not yield different
 results like the setTimeout() approach.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Improving the Firefox new tab page]]></title>
+    <link href="http://timtaubert.de/blog/2012/08/improving-the-firefox-new-tab-page/"/>
+    <updated>2012-08-23T12:00:00+02:00</updated>
+    <id>http://timtaubert.de/blog/2012/08/improving-the-firefox-new-tab-page</id>
+    <content type="html"><![CDATA[<p>Firefox 17 (Nightly, that soon becomes Aurora) includes two improvements for
+the new tab page introduced by version 13.</p>
+
+<h2>Customize the number of tiles</h2>
+
+<p><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=752841" title="Bug 752841 - [New Tab Page] make the number of tabs adjustable">Bug 752841</a>
+introduced two preferences that allow you to adjust the number of tiles on your
+new tab page to your likings. All you have to do is open &#8220;about:config&#8221; and
+modify one or both of the following preferences:</p>
+
+<figure class='code'> <div class="highlight"><pre>browser.newtabpage.rows [default=3]
+browser.newtabpage.columns [default=3]
+</pre>
+</div>
+</figure>
+
+
+<h3>TODO [add image(s) of modified new tab page]</h3>
+
+<p>Your changes will be applied instantly and all open new tab pages will be
+updated. There is no positive limit to the number of rows and columns so feel
+free to experiment with those values.</p>
+
+<h2>Restore sites you removed from the grid</h2>
+
+<p>With the landing of <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=722234" title="Bug 722234 - [New Tab Page] provide an option to undo remove a site">bug 722234</a>
+you will finally be able to undo the removal of sites from your new tab page.
+As soon as you remove a site from the grid we will show you a dialog that ask
+whether you want to undo the last change or to restore all sites you ever
+removed from the grid.</p>
+
+<h3>TODO [add image with undo dialog]</h3>
 ]]></content>
   </entry>
   

@@ -6,7 +6,8 @@
     <title>Tim Taubert - Open Source enthusiast. JavaScript lover. Mozillian.</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     
-    <meta name="description" content="Building a live green screen with getUserMedia() and MediaStreams October, 17th 2012 While recently watching a talk about the new WebRTC features I &hellip;">
+    <meta name="description" content="getUserMedia() part 2: building an EyeToy-like mini-game October, 18th 2012 This post is a follow-up to my previous one about
+building a live green &hellip;">
     <meta content="Tim Taubert" name="author">
     <link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700|PT+Sans" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/screen.css" media="screen" rel="stylesheet" type="text/css">
@@ -49,6 +50,103 @@
         <section>
           <h1 class="hidden">Content</h1>
           
+
+
+  <article class="post">
+  <header class="article-header">
+    
+      <h1><a href="/blog/2012/10/getusermedia-part-2-building-an-eyetoy-like-mini-game/" title="getUserMedia() part 2: building an EyeToy-like mini-game">getUserMedia() part 2: building an EyeToy-like mini-game</a></h1>
+    
+    
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2012-10-18T22:00:00+02:00" pubdate data-updated="true">October, 18<span>th</span> 2012</time>
+  </header>
+  <p>This post is a follow-up to my previous one about
+<a href="/blog/2012/10/building-a-live-green-screen-with-getusermedia-and-mediastreams/">building a live green screen with getUserMedia() and MediaStreams</a>.
+If you have not read it yet, this might be a good time. We will extend the small
+example to build an EyeToy-like mini-game.</p>
+
+<h2>Some additions</h2>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">let</span> <span class="nx">GreenScreen</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="c1">// Keep track of revealed pixels.</span>
+  <span class="nx">revealed</span><span class="o">:</span> <span class="k">new</span> <span class="nx">Set</span><span class="p">(),</span>
+
+  <span class="nx">start</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</pre>
+</div>
+</figure>
+
+
+<p>Let us add a
+<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Set">Set</a>
+to <em>GreenScreen</em> that keeps track of all pixels that have already been
+revealed by holding a green object in front of the camera.</p>
+
+<figure class='code'> <div class="highlight"><pre>    <span class="c1">// Iterate over all pixels in the current frame.</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// This pixel has already been revealed.</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">revealed</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">i</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">frame</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">continue</span><span class="p">;</span>
+      <span class="p">}</span>
+</pre>
+</div>
+</figure>
+
+
+<p>When iterating over all of the canvas&#8217; pixels we check if the current index is
+contained in the set. If so we do not need to check its color but set its
+opacity to zero and continue with the next iteration.</p>
+
+<figure class='code'> <div class="highlight"><pre>      <span class="c1">// Convert from RGB to HSL...</span>
+      <span class="kd">let</span> <span class="p">[</span><span class="nx">h</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">l</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">rgb2hsl</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">);</span>
+
+      <span class="c1">// ... and check if we have a somewhat green pixel.</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">h</span> <span class="o">&gt;=</span> <span class="mi">90</span> <span class="o">&amp;&amp;</span> <span class="nx">h</span> <span class="o">&lt;=</span> <span class="mi">160</span> <span class="o">&amp;&amp;</span>
+          <span class="nx">s</span> <span class="o">&gt;=</span> <span class="mi">25</span> <span class="o">&amp;&amp;</span> <span class="nx">s</span> <span class="o">&lt;=</span> <span class="mi">90</span> <span class="o">&amp;&amp;</span>
+          <span class="nx">l</span> <span class="o">&gt;=</span> <span class="mi">20</span> <span class="o">&amp;&amp;</span> <span class="nx">l</span> <span class="o">&lt;=</span> <span class="mi">75</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">frame</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">revealed</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+      <span class="p">}</span>
+</pre>
+</div>
+</figure>
+
+
+<p>If the pixel is not in the set but is a green one, we make it transparent like
+before and add it to the set to make it stay that way.</p>
+
+<h2>Demo and screencast</h2>
+
+<p>That is all! Take a look at the <a href="/demos/eye-toy/">live demo</a> or watch the
+screencast below:</p>
+
+<iframe class="embed"
+ src="http://player.vimeo.com/video/51703468?title=1&amp;byline=1&amp;portrait=1"
+ width="500" height="195" frameborder="0"
+ webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+
+
+<h2>I know&#8230;</h2>
+
+<p>&#8230; this is not much of a game but rather a small demo one could turn into a
+mini-game with little effort. Play around with the code and see what you can
+come up with!</p>
+
+</article>
+
 
 
   <article class="post">
@@ -351,6 +449,63 @@ results like the setTimeout() approach.</p>
   <article class="post">
   <header class="article-header">
     
+      <h1><a href="/blog/2012/08/improving-the-firefox-new-tab-page/" title="Improving the Firefox new tab page">Improving the Firefox new tab page</a></h1>
+    
+    
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2012-08-23T12:00:00+02:00" pubdate data-updated="true">August, 23<span>rd</span> 2012</time>
+  </header>
+  <p>Firefox 17 (Nightly, that soon becomes Aurora) includes two improvements for
+the new tab page introduced by version 13.</p>
+
+<h2>Customize the number of tiles</h2>
+
+<p><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=752841" title="Bug 752841 - [New Tab Page] make the number of tabs adjustable">Bug 752841</a>
+introduced two preferences that allow you to adjust the number of tiles on your
+new tab page to your likings. All you have to do is open &#8220;about:config&#8221; and
+modify one or both of the following preferences:</p>
+
+<figure class='code'> <div class="highlight"><pre>browser.newtabpage.rows [default=3]
+browser.newtabpage.columns [default=3]
+</pre>
+</div>
+</figure>
+
+
+<h3>TODO [add image(s) of modified new tab page]</h3>
+
+<p>Your changes will be applied instantly and all open new tab pages will be
+updated. There is no positive limit to the number of rows and columns so feel
+free to experiment with those values.</p>
+
+<h2>Restore sites you removed from the grid</h2>
+
+<p>With the landing of <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=722234" title="Bug 722234 - [New Tab Page] provide an option to undo remove a site">bug 722234</a>
+you will finally be able to undo the removal of sites from your new tab page.
+As soon as you remove a site from the grid we will show you a dialog that ask
+whether you want to undo the last change or to restore all sites you ever
+removed from the grid.</p>
+
+<h3>TODO [add image with undo dialog]</h3>
+
+</article>
+
+
+
+  <article class="post">
+  <header class="article-header">
+    
       <h1><a href="/blog/2012/08/snappy-fixing-new-tab-page-performance-regressions/" title="Snappy: Fixing new tab page performance regressions">Snappy: Fixing new tab page performance regressions</a></h1>
     
     
@@ -575,69 +730,6 @@ Aurora: <a href="https://www.mozilla.org/en-US/firefox/aurora/">https://www.mozi
 
 
 
-  <article class="post">
-  <header class="article-header">
-    
-      <h1><a href="/blog/2012/01/how-i-became-a-firefox-contributor/" title="How I became a Firefox contributor">How I became a Firefox contributor</a></h1>
-    
-    
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2012-01-19T19:04:00+01:00" pubdate data-updated="true">January, 19<span>th</span> 2012</time>
-  </header>
-  <p>December 2009. I’ve been a freelancer for quite some time now and decided to dedicate some weeks to something that always fascinated me: contributing to a big open source project. I started some smaller open source projects in the past (like <a href="https://github.com/ttaubert/video4linux-net">Video4Linux.Net</a> and <a href="https://github.com/ttaubert/ViGedit-Plus">ViGedit+</a>) and contributed every so often to Gentoo and the Linux kernel. I’ve always been a great fan of the open source movement and I felt that it’s time to give back some love.</p>
-
-<p>I made a list of all the things that interested me and that I could possibly contribute to. Besides having things like Linux, ReactOS and Wine on the list I picked “Firefox” because it simply has been a loyal companion for years. I think I’ve used it first in version 1.5 and it was one of the most valuable tools that helped me to earn money, get my everyday work done and the most trivial: just browse and experience the web.</p>
-
-<p>Some weeks before that I switched to Firefox 4.0 beta3/4 because that included the first version of Panorama (Tab Groups / TabCandy) that worked on Linux. I loved this feature but noticed that it was in an early stage and needed some fixes. I set up a Firefox build environment, went through Bugzilla to find open bugs, nagged people on IRC and was totally overwhelmed by the warm welcome and the appreciation of my work. This was something I did not at all experience when trying to contribute to other open source projects. Finally, the Panorama team and me managed to get this feature into shape and land it in Firefox 4, yay!</p>
-
-<p>Long story short, I’m now a full-time contributor and love what I’m doing.</p>
-
-</article>
-
-
-
-  <article class="post">
-  <header class="article-header">
-    
-      <h1><a href="/blog/2011/12/firefox-add-on-websockets-for-irccloud/" title="Firefox Add-on: Websockets for IRCCloud">Firefox Add-on: Websockets for IRCCloud</a></h1>
-    
-    
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2011-12-07T19:00:00+01:00" pubdate data-updated="true">December, 7<span>th</span> 2011</time>
-  </header>
-  <p>If you don’t know <a href="https://irccloud.com/">IRCCloud</a>, check it out. It’s become a very important tool for my every day work and I really don’t want to miss it. The one thing I never liked about it is that is currently uses a Flash fallback if it detects that the browser doesn’t support the WebSocket API.</p>
-
-<p>The Firefox WebSocket API is currently prefixed (called MozWebSocket) and that’s why even with the newest Firefox you’re forced to use the Flash fallback. They even check for MozWebSocket and explicitly don’t use it if detected. As I didn’t quite understand the reasons behind that I decided to write an add-on that convinces IRCCloud to use native WebSockets in Firefox. Works good so far. I hope that’ll encourage the IRCCloud guys to think about using it again.</p>
-
-<p>Add-on: <a href="https://addons.mozilla.org/en-US/firefox/addon/websockets-for-irccloud/">https://addons.mozilla.org/en-US/firefox/addon/websockets-for-irccloud/</a><br/>
-Source: <a href="https://github.com/ttaubert/irccloud-websockets">https://github.com/ttaubert/irccloud-websockets</a></p>
-
-</article>
-
-
-
 <div class="pager">
   
     <li class="next"><a href="/blog/page/2/" title="Older posts">Older posts &rarr;</a></li>
@@ -653,15 +745,15 @@ Source: <a href="https://github.com/ttaubert/irccloud-websockets">https://github
   <h1 class="sidebar-header">Recent posts</h1>
   <ul class="nav nav-list" id="recent-posts">
     
+      <li><a title="getUserMedia() part 2: building an EyeToy-like mini-game" href="/blog/2012/10/getusermedia-part-2-building-an-eyetoy-like-mini-game/">getUserMedia() part 2: building an EyeToy-like mini-game</a></li>
+    
       <li><a title="Building a live green screen with getUserMedia() and MediaStreams" href="/blog/2012/10/building-a-live-green-screen-with-getusermedia-and-mediastreams/">Building a live green screen with getUserMedia() and MediaStreams</a></li>
     
       <li><a title="Force Octopress/Jekyll to use a specific time zone" href="/blog/2012/09/force-octopress-jekyll-to-use-a-specific-time-zone/">Force Octopress/Jekyll to use a specific time zone</a></li>
     
       <li><a title="CSS transitions for dynamically created DOM elements" href="/blog/2012/09/css-transitions-for-dynamically-created-dom-elements/">CSS transitions for dynamically created DOM elements</a></li>
     
-      <li><a title="Snappy: Fixing new tab page performance regressions" href="/blog/2012/08/snappy-fixing-new-tab-page-performance-regressions/">Snappy: Fixing new tab page performance regressions</a></li>
-    
-      <li><a title="Are we small, yet?" href="/blog/2012/04/are-we-small-yet/">Are we small, yet?</a></li>
+      <li><a title="Improving the Firefox new tab page" href="/blog/2012/08/improving-the-firefox-new-tab-page/">Improving the Firefox new tab page</a></li>
     
   </ul>
 </section>
