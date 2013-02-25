@@ -3,10 +3,13 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Firefox Add-on: Customizable Shortcuts - Tim Taubert</title>
+    <title>Note to myself: Don't be lazy - Tim Taubert</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     
-    <meta name="description" content="Firefox Add-on: Customizable Shortcuts April, 21st 2011 As you probably know, in Firefox there is unfortunately no way to configure existing &hellip;">
+    <meta name="description" content="Note to myself: Don't be lazy February, 25th 2013 Back in October 2012 I wrote two blog posts,
+getUserMedia part 1
+and part 2,
+including demos which &hellip;">
     <meta content="Tim Taubert" name="author">
     <link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700|PT+Sans" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/screen.css" media="screen" rel="stylesheet" type="text/css">
@@ -51,7 +54,7 @@
           <article class="post">
   <header class="article-header">
     
-      <h1>Firefox Add-on: Customizable Shortcuts</h1>
+      <h1>Note to myself: Don't be lazy</h1>
     
     
 
@@ -66,17 +69,32 @@
 
 
 
-<time datetime="2011-04-21T14:03:00+02:00" pubdate data-updated="true">April, 21<span>st</span> 2011</time>
+<time datetime="2013-02-25T12:00:00+01:00" pubdate data-updated="true">February, 25<span>th</span> 2013</time>
   </header>
-  <p>As you probably know, in Firefox there is unfortunately no way to configure existing shortcuts. All I found is the <a href="http://forums.mozillazine.org/viewtopic.php?t=72994">keyconfig</a> add-on, that seems really old and very hard to configure (there is no UI, only about:config). That’s why I finally decided to write an add-on with a neat UI (not only) for casual users in mind. I would love to see such a feature directly delivered with Firefox some day because it enables you not only to modify shortcuts to your needs but also to easily discover new ones you haven’t heard of, yet.</p>
+  <p>Back in October 2012 I wrote two blog posts,
+<a href="/blog/2012/10/building-a-live-green-screen-with-getusermedia-and-mediastreams/">getUserMedia part 1</a>
+and <a href="/blog/2012/10/getusermedia-part-2-building-an-eyetoy-like-mini-game/">part 2</a>,
+including demos which unfortunately would run in Firefox, only. I did not
+explicitly want to be exclusive but I think I just did not feel like looking up
+why my code did not work in Opera and why exactly webkitGetUserMedia() behaved
+differently than mozGetUserMedia(). I was being lazy.</p>
 
-<p>The add-on’s current version is 0.5.8 – so I already invested a decent amount of time. Unfortunately I’m still waiting for full review from the AMO team as their backlog is pretty high after the Firefox 4 release. If you have any thoughts or bugs feel free to comment.</p>
+<p>I also intended to mix in a couple of nice JavaScript features, like
+block-scoped variable definitions with
+<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Statements/let">let</a>,
+<a href="https://developer.mozilla.org/en-US/docs/JavaScript/New_in_JavaScript/1.7">destructuring assignments</a>
+or <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Set">Sets</a>
+(did I just do it again?). In hindsight this does not really make sense as I
+should not expect visitors to want to learn about cutting-edge JavaScript
+features when viewing a getUserMedia() post.</p>
 
-<p><img src="/images/customizable-shortcuts.png" title="Screenshot of the Customizable Shortcuts add-on" ></p>
+<p>Before finishing my third piece on getUserMedia() I decided to update the demos
+of my older posts to run in any modern browser. I also seized the chance to
+overhaul code examples which did not adhere to my coding standards anymore.</p>
 
-<p>Download: <a href="https://addons.mozilla.org/en-US/firefox/addon/customizable-shortcuts/">https://addons.mozilla.org/en-US/firefox/addon/customizable-shortcuts/</a><br/>
-GitHub: <a href="https://github.com/ttaubert/customizable-shortcuts">https://github.com/ttaubert/customizable-shortcuts</a><br/>
-Bugs: <a href="https://github.com/ttaubert/customizable-shortcuts/issues">https://github.com/ttaubert/customizable-shortcuts/issues</a></p>
+<p>If you should ever be in a similar situation - please take a couple of minutes
+to write code that runs in all modern browsers so people can enjoy your demos in
+their browser of choice. Please don&#8217;t be lazy.</p>
 
 </article>
 

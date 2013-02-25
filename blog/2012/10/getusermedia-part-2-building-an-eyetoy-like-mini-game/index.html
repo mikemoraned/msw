@@ -76,54 +76,56 @@ example to build an EyeToy-like mini-game.</p>
 
 <h2>Some additions</h2>
 
-<figure class='code'> <div class="highlight"><pre><span class="kd">let</span> <span class="nx">GreenScreen</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="c1">// Keep track of revealed pixels.</span>
-  <span class="nx">revealed</span><span class="o">:</span> <span class="k">new</span> <span class="nx">Set</span><span class="p">(),</span>
+<figure class='code'> <div class="highlight"><pre><span class="kd">var</span> <span class="nx">video</span><span class="p">,</span> <span class="nx">width</span><span class="p">,</span> <span class="nx">height</span><span class="p">,</span> <span class="nx">context</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">revealed</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
 
-  <span class="nx">start</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+<span class="kd">function</span> <span class="nx">initialize</span><span class="p">()</span> <span class="p">{</span>
 </pre>
 </div>
 </figure>
 
 
-<p>Let us add a
-<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Set">Set</a>
-to <em>GreenScreen</em> that keeps track of all pixels that have already been
-revealed by holding a green object in front of the camera.</p>
+<p>First, we will add a variable called <em>revealed</em> that keeps track of all pixels
+that have already been revealed by holding a green object in front of the
+camera. Instead of <em>replaceGreen()</em> we will call our method <em>revealGreen()</em>
+from now on:</p>
 
-<figure class='code'> <div class="highlight"><pre>    <span class="c1">// Iterate over all pixels in the current frame.</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-      <span class="c1">// This pixel has already been revealed.</span>
-      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">revealed</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">i</span><span class="p">))</span> <span class="p">{</span>
-        <span class="nx">frame</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="k">continue</span><span class="p">;</span>
-      <span class="p">}</span>
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">revealGreen</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">width</span> <span class="o">*</span> <span class="nx">height</span><span class="p">;</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">,</span> <span class="nx">j</span> <span class="o">+=</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// This pixel has already been revealed.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="k">in</span> <span class="nx">revealed</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">data</span><span class="p">[</span><span class="nx">j</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">continue</span><span class="p">;</span>
+    <span class="p">}</span>
 </pre>
 </div>
 </figure>
 
 
-<p>When iterating over all of the canvas&#8217; pixels we check if the current index is
-contained in the set. If so we do not need to check its color but set its
+<p>When iterating over all of the canvas&#8217; pixels we check whether the current index
+is marked as revealed. If so we do not need to check its color but set its
 opacity to zero and continue with the next iteration.</p>
 
-<figure class='code'> <div class="highlight"><pre>      <span class="c1">// Convert from RGB to HSL...</span>
-      <span class="kd">let</span> <span class="p">[</span><span class="nx">h</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">l</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">rgb2hsl</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">);</span>
+<figure class='code'> <div class="highlight"><pre>    <span class="c1">// Convert from RGB to HSL...</span>
+    <span class="kd">var</span> <span class="nx">hsl</span> <span class="o">=</span> <span class="nx">rgb2hsl</span><span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="nx">j</span><span class="p">],</span> <span class="nx">data</span><span class="p">[</span><span class="nx">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="nx">data</span><span class="p">[</span><span class="nx">j</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]);</span>
+    <span class="kd">var</span> <span class="nx">h</span> <span class="o">=</span> <span class="nx">hsl</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">s</span> <span class="o">=</span> <span class="nx">hsl</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">l</span> <span class="o">=</span> <span class="nx">hsl</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
 
-      <span class="c1">// ... and check if we have a somewhat green pixel.</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">h</span> <span class="o">&gt;=</span> <span class="mi">90</span> <span class="o">&amp;&amp;</span> <span class="nx">h</span> <span class="o">&lt;=</span> <span class="mi">160</span> <span class="o">&amp;&amp;</span>
-          <span class="nx">s</span> <span class="o">&gt;=</span> <span class="mi">25</span> <span class="o">&amp;&amp;</span> <span class="nx">s</span> <span class="o">&lt;=</span> <span class="mi">90</span> <span class="o">&amp;&amp;</span>
-          <span class="nx">l</span> <span class="o">&gt;=</span> <span class="mi">20</span> <span class="o">&amp;&amp;</span> <span class="nx">l</span> <span class="o">&lt;=</span> <span class="mi">75</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">frame</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">revealed</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
-      <span class="p">}</span>
+    <span class="c1">// ... and check if we have a somewhat green pixel.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">h</span> <span class="o">&gt;=</span> <span class="mi">90</span> <span class="o">&amp;&amp;</span> <span class="nx">h</span> <span class="o">&lt;=</span> <span class="mi">160</span> <span class="o">&amp;&amp;</span> <span class="nx">s</span> <span class="o">&gt;=</span> <span class="mi">25</span> <span class="o">&amp;&amp;</span> <span class="nx">s</span> <span class="o">&lt;=</span> <span class="mi">90</span> <span class="o">&amp;&amp;</span> <span class="nx">l</span> <span class="o">&gt;=</span> <span class="mi">20</span> <span class="o">&amp;&amp;</span> <span class="nx">l</span> <span class="o">&lt;=</span> <span class="mi">75</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">data</span><span class="p">[</span><span class="nx">j</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="nx">revealed</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre>
 </div>
 </figure>
 
 
-<p>If the pixel is not in the set but is a green one, we make it transparent like
-before and add it to the set to make it stay that way.</p>
+<p>If the pixel has not been revealed yet but is a green one, we make it
+transparent like before and mark it to stay that way.</p>
 
 <h2>Demo and screencast</h2>
 
@@ -160,6 +162,8 @@ come up with!</p>
   <h1 class="sidebar-header">Recent posts</h1>
   <ul class="nav nav-list" id="recent-posts">
     
+      <li><a title="Note to myself: Don't be lazy" href="/blog/2013/02/note-to-myself-dont-be-lazy/">Note to myself: Don't be lazy</a></li>
+    
       <li><a title="getUserMedia() part 2: building an EyeToy-like mini-game" href="/blog/2012/10/getusermedia-part-2-building-an-eyetoy-like-mini-game/">getUserMedia() part 2: building an EyeToy-like mini-game</a></li>
     
       <li><a title="Building a live green screen with getUserMedia() and MediaStreams" href="/blog/2012/10/building-a-live-green-screen-with-getusermedia-and-mediastreams/">Building a live green screen with getUserMedia() and MediaStreams</a></li>
@@ -167,8 +171,6 @@ come up with!</p>
       <li><a title="Force Octopress/Jekyll to use a specific time zone" href="/blog/2012/09/force-octopress-jekyll-to-use-a-specific-time-zone/">Force Octopress/Jekyll to use a specific time zone</a></li>
     
       <li><a title="CSS transitions for dynamically created DOM elements" href="/blog/2012/09/css-transitions-for-dynamically-created-dom-elements/">CSS transitions for dynamically created DOM elements</a></li>
-    
-      <li><a title="Snappy: Fixing new tab page performance regressions" href="/blog/2012/08/snappy-fixing-new-tab-page-performance-regressions/">Snappy: Fixing new tab page performance regressions</a></li>
     
   </ul>
 </section>

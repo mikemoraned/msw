@@ -4,7 +4,7 @@
   <title><![CDATA[Tim Taubert]]></title>
   <link href="http://timtaubert.de/atom.xml" rel="self"/>
   <link href="http://timtaubert.de/"/>
-  <updated>2012-10-21T10:51:27+02:00</updated>
+  <updated>2013-02-25T11:14:41+01:00</updated>
   <id>http://timtaubert.de/</id>
   <author>
     <name><![CDATA[Tim Taubert]]></name>
@@ -12,6 +12,38 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Note to myself: Don't be lazy]]></title>
+    <link href="http://timtaubert.de/blog/2013/02/note-to-myself-dont-be-lazy/"/>
+    <updated>2013-02-25T12:00:00+01:00</updated>
+    <id>http://timtaubert.de/blog/2013/02/note-to-myself-dont-be-lazy</id>
+    <content type="html"><![CDATA[<p>Back in October 2012 I wrote two blog posts,
+<a href="http://timtaubert.de/blog/2012/10/building-a-live-green-screen-with-getusermedia-and-mediastreams/">getUserMedia part 1</a>
+and <a href="http://timtaubert.de/blog/2012/10/getusermedia-part-2-building-an-eyetoy-like-mini-game/">part 2</a>,
+including demos which unfortunately would run in Firefox, only. I did not
+explicitly want to be exclusive but I think I just did not feel like looking up
+why my code did not work in Opera and why exactly webkitGetUserMedia() behaved
+differently than mozGetUserMedia(). I was being lazy.</p>
+
+<p>I also intended to mix in a couple of nice JavaScript features, like
+block-scoped variable definitions with
+<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Statements/let">let</a>,
+<a href="https://developer.mozilla.org/en-US/docs/JavaScript/New_in_JavaScript/1.7">destructuring assignments</a>
+or <a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Set">Sets</a>
+(did I just do it again?). In hindsight this does not really make sense as I
+should not expect visitors to want to learn about cutting-edge JavaScript
+features when viewing a getUserMedia() post.</p>
+
+<p>Before finishing my third piece on getUserMedia() I decided to update the demos
+of my older posts to run in any modern browser. I also seized the chance to
+overhaul code examples which did not adhere to my coding standards anymore.</p>
+
+<p>If you should ever be in a similar situation - please take a couple of minutes
+to write code that runs in all modern browsers so people can enjoy your demos in
+their browser of choice. Please don&#8217;t be lazy.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[getUserMedia() part 2: building an EyeToy-like mini-game]]></title>
@@ -25,54 +57,56 @@ example to build an EyeToy-like mini-game.</p>
 
 <h2>Some additions</h2>
 
-<figure class='code'> <div class="highlight"><pre><span class="kd">let</span> <span class="nx">GreenScreen</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="c1">// Keep track of revealed pixels.</span>
-  <span class="nx">revealed</span><span class="o">:</span> <span class="k">new</span> <span class="nx">Set</span><span class="p">(),</span>
+<figure class='code'> <div class="highlight"><pre><span class="kd">var</span> <span class="nx">video</span><span class="p">,</span> <span class="nx">width</span><span class="p">,</span> <span class="nx">height</span><span class="p">,</span> <span class="nx">context</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">revealed</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
 
-  <span class="nx">start</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+<span class="kd">function</span> <span class="nx">initialize</span><span class="p">()</span> <span class="p">{</span>
 </pre>
 </div>
 </figure>
 
 
-<p>Let us add a
-<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Set">Set</a>
-to <em>GreenScreen</em> that keeps track of all pixels that have already been
-revealed by holding a green object in front of the camera.</p>
+<p>First, we will add a variable called <em>revealed</em> that keeps track of all pixels
+that have already been revealed by holding a green object in front of the
+camera. Instead of <em>replaceGreen()</em> we will call our method <em>revealGreen()</em>
+from now on:</p>
 
-<figure class='code'> <div class="highlight"><pre>    <span class="c1">// Iterate over all pixels in the current frame.</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-      <span class="c1">// This pixel has already been revealed.</span>
-      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">revealed</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">i</span><span class="p">))</span> <span class="p">{</span>
-        <span class="nx">frame</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="k">continue</span><span class="p">;</span>
-      <span class="p">}</span>
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">revealGreen</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">width</span> <span class="o">*</span> <span class="nx">height</span><span class="p">;</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">,</span> <span class="nx">j</span> <span class="o">+=</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// This pixel has already been revealed.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="k">in</span> <span class="nx">revealed</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">data</span><span class="p">[</span><span class="nx">j</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">continue</span><span class="p">;</span>
+    <span class="p">}</span>
 </pre>
 </div>
 </figure>
 
 
-<p>When iterating over all of the canvas&#8217; pixels we check if the current index is
-contained in the set. If so we do not need to check its color but set its
+<p>When iterating over all of the canvas&#8217; pixels we check whether the current index
+is marked as revealed. If so we do not need to check its color but set its
 opacity to zero and continue with the next iteration.</p>
 
-<figure class='code'> <div class="highlight"><pre>      <span class="c1">// Convert from RGB to HSL...</span>
-      <span class="kd">let</span> <span class="p">[</span><span class="nx">h</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">l</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">rgb2hsl</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">);</span>
+<figure class='code'> <div class="highlight"><pre>    <span class="c1">// Convert from RGB to HSL...</span>
+    <span class="kd">var</span> <span class="nx">hsl</span> <span class="o">=</span> <span class="nx">rgb2hsl</span><span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="nx">j</span><span class="p">],</span> <span class="nx">data</span><span class="p">[</span><span class="nx">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="nx">data</span><span class="p">[</span><span class="nx">j</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]);</span>
+    <span class="kd">var</span> <span class="nx">h</span> <span class="o">=</span> <span class="nx">hsl</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">s</span> <span class="o">=</span> <span class="nx">hsl</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">l</span> <span class="o">=</span> <span class="nx">hsl</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
 
-      <span class="c1">// ... and check if we have a somewhat green pixel.</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">h</span> <span class="o">&gt;=</span> <span class="mi">90</span> <span class="o">&amp;&amp;</span> <span class="nx">h</span> <span class="o">&lt;=</span> <span class="mi">160</span> <span class="o">&amp;&amp;</span>
-          <span class="nx">s</span> <span class="o">&gt;=</span> <span class="mi">25</span> <span class="o">&amp;&amp;</span> <span class="nx">s</span> <span class="o">&lt;=</span> <span class="mi">90</span> <span class="o">&amp;&amp;</span>
-          <span class="nx">l</span> <span class="o">&gt;=</span> <span class="mi">20</span> <span class="o">&amp;&amp;</span> <span class="nx">l</span> <span class="o">&lt;=</span> <span class="mi">75</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">frame</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">revealed</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
-      <span class="p">}</span>
+    <span class="c1">// ... and check if we have a somewhat green pixel.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">h</span> <span class="o">&gt;=</span> <span class="mi">90</span> <span class="o">&amp;&amp;</span> <span class="nx">h</span> <span class="o">&lt;=</span> <span class="mi">160</span> <span class="o">&amp;&amp;</span> <span class="nx">s</span> <span class="o">&gt;=</span> <span class="mi">25</span> <span class="o">&amp;&amp;</span> <span class="nx">s</span> <span class="o">&lt;=</span> <span class="mi">90</span> <span class="o">&amp;&amp;</span> <span class="nx">l</span> <span class="o">&gt;=</span> <span class="mi">20</span> <span class="o">&amp;&amp;</span> <span class="nx">l</span> <span class="o">&lt;=</span> <span class="mi">75</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">data</span><span class="p">[</span><span class="nx">j</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="nx">revealed</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre>
 </div>
 </figure>
 
 
-<p>If the pixel is not in the set but is a green one, we make it transparent like
-before and add it to the set to make it stay that way.</p>
+<p>If the pixel has not been revealed yet but is a green one, we make it
+transparent like before and mark it to stay that way.</p>
 
 <h2>Demo and screencast</h2>
 
@@ -102,11 +136,11 @@ come up with!</p>
 Paul Rouget&#8217;s great
 <a href="https://developer.mozilla.org/samples/video/chroma-key/index.xhtml">green screen demo</a>
 and thought that this would be a cool thing to have for live video as well.
-Let&#8217;s build a live green screen!</p>
+Let us build a live green screen!</p>
 
 <h2>The markup</h2>
 
-<figure class='code'> <div class="highlight"><pre><span class="nt">&lt;body</span> <span class="na">onload=</span><span class="s">&quot;GreenScreen.start()&quot;</span><span class="nt">&gt;</span>
+<figure class='code'> <div class="highlight"><pre><span class="nt">&lt;body&gt;</span>
   <span class="nt">&lt;video</span> <span class="na">id=</span><span class="s">&quot;v&quot;</span> <span class="na">width=</span><span class="s">&quot;320&quot;</span> <span class="na">height=</span><span class="s">&quot;240&quot;</span><span class="nt">&gt;&lt;/video&gt;</span>
   <span class="nt">&lt;canvas</span> <span class="na">id=</span><span class="s">&quot;c&quot;</span> <span class="na">width=</span><span class="s">&quot;320&quot;</span> <span class="na">height=</span><span class="s">&quot;240&quot;</span><span class="nt">&gt;&lt;/canvas&gt;</span>
 <span class="nt">&lt;/body&gt;</span>
@@ -120,84 +154,80 @@ and a canvas we will use to read and transform image data.</p>
 
 <h2>The JavaScript</h2>
 
-<figure class='code'> <div class="highlight"><pre><span class="kd">let</span> <span class="nx">GreenScreen</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="nx">start</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="c1">// Get the video stream.</span>
-    <span class="nx">navigator</span><span class="p">.</span><span class="nx">mozGetUserMedia</span><span class="p">({</span><span class="nx">video</span><span class="o">:</span> <span class="kc">true</span><span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">stream</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">video</span><span class="p">.</span><span class="nx">mozSrcObject</span> <span class="o">=</span> <span class="nx">stream</span><span class="p">;</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">video</span><span class="p">.</span><span class="nx">play</span><span class="p">();</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">requestAnimationFrame</span><span class="p">();</span>
-    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">),</span> <span class="kd">function</span> <span class="nx">err</span><span class="p">()</span> <span class="p">{});</span>
-  <span class="p">},</span>
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">initialize</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// Get the webcam&#39;s stream.</span>
+  <span class="nx">navigator</span><span class="p">.</span><span class="nx">getUserMedia</span><span class="p">({</span><span class="nx">video</span><span class="o">:</span> <span class="kc">true</span><span class="p">},</span> <span class="nx">startStream</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{});</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">startStream</span><span class="p">(</span><span class="nx">stream</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">video</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">URL</span><span class="p">.</span><span class="nx">createObjectURL</span><span class="p">(</span><span class="nx">stream</span><span class="p">);</span>
+  <span class="nx">video</span><span class="p">.</span><span class="nx">play</span><span class="p">();</span>
+
+  <span class="c1">// Ready! Let&#39;s start drawing.</span>
+  <span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">draw</span><span class="p">);</span>
+<span class="p">}</span>
 </pre>
 </div>
 </figure>
 
 
-<p>We call getUserMedia() and pass <em>{video: true}</em> as the first argument which
-indicates that we want to receive a video stream. We assign the MediaStream
-to the video&#8217;s <em>.src</em> property to connect it to the &lt;video> element.</p>
+<p>We call <a href="https://developer.mozilla.org/en-US/docs/WebRTC/navigator.getUserMedia">navigator.getUserMedia()</a>
+and pass <em>{video: true}</em> as the first argument which indicates that we want to
+receive a video stream. We assign the MediaStream to the video&#8217;s <em>.src</em> property
+to connect it to the &lt;video> element.</p>
 
 <p>The video starts playing (which means the camera will be activated and you will
 see your webcam&#8217;s live video) and we request an animation frame using the
-<a href="https://developer.mozilla.org/en-US/docs/DOM/window.requestAnimationFrame">requestAnimationFrame() API</a>:</p>
+<a href="https://developer.mozilla.org/en-US/docs/DOM/window.requestAnimationFrame">requestAnimationFrame() API</a>.
+This is perfect for drawing to our canvas as the browser schedules the next
+repaint and we will be called immediately before that happens. Now for the last
+and most important part of our green screen:</p>
 
-<figure class='code'> <div class="highlight"><pre>  <span class="nx">requestAnimationFrame</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="nx">mozRequestAnimationFrame</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">draw</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
-  <span class="p">},</span>
-</pre>
-</div>
-</figure>
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">draw</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">frame</span> <span class="o">=</span> <span class="nx">readFrame</span><span class="p">();</span>
 
+  <span class="k">if</span> <span class="p">(</span><span class="nx">frame</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">replaceGreen</span><span class="p">(</span><span class="nx">frame</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">putImageData</span><span class="p">(</span><span class="nx">frame</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="p">}</span>
 
-<p>requestAnimationFrame() is perfect for updating/ drawing to our canvas as the
-browser schedules the next repaint and we will be called immediately before
-that happens. Now for the last and most important part of our green screen:</p>
+  <span class="c1">// Wait for the next frame.</span>
+  <span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">draw</span><span class="p">);</span>
+<span class="p">}</span>
 
-<figure class='code'> <div class="highlight"><pre>  <span class="nx">draw</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">context</span><span class="p">.</span><span class="nx">drawImage</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">video</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">height</span><span class="p">);</span>
-    <span class="kd">let</span> <span class="nx">frame</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">context</span><span class="p">.</span><span class="nx">getImageData</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">width</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">height</span><span class="p">);</span>
-    <span class="kd">let</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">length</span> <span class="o">/</span> <span class="mi">4</span><span class="p">;</span>
+<span class="kd">function</span> <span class="nx">replaceGreen</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
 
-    <span class="c1">// Iterate over all pixels in the current frame.</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">let</span> <span class="nx">r</span> <span class="o">=</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">0</span><span class="p">];</span>
-      <span class="kd">let</span> <span class="nx">g</span> <span class="o">=</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
-      <span class="kd">let</span> <span class="nx">b</span> <span class="o">=</span> <span class="nx">frame</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">2</span><span class="p">];</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">,</span> <span class="nx">j</span> <span class="o">+=</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Convert from RGB to HSL...</span>
+    <span class="kd">var</span> <span class="nx">hsl</span> <span class="o">=</span> <span class="nx">rgb2hsl</span><span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="nx">j</span><span class="p">],</span> <span class="nx">data</span><span class="p">[</span><span class="nx">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="nx">data</span><span class="p">[</span><span class="nx">j</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]);</span>
+    <span class="kd">var</span> <span class="nx">h</span> <span class="o">=</span> <span class="nx">hsl</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">s</span> <span class="o">=</span> <span class="nx">hsl</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">l</span> <span class="o">=</span> <span class="nx">hsl</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
 
-      <span class="c1">// Convert from RGB to HSL...</span>
-      <span class="kd">let</span> <span class="p">[</span><span class="nx">h</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">l</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">rgb2hsl</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">);</span>
-
-      <span class="c1">// ... and check if we have a somewhat green pixel.</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">h</span> <span class="o">&gt;=</span> <span class="mi">90</span> <span class="o">&amp;&amp;</span> <span class="nx">h</span> <span class="o">&lt;=</span> <span class="mi">160</span> <span class="o">&amp;&amp;</span>
-          <span class="nx">s</span> <span class="o">&gt;=</span> <span class="mi">25</span> <span class="o">&amp;&amp;</span> <span class="nx">s</span> <span class="o">&lt;=</span> <span class="mi">90</span> <span class="o">&amp;&amp;</span>
-          <span class="nx">l</span> <span class="o">&gt;=</span> <span class="mi">20</span> <span class="o">&amp;&amp;</span> <span class="nx">l</span> <span class="o">&lt;=</span> <span class="mi">75</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">frame</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-      <span class="p">}</span>
+    <span class="c1">// ... and check if we have a somewhat green pixel.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">h</span> <span class="o">&gt;=</span> <span class="mi">90</span> <span class="o">&amp;&amp;</span> <span class="nx">h</span> <span class="o">&lt;=</span> <span class="mi">160</span> <span class="o">&amp;&amp;</span> <span class="nx">s</span> <span class="o">&gt;=</span> <span class="mi">25</span> <span class="o">&amp;&amp;</span> <span class="nx">s</span> <span class="o">&lt;=</span> <span class="mi">90</span> <span class="o">&amp;&amp;</span> <span class="nx">l</span> <span class="o">&gt;=</span> <span class="mi">20</span> <span class="o">&amp;&amp;</span> <span class="nx">l</span> <span class="o">&lt;=</span> <span class="mi">75</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">data</span><span class="p">[</span><span class="nx">j</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="p">}</span>
-
-    <span class="k">this</span><span class="p">.</span><span class="nx">context</span><span class="p">.</span><span class="nx">putImageData</span><span class="p">(</span><span class="nx">frame</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">requestAnimationFrame</span><span class="p">();</span>
-  <span class="p">},</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </pre>
 </div>
 </figure>
 
 
-<p>What happens here is actually quite simple: we draw the current video frame
-to our canvas and extract its image data. We then iterate over all pixels in
-the frame and check if we found a green pixel - if so its opacity byte is set
-to zero, which means fully transparent. The manipulated image data is put back
-into the canvas and we are done for now until the next animation frame is ready.</p>
+<p>What happens here is actually quite simple: we read the current video frame and
+extract its image data. We then iterate over all pixels in the frame and check
+if we found a green one - if so its opacity byte is set to zero, which means
+fully transparent. The manipulated image data is put back into the canvas and
+we are done for now until the next animation frame is ready.</p>
 
 <h2>The demo</h2>
 
-<p>Take a look a the <a href="http://timtaubert.de/demos/green-screen/">live demo</a>. You will need Firefox 18+
-and thus Nightly or Aurora as of the time of writing. Make sure that
-<em>media.navigator.enabled</em> is set to <em>true</em>. Hold a green object in front of the
-the camera and try it out yourself. Your camera and light setup is probably very
-different from mine so you might need to adjust the color check a little to
-make it work. Alternatively, here is a screencast of the demo:</p>
+<p>Take a look at the <a href="http://timtaubert.de/demos/green-screen/">live demo</a>, you will need a recent
+Firefox/Chrome/Opera build. Make sure that getUserMedia() support is enabled
+in your browser of choice. Hold a green object in front of the the camera and
+try it out yourself. Your camera and light setup is probably very different
+from mine so you might need to adjust the color check a little to make it work.
+Alternatively, here is a screencast of the demo:</p>
 
 <iframe class="embed"
  src="http://player.vimeo.com/video/51593914?title=1&amp;byline=1&amp;portrait=1"
