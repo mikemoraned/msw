@@ -97,6 +97,12 @@
         <lastmod>2013-02-25T11:07:00+01:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://timtaubert.de/blog/2013/02/getusermedia-part-3-simple-motion-detection-in-a-live-video/
+        </loc>
+        <lastmod>2013-02-27T14:51:43+01:00</lastmod>
+    </url>
+    <url>
         <loc>http://timtaubert.de/about-me/</loc>
         <lastmod>2012-07-09T23:45:19+02:00</lastmod>
     </url>
@@ -110,6 +116,6 @@
     </url>
     <url>
         <loc>http://timtaubert.de/</loc>
-        <lastmod>2013-02-25T11:07:00+01:00</lastmod>
+        <lastmod>2013-02-27T14:51:43+01:00</lastmod>
     </url>
 </urlset>

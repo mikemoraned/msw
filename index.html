@@ -6,10 +6,8 @@
     <title>Tim Taubert - Open Source enthusiast. JavaScript lover. Mozillian.</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     
-    <meta name="description" content="Note to myself: Don&#8217;t be lazy February, 25th 2013 Back in October 2012 I wrote two blog posts,
-getUserMedia part 1
-and part 2,
-including demos &hellip;">
+    <meta name="description" content="getUserMedia() part 3: simple motion detection in a live video February, 27th 2013 Now that you should already know how to build a
+live green screen &hellip;">
     <meta content="Tim Taubert" name="author">
     <link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700|PT+Sans" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/screen.css" media="screen" rel="stylesheet" type="text/css">
@@ -52,6 +50,152 @@ including demos &hellip;">
         <section>
           <h1 class="hidden">Content</h1>
           
+
+
+  <article class="post">
+  <header class="article-header">
+    
+      <h1><a href="/blog/2013/02/getusermedia-part-3-simple-motion-detection-in-a-live-video/" title="getUserMedia() part 3: simple motion detection in a live video">getUserMedia() part 3: simple motion detection in a live video</a></h1>
+    
+    
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2013-02-27T12:00:00+01:00" pubdate data-updated="true">February, 27<span>th</span> 2013</time>
+  </header>
+  <p>Now that you should already know how to build a
+<a href="/blog/2012/10/building-a-live-green-screen-with-getusermedia-and-mediastreams/">live green screen</a>
+and an
+<a href="/blog/2012/10/getusermedia-part-2-building-an-eyetoy-like-mini-game/">EyeToy-like mini-game</a>
+using nothing but plain JavaScript and a modern browser supporting WebRTC, let
+us move on to another interesting example: simple motion detection in a live
+video.</p>
+
+<h2>The initialization code</h2>
+
+<p>To detect motion in a video we need to compare at least two frames. We will use
+<a href="https://developer.mozilla.org/en-US/docs/JavaScript_typed_arrays">typed arrays</a>
+to store the lightness data of the previous frames:</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">initialize</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// ... code to initialize the canvas and video elements ...</span>
+
+  <span class="c1">// Prepare buffers to store lightness data.</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">buffers</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Uint8Array</span><span class="p">(</span><span class="nx">width</span> <span class="o">*</span> <span class="nx">height</span><span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Get the webcam&#39;s stream.</span>
+  <span class="nx">nav</span><span class="p">.</span><span class="nx">getUserMedia</span><span class="p">({</span><span class="nx">video</span><span class="o">:</span> <span class="kc">true</span><span class="p">},</span> <span class="nx">startStream</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{});</span>
+<span class="p">}</span>
+</pre>
+</div>
+</figure>
+
+
+<p>We want two frame buffers - a single one results in a heavily
+flickering motion video but the more frames we store the more motion blur
+we will see. Two seems like a good value for demonstration purposes.</p>
+
+<h2>Illustrating lightness changes</h2>
+
+<p>The main <em>draw()</em> function from
+<a href="/blog/2012/10/building-a-live-green-screen-with-getusermedia-and-mediastreams/">part 1</a>
+did not change except that we now call <em>markLightnessChanges()</em> for every frame.
+This is also the probably most interesting function of the whole demo:</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">markLightnessChanges</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Pick the next buffer (round-robin).</span>
+  <span class="kd">var</span> <span class="nx">buffer</span> <span class="o">=</span> <span class="nx">buffers</span><span class="p">[</span><span class="nx">bufidx</span><span class="o">++</span> <span class="o">%</span> <span class="nx">buffers</span><span class="p">.</span><span class="nx">length</span><span class="p">];</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">buffer</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">,</span> <span class="nx">j</span> <span class="o">+=</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Determine lightness value.</span>
+    <span class="kd">var</span> <span class="nx">current</span> <span class="o">=</span> <span class="nx">lightnessValue</span><span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="nx">j</span><span class="p">],</span> <span class="nx">data</span><span class="p">[</span><span class="nx">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="nx">data</span><span class="p">[</span><span class="nx">j</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]);</span>
+
+    <span class="c1">// Set color to black.</span>
+    <span class="nx">data</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="nx">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">data</span><span class="p">[</span><span class="nx">j</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// Full opacity for changes.</span>
+    <span class="nx">data</span><span class="p">[</span><span class="nx">j</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span> <span class="o">*</span> <span class="nx">lightnessHasChanged</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="nx">current</span><span class="p">);</span>
+
+    <span class="c1">// Store current lightness value.</span>
+    <span class="nx">buffer</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">current</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+</div>
+</figure>
+
+
+<p>We determine the lightness value of every pixel in the canvas and compare it
+to its values in the previously captured frames. If the difference to one of
+those buffers exceeds a specific threshold the pixel will be black, if not it
+becomes transparent.</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">lightnessHasChanged</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">buffers</span><span class="p">.</span><span class="nx">some</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">buffer</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">value</span> <span class="o">-</span> <span class="nx">buffer</span><span class="p">[</span><span class="nx">index</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">15</span><span class="p">;</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</pre>
+</div>
+</figure>
+
+
+<h2>Blend mode difference</h2>
+
+<p>The simple method we use to detect motion is called a
+<a href="http://en.wikipedia.org/wiki/Blend_modes#Difference">blend mode difference</a>.
+That is a quite fancy word to say: we compare two images (also called layers
+or frames) by putting them on top of each other and subtracting the bottom from
+the top layer. In this example we do it for every pixel&#8217;s L-value of the
+<a href="https://en.wikipedia.org/wiki/HSL_and_HSV">HSL color model</a>.</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">lightnessValue</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">))</span> <span class="o">/</span> <span class="mi">255</span> <span class="o">*</span> <span class="mi">50</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+</div>
+</figure>
+
+
+<p>If the current frame is identical to the previous one, the lightness
+difference will be exactly zero for all pixels. If the frames differ because
+something in that picture has moved then there is a good chance that lightness
+values change where motion occured. A small threshold ensures that we ignore
+noise in the signal.</p>
+
+<h2>Demo and screencast</h2>
+
+<p>That is all! Take a look at the <a href="/demos/motion-detection/">live demo</a> or watch
+the screencast below:</p>
+
+<iframe class="embed embed-space"
+ src="http://player.vimeo.com/video/60650211?title=1&amp;byline=1&amp;portrait=1"
+ width="500" height="195" frameborder="0"
+ webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+
+
+<p>You can create some really great demos with this simple technique. Here is a
+neat one of
+<a href="http://www.soundstep.com/blog/experiments/jsdetection/">a xylophone you can play by waving your hands</a>
+(which unfortunately does not work in Firefox).</p>
+
+<p>Whatever your ideas may be, I encourage you to fiddle around with the small
+demos I provided in my three getUserMedia() examples so far and let me know if
+you built something amazing!</p>
+
+</article>
+
 
 
   <article class="post">
@@ -685,43 +829,6 @@ Windows (XP): 120 (118) leaks
 
 
 
-  <article class="post">
-  <header class="article-header">
-    
-      <h1><a href="/blog/2012/02/help-us-test-the-new-tab-page/" title="Help us test the New Tab Page!">Help us test the New Tab Page!</a></h1>
-    
-    
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2012-02-10T19:11:00+01:00" pubdate data-updated="true">February, 10<span>th</span> 2012</time>
-  </header>
-  <p>Over the last weeks we worked hard on getting the New Tab Page into Firefox. It’s not quite ready yet but we need your help testing it. We enabled it by default on Nightly and decided to give it a week on Aurora to get feedback from those users as well.</p>
-
-<p>Nightly: <a href="http://nightly.mozilla.org/">http://nightly.mozilla.org/</a><br/>
-Aurora: <a href="https://www.mozilla.org/en-US/firefox/aurora/">https://www.mozilla.org/en-US/firefox/aurora/</a></p>
-
-<p>We’ll disable it for Aurora again on February 16th (next Thursday). If you liked the feature and want it back then just set the preference ‘browser.newtab.url’ to ‘about:newtab’, ‘browser.newtabpage.enabled’ to ‘true’ and restart the browser. You can easily file bugs using the following link:</p>
-
-<p><a href="https://bugzilla.mozilla.org/enter_bug.cgi?product=Firefox&amp;component=General&amp;short_desc=[New%20Tab%20Page]%20Summary%20of%20your%20problem">https://bugzilla.mozilla.org/enter_bug.cgi?product=Firefox&amp;component=General</a></p>
-
-<p>Please make sure you don’t report a duplicate bug and check the dependencies of the original New Tab Page bug before filing – <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=455553" title="Bug 455553 - New Tab Page feature">bug 455553</a>.</p>
-
-<p><img src="/images/newtab.png" title="Screenshot of the new tab page" ></p>
-
-</article>
-
-
-
 <div class="pager">
   
     <li class="next"><a href="/blog/page/2/" title="Older posts">Older posts &rarr;</a></li>
@@ -737,6 +844,8 @@ Aurora: <a href="https://www.mozilla.org/en-US/firefox/aurora/">https://www.mozi
   <h1 class="sidebar-header">Recent posts</h1>
   <ul class="nav nav-list" id="recent-posts">
     
+      <li><a title="getUserMedia() part 3: simple motion detection in a live video" href="/blog/2013/02/getusermedia-part-3-simple-motion-detection-in-a-live-video/">getUserMedia() part 3: simple motion detection in a live video</a></li>
+    
       <li><a title="Note to myself: Don't be lazy" href="/blog/2013/02/note-to-myself-dont-be-lazy/">Note to myself: Don't be lazy</a></li>
     
       <li><a title="getUserMedia() part 2: building an EyeToy-like mini-game" href="/blog/2012/10/getusermedia-part-2-building-an-eyetoy-like-mini-game/">getUserMedia() part 2: building an EyeToy-like mini-game</a></li>
@@ -744,8 +853,6 @@ Aurora: <a href="https://www.mozilla.org/en-US/firefox/aurora/">https://www.mozi
       <li><a title="Building a live green screen with getUserMedia() and MediaStreams" href="/blog/2012/10/building-a-live-green-screen-with-getusermedia-and-mediastreams/">Building a live green screen with getUserMedia() and MediaStreams</a></li>
     
       <li><a title="Force Octopress/Jekyll to use a specific time zone" href="/blog/2012/09/force-octopress-jekyll-to-use-a-specific-time-zone/">Force Octopress/Jekyll to use a specific time zone</a></li>
-    
-      <li><a title="CSS transitions for dynamically created DOM elements" href="/blog/2012/09/css-transitions-for-dynamically-created-dom-elements/">CSS transitions for dynamically created DOM elements</a></li>
     
   </ul>
 </section>

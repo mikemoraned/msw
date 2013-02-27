@@ -202,6 +202,7 @@ img:hover{border:1px solid #c8c8c8;}
 .post:not(:first-of-type):before{content:" ";display:block;width:80%;height:1px;margin:60px auto;background-color:#b3b3b3;background-image:-o-linear-gradient(left, #ffffff, #666666, #ffffff);background-image:-ms-linear-gradient(left, #ffffff, #666666, #ffffff);background-image:-moz-linear-gradient(left, #ffffff, #666666, #ffffff);background-image:-webkit-linear-gradient(left, #ffffff, #666666, #ffffff);background-image:linear-gradient(to right, #ffffff, #666666, #ffffff);}
 time{font-size:13px;color:#aaa;}
 .embed{width:100%;}
+.embed-space{margin-bottom:22px;}
 .feedback{margin:0;font-size:17px;}
 #recent-posts{padding:0;}
 .sidebar-header{margin-bottom:10px;}
