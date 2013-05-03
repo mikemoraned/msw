@@ -3,10 +3,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Tim Taubert - Open Source enthusiast. JavaScript lover. Mozillian.</title>
+    <title>Tim Taubert - Mozillian. Open Source enthusiast. Loves programming languages.</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     
-    <meta name="description" content="Firefox Add-on: Customizable Shortcuts April, 21st 2011 As you probably know, in Firefox there is unfortunately no way to configure existing &hellip;">
+    <meta name="description" content="Using Xvfb on Linux to run mochitests in the background May, 1st 2011 Seeing mochitests run for the first time is awesome but gets pretty annoying &hellip;">
     <meta content="Tim Taubert" name="author">
     <link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700|PT+Sans" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/screen.css" media="screen" rel="stylesheet" type="text/css">
@@ -31,9 +31,9 @@
 
         <section id="about">
   <h1 class="hidden">About me</h1>
-  <strong>Open Source enthusiast.</strong>
-  <strong>JavaScript lover.</strong>
   <strong>Mozillian.</strong>
+  <strong>Open Source enthusiast.</strong>
+  <strong>Loves Programming Languages.</strong>
 </section>
 
         <nav>
@@ -49,6 +49,43 @@
         <section>
           <h1 class="hidden">Content</h1>
           
+
+
+  <article class="post">
+  <header class="article-header">
+    
+      <h1><a href="/blog/2011/05/using-xvfb-on-linux-to-run-mochitests-in-the-background/" title="Using Xvfb on Linux to run mochitests in the background">Using Xvfb on Linux to run mochitests in the background</a></h1>
+    
+    
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-05-01T14:08:00+02:00" pubdate data-updated="true">May, 1<span>st</span> 2011</time>
+  </header>
+  <p>Seeing mochitests run for the first time is awesome but gets pretty annoying at the 50th time, especially when executing whole test suites. I’ve always wanted to be able to do some bug triage or catch up with the mailing lists while letting mochitests run in the background.</p>
+
+<p>Spawning a second XServer seemed a bit too much but fortunately there is another solution: Xvfb – a virtual frame buffer. Xvfb spawns a virtual XServer on the specified display and runs purely in memory.</p>
+
+<p>Here is how to set up Xvfb and run mochitests on Ubuntu (shouldn’t be too hard on other distros either):</p>
+
+<figure class='code'> <div class="highlight"><pre>me@host:~$ sudo apt-get install xvfb
+me@host:~$ xvfb-run make -C $(OBJDIR) mochitest-browser-chrome
+</pre></div></figure>
+
+
+<p>Enjoy!</p>
+
+</article>
+
 
 
   <article class="post">
@@ -100,6 +137,8 @@ Bugs: <a href="https://github.com/ttaubert/customizable-shortcuts/issues">https:
   <h1 class="sidebar-header">Recent posts</h1>
   <ul class="nav nav-list" id="recent-posts">
     
+      <li><a title="Stop. Iteration time!" href="/blog/2013/05/stop-iteration-time/">Stop. Iteration time!</a></li>
+    
       <li><a title="getUserMedia() part 3: simple motion detection in a live video" href="/blog/2013/02/getusermedia-part-3-simple-motion-detection-in-a-live-video/">getUserMedia() part 3: simple motion detection in a live video</a></li>
     
       <li><a title="Note to myself: Don't be lazy" href="/blog/2013/02/note-to-myself-dont-be-lazy/">Note to myself: Don't be lazy</a></li>
@@ -107,8 +146,6 @@ Bugs: <a href="https://github.com/ttaubert/customizable-shortcuts/issues">https:
       <li><a title="getUserMedia() part 2: building an EyeToy-like mini-game" href="/blog/2012/10/getusermedia-part-2-building-an-eyetoy-like-mini-game/">getUserMedia() part 2: building an EyeToy-like mini-game</a></li>
     
       <li><a title="Building a live green screen with getUserMedia() and MediaStreams" href="/blog/2012/10/building-a-live-green-screen-with-getusermedia-and-mediastreams/">Building a live green screen with getUserMedia() and MediaStreams</a></li>
-    
-      <li><a title="Force Octopress/Jekyll to use a specific time zone" href="/blog/2012/09/force-octopress-jekyll-to-use-a-specific-time-zone/">Force Octopress/Jekyll to use a specific time zone</a></li>
     
   </ul>
 </section>

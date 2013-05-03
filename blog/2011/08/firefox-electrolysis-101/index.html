@@ -31,9 +31,9 @@
 
         <section id="about">
   <h1 class="hidden">About me</h1>
-  <strong>Open Source enthusiast.</strong>
-  <strong>JavaScript lover.</strong>
   <strong>Mozillian.</strong>
+  <strong>Open Source enthusiast.</strong>
+  <strong>Loves Programming Languages.</strong>
 </section>
 
         <nav>
@@ -87,9 +87,7 @@
 <figure class='code'> <div class="highlight"><pre><span class="cm">/* chrome script */</span>
 <span class="kd">let</span> <span class="nx">globalMM</span> <span class="o">=</span> <span class="nx">Cc</span><span class="p">[</span><span class="s2">&quot;@mozilla.org/globalmessagemanager;1&quot;</span><span class="p">]</span>
                  <span class="p">.</span><span class="nx">getService</span><span class="p">(</span><span class="nx">Ci</span><span class="p">.</span><span class="nx">nsIChromeFrameMessageManager</span><span class="p">);</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <h3>window.messageManager</h3>
@@ -106,9 +104,7 @@
 <span class="nx">messageManager</span><span class="p">.</span><span class="nx">removeMessageListener</span><span class="p">(</span><span class="nx">messageName</span><span class="p">,</span> <span class="nx">listener</span><span class="p">)</span>
 <span class="nx">messageManager</span><span class="p">.</span><span class="nx">sendAsyncMessage</span><span class="p">(</span><span class="nx">messageName</span><span class="p">[,</span> <span class="nx">json</span><span class="p">])</span>
 <span class="nx">messageManager</span><span class="p">.</span><span class="nx">loadFrameScript</span><span class="p">(</span><span class="nx">url</span><span class="p">[,</span> <span class="nx">allowDelayedLoad</span><span class="p">])</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <h3>content/frame scripts</h3>
@@ -119,9 +115,7 @@
 <span class="nx">removeMessageListener</span><span class="p">(</span><span class="nx">messageName</span><span class="p">,</span> <span class="nx">listener</span><span class="p">)</span>
 <span class="nx">sendAsyncMessage</span><span class="p">(</span><span class="nx">messageName</span><span class="p">[,</span> <span class="nx">json</span><span class="p">])</span>
 <span class="nx">sendSyncMessage</span><span class="p">(</span><span class="nx">messageName</span><span class="p">[,</span> <span class="nx">json</span><span class="p">])</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <h3>e10s components</h3>
@@ -146,9 +140,7 @@
 <span class="p">});</span>
 
 <span class="nx">mm</span><span class="p">.</span><span class="nx">loadFrameScript</span><span class="p">(</span><span class="s2">&quot;chrome://project/content/content.js&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <h3>The frame script</h3>
@@ -164,9 +156,7 @@
 <span class="nx">addMessageListener</span><span class="p">(</span><span class="s2">&quot;alert&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">alert</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">json</span><span class="p">.</span><span class="nx">text</span><span class="p">);</span>
 <span class="p">});</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <h3>Process communication</h3>
@@ -200,9 +190,7 @@
 <span class="kd">let</span> <span class="nx">WebProgressListener</span> <span class="o">=</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
 <span class="kd">let</span> <span class="nx">mask</span> <span class="o">=</span> <span class="nx">Ci</span><span class="p">.</span><span class="nx">nsIWebProgress</span><span class="p">.</span><span class="nx">NOTIFY_STATE_ALL</span><span class="p">;</span>
 <span class="nx">webProgress</span><span class="p">.</span><span class="nx">addProgressListener</span><span class="p">(</span><span class="nx">WebProgressListener</span><span class="p">,</span> <span class="nx">mask</span><span class="p">);</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <h3>nsIDOMWindowUtils</h3>
@@ -212,9 +200,7 @@
 <figure class='code'> <div class="highlight"><pre><span class="cm">/* content script */</span>
 <span class="kd">let</span> <span class="nx">ifaceReq</span> <span class="o">=</span> <span class="nx">content</span><span class="p">.</span><span class="nx">QueryInterface</span><span class="p">(</span><span class="nx">Ci</span><span class="p">.</span><span class="nx">nsIInterfaceRequestor</span><span class="p">);</span>
 <span class="kd">let</span> <span class="nx">utils</span> <span class="o">=</span> <span class="nx">ifaceReq</span><span class="p">.</span><span class="nx">getInterface</span><span class="p">(</span><span class="nx">Ci</span><span class="p">.</span><span class="nx">nsIDOMWindowUtils</span><span class="p">);</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <h2>Tips and hints</h2>
@@ -236,9 +222,7 @@
 <span class="kd">let</span> <span class="nx">results</span> <span class="o">=</span> <span class="nx">sendSyncMessage</span><span class="p">(</span><span class="s2">&quot;mymessage&quot;</span><span class="p">,</span> <span class="p">{</span><span class="nx">foo</span><span class="o">:</span> <span class="s2">&quot;bar&quot;</span><span class="p">});</span>
 <span class="nx">print</span><span class="p">(</span><span class="nx">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span> <span class="c1">// prints &quot;hello world&quot;</span>
 <span class="nx">print</span><span class="p">(</span><span class="nx">results</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span> <span class="c1">// prints &quot;hello the 2nd&quot;</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <h3>globalMessageManager.addFrameScript()</h3>
@@ -267,9 +251,7 @@ sync   - false if the message was sent asynchronously
          (always false for messages from chrome scripts)
 target - the browser associated with the content that this
          message came from
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <h3>Message name prefixes</h3>
@@ -298,6 +280,8 @@ target - the browser associated with the content that this
   <h1 class="sidebar-header">Recent posts</h1>
   <ul class="nav nav-list" id="recent-posts">
     
+      <li><a title="Stop. Iteration time!" href="/blog/2013/05/stop-iteration-time/">Stop. Iteration time!</a></li>
+    
       <li><a title="getUserMedia() part 3: simple motion detection in a live video" href="/blog/2013/02/getusermedia-part-3-simple-motion-detection-in-a-live-video/">getUserMedia() part 3: simple motion detection in a live video</a></li>
     
       <li><a title="Note to myself: Don't be lazy" href="/blog/2013/02/note-to-myself-dont-be-lazy/">Note to myself: Don't be lazy</a></li>
@@ -305,8 +289,6 @@ target - the browser associated with the content that this
       <li><a title="getUserMedia() part 2: building an EyeToy-like mini-game" href="/blog/2012/10/getusermedia-part-2-building-an-eyetoy-like-mini-game/">getUserMedia() part 2: building an EyeToy-like mini-game</a></li>
     
       <li><a title="Building a live green screen with getUserMedia() and MediaStreams" href="/blog/2012/10/building-a-live-green-screen-with-getusermedia-and-mediastreams/">Building a live green screen with getUserMedia() and MediaStreams</a></li>
-    
-      <li><a title="Force Octopress/Jekyll to use a specific time zone" href="/blog/2012/09/force-octopress-jekyll-to-use-a-specific-time-zone/">Force Octopress/Jekyll to use a specific time zone</a></li>
     
   </ul>
 </section>

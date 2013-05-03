@@ -3,11 +3,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Tim Taubert - Open Source enthusiast. JavaScript lover. Mozillian.</title>
+    <title>Tim Taubert - Mozillian. Open Source enthusiast. Loves programming languages.</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     
-    <meta name="description" content="getUserMedia() part 3: simple motion detection in a live video February, 27th 2013 Now that you should already know how to build a
-live green screen &hellip;">
+    <meta name="description" content="Stop. Iteration time! May, 3rd 2013 You have probably already heard of
+generators and iterators
+coming to a browser near you. They have been &hellip;">
     <meta content="Tim Taubert" name="author">
     <link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700|PT+Sans" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/screen.css" media="screen" rel="stylesheet" type="text/css">
@@ -32,9 +33,9 @@ live green screen &hellip;">
 
         <section id="about">
   <h1 class="hidden">About me</h1>
-  <strong>Open Source enthusiast.</strong>
-  <strong>JavaScript lover.</strong>
   <strong>Mozillian.</strong>
+  <strong>Open Source enthusiast.</strong>
+  <strong>Loves Programming Languages.</strong>
 </section>
 
         <nav>
@@ -50,6 +51,288 @@ live green screen &hellip;">
         <section>
           <h1 class="hidden">Content</h1>
           
+
+
+  <article class="post">
+  <header class="article-header">
+    
+      <h1><a href="/blog/2013/05/stop-iteration-time/" title="Stop. Iteration time!">Stop. Iteration time!</a></h1>
+    
+    
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2013-05-03T18:00:00+02:00" pubdate data-updated="true">May, 3<span>rd</span> 2013</time>
+  </header>
+  <p>You have probably already heard of
+<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Guide/Iterators_and_Generators">generators and iterators</a>
+coming to a browser near you. They have been available in Firefox for a long
+time and are used extensively all over the Mozilla code base. The V8 team
+will implement iterators and generators
+<a href="http://code.google.com/p/v8/issues/detail?id=2355">once ES6 has been finalized</a>.</p>
+
+<p>This post describes the current implementation in SpiderMonkey and tries to
+include the current state of the ES6 draft and discussions.</p>
+
+<h2>A simple generator</h2>
+
+<p>Let us take a look at a simple example of a generator function that represents
+an infinite sequence containing all the numbers from 0 to <em>Number.MAX_VALUE</em>.
+Once it reaches <em>MAX_VALUE</em> it will not increase any further but always return
+the same number.</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">myInfiniteGenerator</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">yield</span> <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">iter</span> <span class="o">=</span> <span class="nx">myInfiniteGenerator</span><span class="p">();</span>
+
+<span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">iter</span><span class="p">.</span><span class="nx">next</span><span class="p">());</span>
+<span class="p">}</span>
+</pre></div></figure>
+
+
+<p>Any object of the following shape is an
+<a href="http://wiki.ecmascript.org/doku.php?id=harmony:iterators">iterator</a>:</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="p">{</span> <span class="nx">next</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nx">any</span> <span class="p">}</span>
+</pre></div></figure>
+
+
+<p>The <em>next()</em> method simply returns the item next in the sequence.</p>
+
+<h2>Finite sequences</h2>
+
+<p>As you surely noticed the generator of the first example produces iterators that
+will never run out of items. The next example shows an iterator representing a
+finite sequence:</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">MyFiniteIterator</span><span class="p">(</span><span class="nx">max</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">cur</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">max</span> <span class="o">=</span> <span class="nx">max</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">MyFiniteIterator</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">next</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">cur</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">max</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">cur</span><span class="o">++</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">throw</span> <span class="nx">StopIteration</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div></figure>
+
+
+<p>The given code implements a custom iterator without writing a generator
+function. Note that it throws <em>StopIteration</em> as soon as it reaches the maximum
+value to signal that the sequence is exhausted. It is a lot more elegant to
+implement the same sequence using a generator function:</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">myFiniteGenerator</span><span class="p">(</span><span class="nx">max</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">max</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">yield</span> <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></figure>
+
+
+<p>Generator functions will automatically throw <em>StopIteration</em> when terminating.
+So how should one consume iterators with finite sequences?</p>
+
+<h2>Consuming sequences</h2>
+
+<p>In Java for example, you would check <em>iter.hasNext()</em> and stop when it returns
+false. In JavaScript however you need to use a <em>try&#8230;catch</em> statement to catch
+<em>StopIteration</em> when it is being thrown.</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">var</span> <span class="nx">iter</span> <span class="o">=</span> <span class="nx">myFiniteGenerator</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+
+<span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">iter</span><span class="p">.</span><span class="nx">next</span><span class="p">());</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span> <span class="k">if</span> <span class="nx">e</span> <span class="o">===</span> <span class="nx">StopIteration</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">break</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></figure>
+
+
+<p>You might wonder if there is a better way to do this and indeed there is. Using
+<em>for&#8230;in</em> or <em>for&#8230;of</em> you do not have to catch <em>StopIteration</em> yourself, the
+JavaScript engine will do it for you. As soon as the sequence is exhausted the
+loop will terminate normally without the exception being propagated:</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">var</span> <span class="nx">iter</span> <span class="o">=</span> <span class="nx">myFiniteGenerator</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">iter</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div></figure>
+
+
+<h2>StopIteration is special</h2>
+
+<p><em>StopIteration</em> actually is a standard variable that is bound to an object of
+class <em>StopIteration</em>. It is an ordinary object with no properties of its own
+and it is not a constructor function.</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="k">try</span> <span class="p">{</span>
+  <span class="k">throw</span> <span class="nx">StopIteration</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span> <span class="k">if</span> <span class="nx">e</span> <span class="k">instanceof</span> <span class="nx">StopIteration</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// This works because:</span>
+  <span class="nx">StopIteration</span> <span class="k">instanceof</span> <span class="nx">StopIteration</span> <span class="o">===</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div></figure>
+
+
+<p>As <em>StopIteration</em> is a singleton of type <em>StopIteration</em> you can also catch it
+by checking for equality:</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="k">try</span> <span class="p">{</span>
+  <span class="k">throw</span> <span class="nx">StopIteration</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span> <span class="k">if</span> <span class="nx">e</span> <span class="o">===</span> <span class="nx">StopIteration</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ... handle exception</span>
+<span class="p">}</span>
+</pre></div></figure>
+
+
+<h2>StopIteration is mutable</h2>
+
+<p>You should be aware that <em>StopIteration</em> is a mutable global. Just like
+<em>undefined</em> it can be modified to hold any other value. If you write a library
+and want to shield against modifications from outside you can use this neat
+little trick I found on
+<a href="http://calculist.blogspot.de/2008/04/how-to-spell-stopiteration.html">Dave Herman&#8217;s blog</a>:</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="p">(</span><span class="kd">function</span><span class="p">(){</span><span class="k">try</span><span class="p">{(</span><span class="kd">function</span><span class="p">(){</span><span class="kc">true</span><span class="o">||</span><span class="p">(</span><span class="k">yield</span><span class="p">)})().</span><span class="nx">next</span><span class="p">()}</span><span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span><span class="k">return</span> <span class="nx">e</span><span class="p">}})()</span>
+</pre></div></figure>
+
+
+<p>The inner function is a generator that terminates immediately and therefore will
+throw a <em>StopIteration</em>. The outer function simply catches and returns it.</p>
+
+<h2>StopIteration may become a constructor</h2>
+
+<p>The current
+<a href="http://wiki.ecmascript.org/doku.php?id=harmony:iterators#stopiteration">iterator strawman</a>
+states that <em>StopIteration</em> will become a constructor to maintain compatibility
+with generator functions returning values.</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="nx">Iter</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">next</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">cur</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">max</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">cur</span><span class="o">++</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">stop</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StopIteration</span><span class="p">();</span>
+  <span class="nx">stop</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="s2">&quot;sequence exhausted&quot;</span><span class="p">;</span>
+  <span class="k">throw</span> <span class="nx">stop</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div></figure>
+
+
+<p>The equality check from above would not work anymore so it might be better to
+just use <em>instanceof</em>.</p>
+
+<h2>StopIteration may not be part of ES6</h2>
+
+<p>The Python way of throwing to denote the end of a sequence is backwards
+compatible with old ECMAScript versions but there seem to be
+<a href="https://mail.mozilla.org/pipermail/es-discuss/2013-February/028668.html">people</a>
+<a href="https://mail.mozilla.org/pipermail/es-discuss/2013-March/028937.html">not happy</a>
+<a href="http://esdiscuss.org/notes/2013-03-12">with the current proposal</a>.
+While I can&#8217;t tell whether <em>StopIteration</em> is really to be removed a couple of
+alternative suggestions have been made:</p>
+
+<h3>Introduce a keyword to end a frame</h3>
+
+<p>To not misuse exceptions for normal control flow ES6 could introduce a
+<em>stopiteration</em> or <em>endframe</em> keyword that would end the current frame with
+an optional return value. The obvious downside is that it is probably not
+backwards compatible.</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="nx">Iter</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">next</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">cur</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">max</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">cur</span><span class="o">++</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">stopiteration</span> <span class="p">[</span><span class="nx">reason</span><span class="p">];</span>
+  <span class="c1">// or endframe [reason];</span>
+<span class="p">};</span>
+</pre></div></figure>
+
+
+<h3>Add an iterator.hasNext() method</h3>
+
+<p>Just like Java the iterator API could consist of the two methods <em>next()</em> and
+<em>hasNext()</em>. The client would then need to check <em>hasNext()</em> every time before
+calling <em>next()</em>.</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="nx">Iter</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">hasNext</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">cur</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">max</span><span class="p">;</span>
+  <span class="p">},</span>
+
+  <span class="nx">next</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">hasNext</span><span class="p">())</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">cur</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;sequence exhausted&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div></figure>
+
+
+<h3>Let next() always return an object</h3>
+
+<p>Custom iterators would be required to implement a single method but would not
+need to throw. Instead they would return an object with the property <em>done</em> set
+to true to indicate that the sequence has ended. The <em>value</em> property would be
+used to store values passed to <em>yield</em> or <em>return</em> in a generator function.</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="p">{</span>
+  <span class="nx">next</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="nx">done</span><span class="o">:</span> <span class="kc">false</span> <span class="p">,</span> <span class="nx">value</span><span class="o">:</span> <span class="nx">any</span> <span class="p">}</span>
+          <span class="o">|</span> <span class="p">{</span> <span class="nx">done</span><span class="o">:</span> <span class="kc">true</span><span class="p">[,</span> <span class="nx">value</span><span class="o">:</span> <span class="nx">any</span><span class="p">]</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></figure>
+
+
+<h3>Food for thought</h3>
+
+<p>This is in no way a complete list of possibilities or proposals that were
+brought up on <a href="http://mail.mozilla.org/pipermail/es-discuss/">es-discuss</a> so
+please make up your own mind about the current iterators implementation and the
+suggested improvements.</p>
+
+<h2>The future is bright</h2>
+
+<p>Whether or not <em>StopIteration</em> will end up in ES6, generators and iterators are
+great and you should make sure to be prepared when they become available in
+modern browsers as well as on Node.js.</p>
+
+<p>I concentrated particularly on <em>StopIteration</em> but there are
+<a href="http://jlongster.com/2012/10/05/javascript-yield.html">lots of</a>
+<a href="http://ejohn.org/blog/javascript-18-progress/">great</a>
+<a href="http://bjouhier.wordpress.com/2012/05/18/asynchronous-javascript-with-generators-an-experiment/">posts</a>
+out there that go way more into depth about generators and their usage. Make
+sure to also take a look at libraries like <a href="http://taskjs.org/">Task.js</a> that
+combines generators with promises to cooperative tasks.</p>
+
+</article>
+
 
 
   <article class="post">
@@ -97,9 +380,7 @@ to store the lightness data of the previous frames:</p>
   <span class="c1">// Get the webcam&#39;s stream.</span>
   <span class="nx">nav</span><span class="p">.</span><span class="nx">getUserMedia</span><span class="p">({</span><span class="nx">video</span><span class="o">:</span> <span class="kc">true</span><span class="p">},</span> <span class="nx">startStream</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{});</span>
 <span class="p">}</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <p>We want two frame buffers - a single one results in a heavily
@@ -131,9 +412,7 @@ This is also the probably most interesting function of the whole demo:</p>
     <span class="nx">buffer</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">current</span><span class="p">;</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <p>We determine the lightness value of every pixel in the canvas and compare it
@@ -146,9 +425,7 @@ becomes transparent.</p>
     <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">abs</span><span class="p">(</span><span class="nx">value</span> <span class="o">-</span> <span class="nx">buffer</span><span class="p">[</span><span class="nx">index</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">15</span><span class="p">;</span>
   <span class="p">});</span>
 <span class="p">}</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <h2>Blend mode difference</h2>
@@ -163,9 +440,7 @@ the top layer. In this example we do it for every pixel&#8217;s L-value of the
 <figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">lightnessValue</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">g</span><span class="p">,</span> <span class="nx">b</span><span class="p">))</span> <span class="o">/</span> <span class="mi">255</span> <span class="o">*</span> <span class="mi">50</span><span class="p">;</span>
 <span class="p">}</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <p>If the current frame is identical to the previous one, the lightness
@@ -278,9 +553,7 @@ example to build an EyeToy-like mini-game.</p>
 <span class="kd">var</span> <span class="nx">revealed</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
 
 <span class="kd">function</span> <span class="nx">initialize</span><span class="p">()</span> <span class="p">{</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <p>First, we will add a variable called <em>revealed</em> that keeps track of all pixels
@@ -297,9 +570,7 @@ from now on:</p>
       <span class="nx">data</span><span class="p">[</span><span class="nx">j</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
       <span class="k">continue</span><span class="p">;</span>
     <span class="p">}</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <p>When iterating over all of the canvas&#8217; pixels we check whether the current index
@@ -317,9 +588,7 @@ opacity to zero and continue with the next iteration.</p>
     <span class="p">}</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <p>If the pixel has not been revealed yet but is a green one, we make it
@@ -378,9 +647,7 @@ Let us build a live green screen!</p>
   <span class="nt">&lt;video</span> <span class="na">id=</span><span class="s">&quot;v&quot;</span> <span class="na">width=</span><span class="s">&quot;320&quot;</span> <span class="na">height=</span><span class="s">&quot;240&quot;</span><span class="nt">&gt;&lt;/video&gt;</span>
   <span class="nt">&lt;canvas</span> <span class="na">id=</span><span class="s">&quot;c&quot;</span> <span class="na">width=</span><span class="s">&quot;320&quot;</span> <span class="na">height=</span><span class="s">&quot;240&quot;</span><span class="nt">&gt;&lt;/canvas&gt;</span>
 <span class="nt">&lt;/body&gt;</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <p>Those are the parts we need. A &lt;video> element that plays the media stream
@@ -400,9 +667,7 @@ and a canvas we will use to read and transform image data.</p>
   <span class="c1">// Ready! Let&#39;s start drawing.</span>
   <span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">draw</span><span class="p">);</span>
 <span class="p">}</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <p>We call <a href="https://developer.mozilla.org/en-US/docs/WebRTC/navigator.getUserMedia">navigator.getUserMedia()</a>
@@ -443,9 +708,7 @@ and most important part of our green screen:</p>
     <span class="p">}</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <p>What happens here is actually quite simple: we read the current video frame and
@@ -514,9 +777,7 @@ all of those every now and then I am somewhere in a different time zone.</p>
 this:</p>
 
 <figure class='code'> <div class="highlight"><pre>TZ=CET rake generate
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <p><strong>TL;DR</strong> - put your time zone into the TZ variable if you want to force Jekyll
@@ -557,9 +818,7 @@ element has just been created and inserted into the DOM dynamically?</p>
   <span class="c">/* ... */</span>
   <span class="n">transition</span><span class="o">:</span> <span class="k">opacity</span> <span class="m">500</span><span class="n">ms</span><span class="p">;</span>
 <span class="p">}</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 
@@ -572,9 +831,7 @@ element has just been created and inserted into the DOM dynamically?</p>
 
 <span class="c1">// Fade it in.</span>
 <span class="nx">elem</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">opacity</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <p>We dynamically insert a new &lt;div> element into the DOM with its initial
@@ -597,9 +854,7 @@ opacity is &#8220;applied&#8221; before trying to fade in:</p>
   <span class="c1">// Fade it in.</span>
   <span class="nx">elem</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">opacity</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 <span class="p">},</span> <span class="mi">0</span><span class="p">);</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <p>This is only marginally better. It seems to work with Webkit and Opera (and
@@ -624,9 +879,7 @@ synchronously:</p>
 
 <span class="c1">// Fade it in.</span>
 <span class="nx">elem</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">opacity</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-</pre>
-</div>
-</figure>
+</pre></div></figure>
 
 
 <p>Although it looks like we only query the current opacity value, getComputedStyle()
@@ -779,56 +1032,6 @@ Firefox 3.6 was a 7.7 MB download.</p>
 
 
 
-  <article class="post">
-  <header class="article-header">
-    
-      <h1><a href="/blog/2012/02/fighting-docshell-and-domwindow-leaks/" title="Fighting DocShell and DOMWindow leaks">Fighting DocShell and DOMWindow leaks</a></h1>
-    
-    
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2012-02-27T19:13:00+01:00" pubdate data-updated="true">February, 27<span>th</span> 2012</time>
-  </header>
-  <p>In my post <a href="/blog/2011/09/leak-hunting-in-browser-chrome-mochitests/">Leak hunting in browser-chrome mochitests</a> I wrote about the measures we were considering to prevent regressing efforts to get rid of leaks in Firefox. Now that <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=683953" title="Bug 683953 - Browser-chrome mochitests should show statistics about leaked DOMWindows and DocShells">bug 683953</a> has landed we finally have a way to detect the leakage of whole DocShells and DOMWindows for the lifetime of the browser when running the browser-chrome mochitest suite.</p>
-
-<h2>How does it work?</h2>
-
-<p>While our browser-chrome mochitest suite runs we parse stdout to track starting and ending tests as well as the creation and removal of DocShells and DOMWindows. Just before the test suite shuts down we schedule a precise GC and wait until it’s completed. Any DOMWindows and DocShells still active are now counted as leaks and assigned to the tests that created them. Additionally we collect the URLs of DOMWindows to help debugging a bit.</p>
-
-<h2>How does this prevent new leaks?</h2>
-
-<p>We implemented a threshold of (currently) 130 leaks that must not be exceeded. If a test run leaks more than the limit we configured it goes orange and the patch should be backed out from the tree. These are the current numbers:</p>
-
-<figure class='code'> <div class="highlight"><pre>Linux (64): 116 (116) leaks
-OS X (64): 79 (89) leaks
-Windows (XP): 120 (118) leaks
-</pre>
-</div>
-</figure>
-
-
-<p>Additionally, I filed <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=730797" title="Bug 730797 - Track number of DOMWindow/DocShell leaks and report improvements/regressions">bug 730797</a> to integrate these leaks statistics into our Talos infrastructure. So the leak count for each push will be recorded and compared to previous runs to make sure the numbers don’t regress. As the leak numbers differ quite heavily between OSes it makes sense to apply a custom threshold per OS, this will be implemented in <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=730800" title="Bug 730800 - Apply per-OS threshold for shutdown leaks">bug 730800</a>.</p>
-
-<h2>Why is there even a threshold?</h2>
-
-<p>First, there are DocShells and DOMWindows that are intentionally kept alive until the browser closes. Second, it’s nearly impossible to bring all these leaks down to “zero” at once. It’s a list of bugs that have to be addressed and we will slowly decrease the threshold to approach “zaroo”.</p>
-
-<p>Thanks to Dão who has been doing great work in <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=658738" title="Bug 658738 - (bc-leaks) [meta] We seem to be leaking hundreds of windows until shutdown during browser-chrome tests">bug 658738</a> discovering all those leaks manually, which in the first place gave me the idea of automating it.</p>
-
-</article>
-
-
-
 <div class="pager">
   
     <li class="next"><a href="/blog/page/2/" title="Older posts">Older posts &rarr;</a></li>
@@ -844,6 +1047,8 @@ Windows (XP): 120 (118) leaks
   <h1 class="sidebar-header">Recent posts</h1>
   <ul class="nav nav-list" id="recent-posts">
     
+      <li><a title="Stop. Iteration time!" href="/blog/2013/05/stop-iteration-time/">Stop. Iteration time!</a></li>
+    
       <li><a title="getUserMedia() part 3: simple motion detection in a live video" href="/blog/2013/02/getusermedia-part-3-simple-motion-detection-in-a-live-video/">getUserMedia() part 3: simple motion detection in a live video</a></li>
     
       <li><a title="Note to myself: Don't be lazy" href="/blog/2013/02/note-to-myself-dont-be-lazy/">Note to myself: Don't be lazy</a></li>
@@ -851,8 +1056,6 @@ Windows (XP): 120 (118) leaks
       <li><a title="getUserMedia() part 2: building an EyeToy-like mini-game" href="/blog/2012/10/getusermedia-part-2-building-an-eyetoy-like-mini-game/">getUserMedia() part 2: building an EyeToy-like mini-game</a></li>
     
       <li><a title="Building a live green screen with getUserMedia() and MediaStreams" href="/blog/2012/10/building-a-live-green-screen-with-getusermedia-and-mediastreams/">Building a live green screen with getUserMedia() and MediaStreams</a></li>
-    
-      <li><a title="Force Octopress/Jekyll to use a specific time zone" href="/blog/2012/09/force-octopress-jekyll-to-use-a-specific-time-zone/">Force Octopress/Jekyll to use a specific time zone</a></li>
     
   </ul>
 </section>
