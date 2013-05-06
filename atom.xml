@@ -4,7 +4,7 @@
   <title><![CDATA[Tim Taubert]]></title>
   <link href="http://timtaubert.de/atom.xml" rel="self"/>
   <link href="http://timtaubert.de/"/>
-  <updated>2013-05-06T13:38:02+02:00</updated>
+  <updated>2013-05-06T18:52:24+02:00</updated>
   <id>http://timtaubert.de/</id>
   <author>
     <name><![CDATA[Tim Taubert]]></name>
@@ -18,7 +18,14 @@
     <link href="http://timtaubert.de/blog/2013/05/working-with-infinite-sequences-in-javascript/"/>
     <updated>2013-05-06T12:00:00+02:00</updated>
     <id>http://timtaubert.de/blog/2013/05/working-with-infinite-sequences-in-javascript</id>
-    <content type="html"><![CDATA[<p>JavaScript comes with most of the little functional tools you need to work on
+    <content type="html"><![CDATA[<blockquote><p>Update: Please note that this post describes the current implementation in
+SpiderMonkey. The final
+<a href="http://wiki.ecmascript.org/doku.php?id=harmony:generators">ES6 specification</a>
+will require generator functions to have a &#8216;*&#8217; token as in <em>function* nat()
+{ &#8230; }</em>. The <em>flatten()</em> function from the last example could use <em>yield*</em> to
+delegate instead of a nested loop.</p></blockquote>
+
+<p>JavaScript comes with most of the little functional tools you need to work on
 finite sequences that are usually implemented using Arrays. Array.prototype
 includes a number of methods like <em>map()</em> and <em>filter()</em> that apply a given
 function to all items of the Array and return the resulting new Array.</p>
@@ -199,7 +206,8 @@ numbers from <em>mersenneNumbers()</em>.</p>
 
 <figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">flatten</span><span class="p">(</span><span class="nx">it</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">x</span> <span class="k">of</span> <span class="nx">it</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">x</span> <span class="o">===</span> <span class="s2">&quot;function&quot;</span> <span class="o">&amp;&amp;</span> <span class="nx">x</span><span class="p">.</span><span class="nx">isGenerator</span><span class="p">()))</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="o">===</span> <span class="s2">&quot;[object Generator]&quot;</span> <span class="o">||</span>
+        <span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">x</span><span class="p">))</span> <span class="p">{</span>
       <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">y</span> <span class="k">of</span> <span class="nx">flatten</span><span class="p">(</span><span class="nx">x</span><span class="p">))</span> <span class="p">{</span>
         <span class="k">yield</span> <span class="nx">y</span><span class="p">;</span>
       <span class="p">}</span>

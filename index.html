@@ -6,8 +6,8 @@
     <title>Tim Taubert - Mozillian. Open Source enthusiast. Loves programming languages.</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     
-    <meta name="description" content="Working with infinite sequences in JavaScript May, 6th 2013 JavaScript comes with most of the little functional tools you need to work on
-finite &hellip;">
+    <meta name="description" content="Working with infinite sequences in JavaScript May, 6th 2013 Update: Please note that this post describes the current implementation in
+SpiderMonkey &hellip;">
     <meta content="Tim Taubert" name="author">
     <link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700|PT+Sans" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/screen.css" media="screen" rel="stylesheet" type="text/css">
@@ -72,7 +72,14 @@ finite &hellip;">
 
 <time datetime="2013-05-06T12:00:00+02:00" pubdate data-updated="true">May, 6<span>th</span> 2013</time>
   </header>
-  <p>JavaScript comes with most of the little functional tools you need to work on
+  <blockquote><p>Update: Please note that this post describes the current implementation in
+SpiderMonkey. The final
+<a href="http://wiki.ecmascript.org/doku.php?id=harmony:generators">ES6 specification</a>
+will require generator functions to have a &#8216;*&#8217; token as in <em>function* nat()
+{ &#8230; }</em>. The <em>flatten()</em> function from the last example could use <em>yield*</em> to
+delegate instead of a nested loop.</p></blockquote>
+
+<p>JavaScript comes with most of the little functional tools you need to work on
 finite sequences that are usually implemented using Arrays. Array.prototype
 includes a number of methods like <em>map()</em> and <em>filter()</em> that apply a given
 function to all items of the Array and return the resulting new Array.</p>
@@ -253,7 +260,8 @@ numbers from <em>mersenneNumbers()</em>.</p>
 
 <figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">flatten</span><span class="p">(</span><span class="nx">it</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">x</span> <span class="k">of</span> <span class="nx">it</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">x</span> <span class="o">===</span> <span class="s2">&quot;function&quot;</span> <span class="o">&amp;&amp;</span> <span class="nx">x</span><span class="p">.</span><span class="nx">isGenerator</span><span class="p">()))</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="o">===</span> <span class="s2">&quot;[object Generator]&quot;</span> <span class="o">||</span>
+        <span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">x</span><span class="p">))</span> <span class="p">{</span>
       <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">y</span> <span class="k">of</span> <span class="nx">flatten</span><span class="p">(</span><span class="nx">x</span><span class="p">))</span> <span class="p">{</span>
         <span class="k">yield</span> <span class="nx">y</span><span class="p">;</span>
       <span class="p">}</span>
