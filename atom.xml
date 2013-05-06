@@ -4,7 +4,7 @@
   <title><![CDATA[Tim Taubert]]></title>
   <link href="http://timtaubert.de/atom.xml" rel="self"/>
   <link href="http://timtaubert.de/"/>
-  <updated>2013-05-03T19:06:22+02:00</updated>
+  <updated>2013-05-06T13:38:02+02:00</updated>
   <id>http://timtaubert.de/</id>
   <author>
     <name><![CDATA[Tim Taubert]]></name>
@@ -12,6 +12,235 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Working with infinite sequences in JavaScript]]></title>
+    <link href="http://timtaubert.de/blog/2013/05/working-with-infinite-sequences-in-javascript/"/>
+    <updated>2013-05-06T12:00:00+02:00</updated>
+    <id>http://timtaubert.de/blog/2013/05/working-with-infinite-sequences-in-javascript</id>
+    <content type="html"><![CDATA[<p>JavaScript comes with most of the little functional tools you need to work on
+finite sequences that are usually implemented using Arrays. Array.prototype
+includes a number of methods like <em>map()</em> and <em>filter()</em> that apply a given
+function to all items of the Array and return the resulting new Array.</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">].</span><span class="nx">map</span><span class="p">(</span><span class="nx">x</span> <span class="o">=&gt;</span> <span class="nx">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span> <span class="c1">// result: [2, 3, 4];</span>
+</pre></div></figure>
+
+
+<p>These tools however are not a good fit for infinite sequences as they always
+consume the whole sequence at once to return a new one. Implementing infinite
+sequences by yourself means you would have to come up with your own API that
+clients need to adhere to. You often would keep state variables whose values
+need to be maintained for the duration of the computation process.</p>
+
+<h2>Generators to the rescue</h2>
+
+<p>Using ES6
+<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Guide/Iterators_and_Generators">generators</a>
+implementing the infinite sequence of all natural numbers turns out to be a
+trivial task. We even have language support to iterate over them.</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">nat</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">yield</span> <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">it</span> <span class="o">=</span> <span class="nx">nat</span><span class="p">();</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">(),</span> <span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">(),</span> <span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">());</span> <span class="c1">// prints 1 2 3</span>
+</pre></div></figure>
+
+
+<p>Now that we have a first infinite set we need a couple of functions that help us
+working with, combining, and building new sequences.</p>
+
+<h2>Mapping</h2>
+
+<p>Let us start with <em>map()</em> - a function at the very heart of functional
+programming. It builds a new sequence by applying a function to all elements of
+a given sequence.</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">map</span><span class="p">(</span><span class="nx">it</span><span class="p">,</span> <span class="nx">f</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">x</span> <span class="k">of</span> <span class="nx">it</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">yield</span> <span class="nx">f</span><span class="p">(</span><span class="nx">x</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></figure>
+
+
+<p>Using the generator implementation of <em>map()</em> we can now easily write a function
+called <em>squares()</em> that represents the set of squares of all natural numbers
+(1², 2², 3², &#8230;, n²).</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">squares</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">map</span><span class="p">(</span><span class="nx">nat</span><span class="p">(),</span> <span class="nx">x</span> <span class="o">=&gt;</span> <span class="nx">x</span> <span class="o">*</span> <span class="nx">x</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">it</span> <span class="o">=</span> <span class="nx">squares</span><span class="p">();</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">(),</span> <span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">(),</span> <span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">());</span> <span class="c1">// prints 1 4 9</span>
+</pre></div></figure>
+
+
+<p>Using
+<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Statements/for...in">for&#8230;in</a>
+instead of
+<a href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Statements/for...of">for&#8230;of</a>
+works fine but using <em>of</em> has a neat advantage in that it properly iterates
+Arrays as well. If you want to map values of a finite sequence you can just do
+that.</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">var</span> <span class="nx">it</span> <span class="o">=</span> <span class="nx">map</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="nx">x</span> <span class="o">=&gt;</span> <span class="nx">x</span> <span class="o">*</span> <span class="nx">x</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">(),</span> <span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">(),</span> <span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">());</span> <span class="c1">// prints 1 4 9</span>
+</pre></div></figure>
+
+
+<h2>Filtering</h2>
+
+<p>Another common task is filtering specific values from a sequence. Our custom
+implementation of <em>filter()</em> takes an iterator and a predicate - the returned
+sequence will consist of all items of the original one for which the predicate
+holds.</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">filter</span><span class="p">(</span><span class="nx">it</span><span class="p">,</span> <span class="nx">f</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">x</span> <span class="k">of</span> <span class="nx">it</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">f</span><span class="p">(</span><span class="nx">x</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">yield</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></figure>
+
+
+<p>We can now use <em>filter()</em> to create the set of all even natural numbers.</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">even</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">filter</span><span class="p">(</span><span class="nx">nat</span><span class="p">(),</span> <span class="nx">x</span> <span class="o">=&gt;</span> <span class="nx">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">===</span> <span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">it</span> <span class="o">=</span> <span class="nx">even</span><span class="p">();</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">(),</span> <span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">(),</span> <span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">());</span> <span class="c1">// prints 2 4 6</span>
+</pre></div></figure>
+
+
+<p>A common derivation from <em>filter()</em> is <em>filterNot()</em> that simply negates the
+given predicate. We can use that to implement <em>even()</em> as well.</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">filterNot</span><span class="p">(</span><span class="nx">it</span><span class="p">,</span> <span class="nx">f</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">filter</span><span class="p">(</span><span class="nx">it</span><span class="p">,</span> <span class="nx">x</span> <span class="o">=&gt;</span> <span class="o">!</span><span class="nx">f</span><span class="p">(</span><span class="nx">x</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">even</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">filterNot</span><span class="p">(</span><span class="nx">nat</span><span class="p">(),</span> <span class="nx">x</span> <span class="o">=&gt;</span> <span class="nx">x</span> <span class="o">%</span> <span class="mi">2</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div></figure>
+
+
+<h2>Mersenne primes</h2>
+
+<p>Suppose we were to implement a sequence that represents all
+<a href="https://en.wikipedia.org/wiki/Mersenne_prime">Mersenne prime numbers</a>.
+Mersenne primes are defined as prime numbers of the form M<sub>n</sub> = 2<sup>n</sup> - 1,
+that is the set of all numbers of the given form that have no positive divisors
+other than 1 and themselves. The set of Mersenne primes is
+<a href="https://en.wikipedia.org/wiki/Lenstra%E2%80%93Pomerance%E2%80%93Wagstaff_conjecture">assumed to be infinite</a>
+though this remains unproven, yet.</p>
+
+<p>Let us first define some helper functions. <em>range(from, to)</em> and <em>forall()</em> are
+common helpers in functional programming languages. <em>range()</em> returns the set of
+natural numbers in a given range. <em>forall()</em> returns whether the given predicate
+holds for all items in the sequence and should therefore only be used for finite
+sequences.</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">range</span><span class="p">(</span><span class="nx">lo</span><span class="p">,</span> <span class="nx">hi</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">while</span> <span class="p">(</span><span class="nx">lo</span> <span class="o">&lt;=</span> <span class="nx">hi</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">yield</span> <span class="nx">lo</span><span class="o">++</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">forall</span><span class="p">(</span><span class="nx">it</span><span class="p">,</span> <span class="nx">f</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">x</span> <span class="k">of</span> <span class="nx">it</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">f</span><span class="p">(</span><span class="nx">x</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div></figure>
+
+
+<p><em>mersenneNumbers()</em> is the set of all numbers of the form M<sub>n</sub> = 2<sup>n</sup> - 1.
+<em>isPrime()</em> is a very simple and naive (and slow) primality checker that returns
+whether the given candidate is divisible by any of the numbers in the range of
+[2, candidate - 1]. We will use <em>isPrime()</em> as a filter to remove all non-prime
+numbers from <em>mersenneNumbers()</em>.</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">mersenneNumbers</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">map</span><span class="p">(</span><span class="nx">nat</span><span class="p">(),</span> <span class="nx">x</span> <span class="o">=&gt;</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">mersennePrimes</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">isPrime</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">forall</span><span class="p">(</span><span class="nx">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="nx">x</span> <span class="o">=&gt;</span> <span class="nx">n</span> <span class="o">%</span> <span class="nx">x</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">filter</span><span class="p">(</span><span class="nx">mersenneNumbers</span><span class="p">(),</span> <span class="nx">isPrime</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">it</span> <span class="o">=</span> <span class="nx">mersennePrimes</span><span class="p">();</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">(),</span> <span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">(),</span> <span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">());</span> <span class="c1">// prints 1 3 7</span>
+</pre></div></figure>
+
+
+<h2>Flattening</h2>
+
+<p>As a last example we will implement a function that flattens nested sequences.</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">flatten</span><span class="p">(</span><span class="nx">it</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">x</span> <span class="k">of</span> <span class="nx">it</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">x</span> <span class="o">===</span> <span class="s2">&quot;function&quot;</span> <span class="o">&amp;&amp;</span> <span class="nx">x</span><span class="p">.</span><span class="nx">isGenerator</span><span class="p">()))</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">y</span> <span class="k">of</span> <span class="nx">flatten</span><span class="p">(</span><span class="nx">x</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">yield</span> <span class="nx">y</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">yield</span> <span class="nx">x</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div></figure>
+
+
+<p>Note that using <em>for&#8230;of</em> comes in handy again as we can use it to iterate
+over Arrays and generators. Using <em>flatten()</em> we can now do:</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="nx">flatten</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[[</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">]]]);</span> <span class="c1">// result: [1, 2, 3, 4, 5]</span>
+</pre></div></figure>
+
+
+<p>Combining <em>flatten()</em> and <em>map()</em> to <em>flatMap()</em> we can implement another very
+common function that flattens the result of applying a given function to all
+items of a sequence. Let us use it to re-build the set of all natural numbers
+from the set of all even natural numbers.</p>
+
+<figure class='code'> <div class="highlight"><pre><span class="kd">function</span> <span class="nx">flatMap</span><span class="p">(</span><span class="nx">it</span><span class="p">,</span> <span class="nx">f</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">flatten</span><span class="p">(</span><span class="nx">map</span><span class="p">(</span><span class="nx">it</span><span class="p">,</span> <span class="nx">f</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">it</span> <span class="o">=</span> <span class="nx">flatMap</span><span class="p">(</span><span class="nx">even</span><span class="p">(),</span> <span class="nx">x</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="nx">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">x</span><span class="p">]);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">(),</span> <span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">(),</span> <span class="nx">it</span><span class="p">.</span><span class="nx">next</span><span class="p">());</span> <span class="c1">// prints 1 2 3</span>
+</pre></div></figure>
+
+
+<h2>Generators are powerful</h2>
+
+<p>It is quite obvious that studying ES6 generators really repays. They are a very
+powerful language construct and I personally cannot wait until they are
+available in V8/Node.js as well. They will be in the toolbox of every
+professional JavaScript developer soon and I am sure we can count on the
+community to come up with lots of great uses and libraries.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Stop. Iteration time!]]></title>
@@ -1269,21 +1498,6 @@ Startup time (after)   - 13.5s (avg)
 <h2>What’s next?</h2>
 
 <p>The next thing we probably should address is the hibernation of entire tab groups that haven’t been used for a while because there are lots of people out there who tend to never close their browsers (like me, yeah) – but that’s another bug.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Firefox Panorama: Sync Integration with the Add-on-SDK]]></title>
-    <link href="http://timtaubert.de/blog/2011/05/firefox-panorama-sync-integration-with-the-add-on-sdk/"/>
-    <updated>2011-05-19T17:53:00+02:00</updated>
-    <id>http://timtaubert.de/blog/2011/05/firefox-panorama-sync-integration-with-the-add-on-sdk</id>
-    <content type="html"><![CDATA[<p>Back in early April 2011 I started to write a small prototype add-on that allows to see tabs from your synchronized mobile devices as special groups in Panorama. While I’m not quite sure how these groups should behave (Should the be immutable? Should that synchronization be bi-directional?) it simply works as described.</p>
-
-<p>This serves as a good example on how to write extensions using the great Add-on SDK that combine the powers of Panorama and Sync. Feel free to ask me anything about it or just send some pull requests:</p>
-
-<p>GitHub: <a href="https://github.com/ttaubert/sync-for-panorama">https://github.com/ttaubert/sync-for-panorama</a></p>
-
-<p>As my time is pretty limited at the moment I would be really glad to see anyone pick up the development of <em>sync-for-panorama</em> or just build similar functionality. If that still doesn’t sound interesting then just be reminded of all the possibilities that extensions offer to you by connecting all these awesome features that are included in Firefox and realize your own ideas!</p>
 ]]></content>
   </entry>
   
