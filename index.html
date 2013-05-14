@@ -6,8 +6,8 @@
     <title>Tim Taubert - Mozillian. Open Source enthusiast. Loves programming languages.</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     
-    <meta name="description" content="Working with infinite sequences in JavaScript May, 6th 2013 Update: Please note that this post describes the current implementation in
-SpiderMonkey &hellip;">
+    <meta name="description" content="Scotland.JS 2013 in Edinburgh May, 14th 2013 I got to spend Wednesday through Friday in Edinburgh last week to attend
+Scotland.JS. Edinburgh is a &hellip;">
     <meta content="Tim Taubert" name="author">
     <link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700|PT+Sans" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/screen.css" media="screen" rel="stylesheet" type="text/css">
@@ -50,6 +50,75 @@ SpiderMonkey &hellip;">
         <section>
           <h1 class="hidden">Content</h1>
           
+
+
+  <article class="post">
+  <header class="article-header">
+    
+      <h1><a href="/blog/2013/05/scotland-js-2013-in-edinburgh/" title="Scotland.JS 2013 in Edinburgh">Scotland.JS 2013 in Edinburgh</a></h1>
+    
+    
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2013-05-14T08:00:00+02:00" pubdate data-updated="true">May, 14<span>th</span> 2013</time>
+  </header>
+  <p>I got to spend Wednesday through Friday in Edinburgh last week to attend
+<a href="http://www.scotlandjs.com/">Scotland.JS</a>. Edinburgh is a lovely city and I will
+definitely return to get to know it better. It has great people, beers, food and
+even a castle - what could one want more?</p>
+
+<p>I arrived on Wednesday, just in time for the
+<a href="http://techmeetup.co.uk/">TechMeetup</a>. It took place in the Appleton Tower and
+had about 70-80 attendees with quite diverse technical backgrounds. I had a very
+interesting talk to a freelance patent attorney and also met a couple of people
+I knew from recent conferences and meetups in Berlin. After we were out of free
+pizza and beers we met most of the Scotland.JS attendees in a pub right next to
+the Appleton Tower. Cue more beers and tech conversations.</p>
+
+<p>Thursday was the first day of Scotland.JS that started with
+<a href="http://decadecity.net/blog/2013/05/09/jan-lehnardt-scotlandjs-opening-keynote">a great keynote</a>
+from <a href="https://twitter.com/janl">Jan Lehnardt</a>. The most memorable talk of the
+day was about
+<a href="http://decadecity.net/blog/2013/05/09/philip-roberts-enemy-state-introduction-functional-reactive-programming-and-baconjs">Functional Reactive Programming using Bacon.js</a>
+by <a href="https://twitter.com/philip_roberts">Philip Roberts</a>. There of course were a
+lot more great talks but the possibilities of creating and combining event
+streams kept my head spinning the most. At the end of the day we again went to a
+neat pub near the venue and I headed to bed rather early, still a little tired
+from travel and the day before.</p>
+
+<p><img src="/images/scotlandjs.jpg" title="Scotland.JS organizer Peter Aitken on stage" ></p>
+
+<p>Friday started with a short 20-minute walk through Edinburgh&#8217;s old town that I
+needed to pass on my way to the venue. My favorite talk of the second and last
+day was held by <a href="https://twitter.com/dominictarr">Dominic Tarr</a> that tought us
+about
+<a href="http://decadecity.net/blog/2013/05/10/dominic-tarr-database-future-leveldb">the internals of leveldb</a>.
+I also really enjoyed <a href="https://twitter.com/maboa">Mark Boas</a> talking about
+<a href="http://happyworm.com/slides/scotlandjs2013/">making audio a first-class citizen of the web</a>
+- a very entertaining and impressive mix of technologies. A GitHub drinkup in
+the venue&#8217;s own pub was a great way to end the conference - lots of good
+conversations with Scotland.JS attendees and speakers as well as people from the
+local tech community and visitors of the Scottish Ruby Conf.</p>
+
+<p>I flew home the very next day and already miss Edinburgh with its neat little
+alleys and pubs everywhere. The JavaScript community has once again shown its
+value as a very interesting mix of nice welcoming people coming from so many
+different technical backgrounds. Like after most conferences I feel a little
+exhausted and my head is full of ideas for future or current (side-)projects. I
+will try my best to return next year, it has been a lot of fun!</p>
+
+</article>
+
 
 
   <article class="post">
@@ -1207,50 +1276,6 @@ regressions until it is ready for prime time.</p>
 
 
 
-  <article class="post">
-  <header class="article-header">
-    
-      <h1><a href="/blog/2012/04/are-we-small-yet/" title="Are we small, yet?">Are we small, yet?</a></h1>
-    
-    
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2012-04-11T00:22:00+02:00" pubdate data-updated="true">April, 11<span>th</span> 2012</time>
-  </header>
-  <p>Lately, <a href="http://weblogs.mozillazine.org/asa/">Asa Dotzler</a> <a href="https://groups.google.com/forum/#!topic/mozilla.dev.apps.firefox/k7fzkhdt9io">posted to dev.apps.firefox</a> regarding the download size of Firefox:</p>
-
-<blockquote><p>This evening I noticed that my full win32 mar update for Firefox was 21MB. That caused me to look at what our full win32 installer size was. I was a bit surprised to see it’s up to 17MB. When we shipped Firefox 1, our Windows installer build was 4.7MB. [&#8230;]</p>
-
-<p>Firefox 12 is a 16.1 MB download.
-Firefox 4 was a 12.0 MB download.
-Firefox 3.6 was a 7.7 MB download.</p>
-
-<p>In less than three years we’ve more than doubled in size. (fuller chart here <a href="http://grab.by/cSHA">http://grab.by/cSHA</a>)</p></blockquote>
-
-<p>While there’s no doubt that adding new features and supporting new platforms are good reasons for increasing the build size it’s definitely a metric that impacts users. It hits them the hardest when downloading Firefox the first time, especially with slow internet connections. It still hits them every time we provide application updates.</p>
-
-<p>To better illustrate the steady growth over the last few years I created <a href="http://www.arewesmallyet.com/">http://www.arewesmallyet.com/</a>. It’s updated daily, shows differences between nightly builds and links to the corresponding changelog if one would like to investigate the cause of increasing build sizes.</p>
-
-<p><img src="/images/arewesmallyet.png" title="Screenshot of arewesmallyet.com" ></p>
-
-<p>While this surely isn’t the most important battle we have right now I hope this will turn out useful to anyone willing to pick this up and tackle some build size optimizations.</p>
-
-<p>GitHub: <a href="https://github.com/ttaubert/arewesmallyet">https://github.com/ttaubert/arewesmallyet</a></p>
-
-</article>
-
-
-
 <div class="pager">
   
     <li class="next"><a href="/blog/page/2/" title="Older posts">Older posts &rarr;</a></li>
@@ -1266,6 +1291,8 @@ Firefox 3.6 was a 7.7 MB download.</p>
   <h1 class="sidebar-header">Recent posts</h1>
   <ul class="nav nav-list" id="recent-posts">
     
+      <li><a title="Scotland.JS 2013 in Edinburgh" href="/blog/2013/05/scotland-js-2013-in-edinburgh/">Scotland.JS 2013 in Edinburgh</a></li>
+    
       <li><a title="Working with infinite sequences in JavaScript" href="/blog/2013/05/working-with-infinite-sequences-in-javascript/">Working with infinite sequences in JavaScript</a></li>
     
       <li><a title="Stop. Iteration time!" href="/blog/2013/05/stop-iteration-time/">Stop. Iteration time!</a></li>
@@ -1273,8 +1300,6 @@ Firefox 3.6 was a 7.7 MB download.</p>
       <li><a title="getUserMedia() part 3: simple motion detection in a live video" href="/blog/2013/02/getusermedia-part-3-simple-motion-detection-in-a-live-video/">getUserMedia() part 3: simple motion detection in a live video</a></li>
     
       <li><a title="Note to myself: Don't be lazy" href="/blog/2013/02/note-to-myself-dont-be-lazy/">Note to myself: Don't be lazy</a></li>
-    
-      <li><a title="getUserMedia() part 2: building an EyeToy-like mini-game" href="/blog/2012/10/getusermedia-part-2-building-an-eyetoy-like-mini-game/">getUserMedia() part 2: building an EyeToy-like mini-game</a></li>
     
   </ul>
 </section>

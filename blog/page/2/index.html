@@ -6,7 +6,7 @@
     <title>Tim Taubert - Mozillian. Open Source enthusiast. Loves programming languages.</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     
-    <meta name="description" content="One year at Mozilla April, 9th 2012 You may already know the story of how I became a Firefox contributor. Back in early April of 2011, having &hellip;">
+    <meta name="description" content="Are we small, yet? April, 11th 2012 Lately, Asa Dotzler posted to dev.apps.firefox regarding the download size of Firefox: This evening I noticed &hellip;">
     <meta content="Tim Taubert" name="author">
     <link href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700|PT+Sans" media="screen" rel="stylesheet" type="text/css" />
     <link href="/stylesheets/screen.css" media="screen" rel="stylesheet" type="text/css">
@@ -49,6 +49,50 @@
         <section>
           <h1 class="hidden">Content</h1>
           
+
+
+  <article class="post">
+  <header class="article-header">
+    
+      <h1><a href="/blog/2012/04/are-we-small-yet/" title="Are we small, yet?">Are we small, yet?</a></h1>
+    
+    
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2012-04-11T00:22:00+02:00" pubdate data-updated="true">April, 11<span>th</span> 2012</time>
+  </header>
+  <p>Lately, <a href="http://weblogs.mozillazine.org/asa/">Asa Dotzler</a> <a href="https://groups.google.com/forum/#!topic/mozilla.dev.apps.firefox/k7fzkhdt9io">posted to dev.apps.firefox</a> regarding the download size of Firefox:</p>
+
+<blockquote><p>This evening I noticed that my full win32 mar update for Firefox was 21MB. That caused me to look at what our full win32 installer size was. I was a bit surprised to see it’s up to 17MB. When we shipped Firefox 1, our Windows installer build was 4.7MB. [&#8230;]</p>
+
+<p>Firefox 12 is a 16.1 MB download.
+Firefox 4 was a 12.0 MB download.
+Firefox 3.6 was a 7.7 MB download.</p>
+
+<p>In less than three years we’ve more than doubled in size. (fuller chart here <a href="http://grab.by/cSHA">http://grab.by/cSHA</a>)</p></blockquote>
+
+<p>While there’s no doubt that adding new features and supporting new platforms are good reasons for increasing the build size it’s definitely a metric that impacts users. It hits them the hardest when downloading Firefox the first time, especially with slow internet connections. It still hits them every time we provide application updates.</p>
+
+<p>To better illustrate the steady growth over the last few years I created <a href="http://www.arewesmallyet.com/">http://www.arewesmallyet.com/</a>. It’s updated daily, shows differences between nightly builds and links to the corresponding changelog if one would like to investigate the cause of increasing build sizes.</p>
+
+<p><img src="/images/arewesmallyet.png" title="Screenshot of arewesmallyet.com" ></p>
+
+<p>While this surely isn’t the most important battle we have right now I hope this will turn out useful to anyone willing to pick this up and tackle some build size optimizations.</p>
+
+<p>GitHub: <a href="https://github.com/ttaubert/arewesmallyet">https://github.com/ttaubert/arewesmallyet</a></p>
+
+</article>
+
 
 
   <article class="post">
@@ -593,101 +637,6 @@ target - the browser associated with the content that this
 
 
 
-  <article class="post">
-  <header class="article-header">
-    
-      <h1><a href="/blog/2011/05/firefox-panorama-deferred-loading-of-inactive-groups/" title="Firefox Panorama: Deferred loading of inactive groups">Firefox Panorama: Deferred loading of inactive groups</a></h1>
-    
-    
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2011-05-20T17:59:00+02:00" pubdate data-updated="true">May, 20<span>th</span> 2011</time>
-  </header>
-  <p>Starting with tomorrow’s Nightly hidden tabs are not anymore restored by default when starting Firefox. That means tabs from inactive Panorama groups will not load until these groups/tabs are shown. Finally we have a part of the behavior everyone actually expects when using Panorama.</p>
-
-<p>If you have lots of tabs and tab groups like me (~120 tabs in 12 groups) the landing of <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=595601" title="Bug 595601 - Option to not load tabs from inactive groups on initial browser startup (and until such time as the tab(s) become part of an active group)">bug 595601</a> for Firefox 6 is going to be a huge win in terms of (perceived) startup speed and memory usage. But let’s check the numbers.</p>
-
-<p><img src="/images/panorama.png" title="Screenshot of Panorama with lots of groups" ></p>
-
-<h2>Memory Usage (with hidden tabs restored)</h2>
-
-<p>Remember: all tabs are restored and rendered regardless of whether they’re hidden or not. JavaScripts, plugins and the like are executed, too.</p>
-
-<figure class='code'> <div class="highlight"><pre>Mapped Memory
-2,066.92 MB (100.0%) -- mapped
-├──1,288.00 MB (62.31%) -- heap
-├────679.80 MB (32.89%) -- other
-└─────99.12 MB (04.80%) -- js
-├──94.49 MB (04.57%) -- mjit-code
-└───4.63 MB (00.22%) -- tjit-code
-
-Used Heap Memory
-1,264.93 MB (100.0%) -- heap-used
-├────574.40 MB (45.41%) -- other
-├────405.63 MB (32.07%) -- js
-├────199.56 MB (15.78%) -- images
-├─────61.39 MB (04.85%) -- layout
-├─────21.25 MB (01.68%) -- storage
-└──────2.70 MB (00.21%) -- gfx
-└──2.70 MB (00.21%) -- surface
-└──2.70 MB (00.21%) -- image
-</pre></div></figure>
-
-
-<h2>Memory Usage (no hidden tabs restored)</h2>
-
-<p>The tabs are technically still present but haven’t been restored and therefore they’re not loaded or rendered and no JavaScripts and plugins are executed until they’re shown.</p>
-
-<figure class='code'> <div class="highlight"><pre>Mapped Memory
-920.39 MB (100.0%) -- mapped
-├──586.25 MB (63.70%) -- other
-├──317.00 MB (34.44%) -- heap
-└───17.14 MB (01.86%) -- js
-├──16.52 MB (01.79%) -- mjit-code
-└───0.63 MB (00.07%) -- tjit-code
-
-Used Heap Memory
-283.59 MB (100.0%) -- heap-used
-├──146.84 MB (51.78%) -- other
-├──119.16 MB (42.02%) -- js
-├────6.74 MB (02.38%) -- layout
-├────5.40 MB (01.91%) -- storage
-├────5.33 MB (01.88%) -- images
-└────0.12 MB (00.04%) -- (1 omitted)
-</pre></div></figure>
-
-
-<h2>Startup Time</h2>
-
-<p>When we would try to measure startup times with <a href="https://addons.mozilla.org/en-US/firefox/addon/about-startup/">about:startup</a> we would probably see no big difference. This is because the patch does not change how the whole session is restored but when every single tab is. So our visible tabs get restored a bit faster and they are earlier available for user interaction (because no tab in the background disturbs with network or CPU usage). Bonus: hidden tabs with auto-play stuff can’t annoy you anymore (looking at you, Youtube!).</p>
-
-<p>The test setup includes a visible group (out of 12) with 4 normal tabs (out of 120) and 4 pinned tabs (including Google Groups, Twitter and Facebook). I simply started the timer when I could see the browser window and stopped it when every visible tab finished loading.</p>
-
-<figure class='code'> <div class="highlight"><pre>Startup time (before)  - 17.5s (avg)
-Startup time (after)   - 13.5s (avg)
-</pre></div></figure>
-
-
-<p>We only see a small win here but that’s no surprise as the session restore component already does a pretty clever job in prioritizing visible tabs higher than hidden tabs and we have also a lot of prioritization at networking level.</p>
-
-<h2>What’s next?</h2>
-
-<p>The next thing we probably should address is the hibernation of entire tab groups that haven’t been used for a while because there are lots of people out there who tend to never close their browsers (like me, yeah) – but that’s another bug.</p>
-
-</article>
-
-
-
 <div class="pager">
   
     <li class="next"><a href="/blog/page/3/" title="Older posts">Older posts &rarr;</a></li>
@@ -705,6 +654,8 @@ Startup time (after)   - 13.5s (avg)
   <h1 class="sidebar-header">Recent posts</h1>
   <ul class="nav nav-list" id="recent-posts">
     
+      <li><a title="Scotland.JS 2013 in Edinburgh" href="/blog/2013/05/scotland-js-2013-in-edinburgh/">Scotland.JS 2013 in Edinburgh</a></li>
+    
       <li><a title="Working with infinite sequences in JavaScript" href="/blog/2013/05/working-with-infinite-sequences-in-javascript/">Working with infinite sequences in JavaScript</a></li>
     
       <li><a title="Stop. Iteration time!" href="/blog/2013/05/stop-iteration-time/">Stop. Iteration time!</a></li>
@@ -712,8 +663,6 @@ Startup time (after)   - 13.5s (avg)
       <li><a title="getUserMedia() part 3: simple motion detection in a live video" href="/blog/2013/02/getusermedia-part-3-simple-motion-detection-in-a-live-video/">getUserMedia() part 3: simple motion detection in a live video</a></li>
     
       <li><a title="Note to myself: Don't be lazy" href="/blog/2013/02/note-to-myself-dont-be-lazy/">Note to myself: Don't be lazy</a></li>
-    
-      <li><a title="getUserMedia() part 2: building an EyeToy-like mini-game" href="/blog/2012/10/getusermedia-part-2-building-an-eyetoy-like-mini-game/">getUserMedia() part 2: building an EyeToy-like mini-game</a></li>
     
   </ul>
 </section>
