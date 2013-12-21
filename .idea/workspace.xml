@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7f21192e-77df-465f-a1b7-2f5bdde51415" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/skin-detection/index.html" afterPath="$PROJECT_DIR$/skin-detection/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/skin-detection/main.js" afterPath="$PROJECT_DIR$/skin-detection/main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="msw.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -30,7 +28,16 @@
       <file leaf-file-name="main.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/skin-detection/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="75" column="8" selection-start="2278" selection-end="2278" vertical-scroll-proportion="0.8508287" vertical-offset="355" max-vertical-offset="1290">
+            <state line="89" column="75" selection-start="3052" selection-end="3052" vertical-scroll-proportion="0.519337" vertical-offset="865" max-vertical-offset="1770">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/motion-detection/main.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="38" column="26" selection-start="886" selection-end="906" vertical-scroll-proportion="0.0" vertical-offset="430" max-vertical-offset="1395">
               <folding />
             </state>
           </provider>
@@ -153,6 +160,20 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="msw" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="msw" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="motion-detection" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
@@ -265,6 +286,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/motion-detection/main.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="38" column="26" selection-start="886" selection-end="906" vertical-scroll-proportion="0.0" vertical-offset="430" max-vertical-offset="1395">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/skin-detection/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="15" column="26" selection-start="478" selection-end="478" vertical-scroll-proportion="-9.375" vertical-offset="0" max-vertical-offset="435">
@@ -276,7 +304,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/skin-detection/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="75" column="8" selection-start="2278" selection-end="2278" vertical-scroll-proportion="0.8508287" vertical-offset="355" max-vertical-offset="1290">
+        <state line="89" column="75" selection-start="3052" selection-end="3052" vertical-scroll-proportion="0.519337" vertical-offset="865" max-vertical-offset="1770">
           <folding />
         </state>
       </provider>

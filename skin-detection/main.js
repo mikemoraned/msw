@@ -1,7 +1,7 @@
 (function (doc, nav) {
     "use strict";
 
-    var video, width, height, zeroResponseContext, logOpponentContexts = {};
+    var video, width, height, zeroResponseContext, logOpponentBuffers = {}, logOpponentContexts = {};
     var bufidx = 0, buffers = [];
 
     function initialize() {
@@ -10,9 +10,14 @@
         width = video.width;
         height = video.height;
 
-        // The target canvases.
+        // zero response
         var zeroResponseCanvas = doc.getElementById("zero-response-adjusted");
         zeroResponseContext = zeroResponseCanvas.getContext("2d");
+
+        // log opponent
+        logOpponentBuffers['i'] = new Uint8Array(width * height);
+        logOpponentBuffers['rg'] = new Uint8Array(width * height);
+        logOpponentBuffers['by'] = new Uint8Array(width * height);
 
         logOpponentContexts['i'] = doc.getElementById("log-opponent-i").getContext("2d");
         logOpponentContexts['rg'] = doc.getElementById("log-opponent-rg").getContext("2d");
@@ -34,8 +39,10 @@
         var frame = readFrame();
 
         if (frame) {
-          zeroResponseAdjust(frame.data);
-          zeroResponseContext.putImageData(frame, 0, 0);
+            zeroResponseAdjust(frame.data);
+            zeroResponseContext.putImageData(frame, 0, 0);
+            convertToLogOpponent(frame.data, logOpponentBuffers);
+            visualiseLogOpponent(logOpponentBuffers, logOpponentContexts);
         }
 
         // Wait for the next frame.
@@ -76,5 +83,30 @@
         removeOffsets(data, minimums);
     }
 
-  addEventListener("DOMContentLoaded", initialize);
+    function convertToLogOpponent(data, logOpponentBuffers) {
+        for (var i = 0; i < data.length; i+= 4) {
+            logOpponentBuffers['i'][i / 4] = (Math.random() * 0.3) * 254.0;
+            logOpponentBuffers['rg'][i / 4] = ((Math.random() * 0.3) + 0.3) * 254.0;
+            logOpponentBuffers['by'][i / 4] = ((Math.random() * 0.3) + 0.6) * 254.0;
+        }
+    }
+
+    function visualiseLogOpponent(logOpponentBuffers, logOpponentContexts)
+    {
+        var parts = ['i','rg','by'];
+        parts.forEach(function(part) {
+            var context = logOpponentContexts[part];
+            var image = context.createImageData(width, height);
+            var data = image.data;
+            for (var i = 0; i < data.length; i+= 4) {
+                var value = logOpponentBuffers[part][i / 4];
+                data[i] = data[i + 1] = data[i + 2] = value;
+                data[i + 3] = 255;
+            }
+            context.putImageData(image, 0, 0);
+//            context.fillRect(10, 10, width - 20, height - 20);
+        });
+    }
+
+    addEventListener("DOMContentLoaded", initialize);
 })(document, navigator);
