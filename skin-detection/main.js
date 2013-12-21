@@ -84,10 +84,24 @@
     }
 
     function convertToLogOpponent(data, logOpponentBuffers) {
+        function logBase10(x) {
+            return Math.log(x) / Math.log(10);
+        }
+        function noise() {
+            return Math.random();
+        }
+        function L(x) {
+            return 105*logBase10(x+1+noise());
+        }
+
         for (var i = 0; i < data.length; i+= 4) {
-            logOpponentBuffers['i'][i / 4] = (Math.random() * 0.3) * 254.0;
-            logOpponentBuffers['rg'][i / 4] = ((Math.random() * 0.3) + 0.3) * 254.0;
-            logOpponentBuffers['by'][i / 4] = ((Math.random() * 0.3) + 0.6) * 254.0;
+            var index = i / 4;
+            var r = data[i];
+            var g = data[i+1];
+            var b = data[i+2];
+            logOpponentBuffers['i'][index] = L(g);
+            logOpponentBuffers['rg'][index] = L(r) - L(g);
+            logOpponentBuffers['by'][index] = L(b) - (L(g) + L(r))/2.0;
         }
     }
 
