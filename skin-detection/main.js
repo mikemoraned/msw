@@ -142,6 +142,9 @@
                 data[i + 3] = 255;
             }
             context.putImageData(image, 0, 0);
+            context.fillStyle = "white";
+            context.font="20px Georgia";
+            context.fillText(JSON.stringify(bounds), 5, height - 5);
 //            context.fillRect(10, 10, width - 20, height - 20);
         }
 
