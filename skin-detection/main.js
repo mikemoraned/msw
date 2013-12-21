@@ -1,53 +1,57 @@
 (function (doc, nav) {
-  "use strict";
+    "use strict";
 
-  var video, width, height, context;
-  var bufidx = 0, buffers = [];
+    var video, width, height, zeroResponseContext, logOpponentContexts = {};
+    var bufidx = 0, buffers = [];
 
-  function initialize() {
-    // The source video.
-    video = doc.getElementById("v");
-    width = video.width;
-    height = video.height;
+    function initialize() {
+        // The source video.
+        video = doc.getElementById("v");
+        width = video.width;
+        height = video.height;
 
-    // The target canvases.
-    var canvas = doc.getElementById("zero-response-adjusted");
-    context = canvas.getContext("2d");
+        // The target canvases.
+        var zeroResponseCanvas = doc.getElementById("zero-response-adjusted");
+        zeroResponseContext = zeroResponseCanvas.getContext("2d");
 
-    // Get the webcam's stream.
-    nav.getUserMedia({video: true}, startStream, function () {});
-  }
+        logOpponentContexts['i'] = doc.getElementById("log-opponent-i").getContext("2d");
+        logOpponentContexts['rg'] = doc.getElementById("log-opponent-rg").getContext("2d");
+        logOpponentContexts['by'] = doc.getElementById("log-opponent-by").getContext("2d");
 
-  function startStream(stream) {
-    video.src = URL.createObjectURL(stream);
-    video.play();
-
-    // Ready! Let's start drawing.
-    requestAnimationFrame(draw);
-  }
-
-  function draw() {
-    var frame = readFrame();
-
-    if (frame) {
-      zeroResponseAdjust(frame.data);
-      context.putImageData(frame, 0, 0);
+        // Get the webcam's stream.
+        nav.getUserMedia({video: true}, startStream, function () {});
     }
 
-    // Wait for the next frame.
-    requestAnimationFrame(draw);
-  }
+    function startStream(stream) {
+        video.src = URL.createObjectURL(stream);
+        video.play();
 
-  function readFrame() {
-    try {
-      context.drawImage(video, 0, 0, width, height);
-    } catch (e) {
-      // The video may not be ready, yet.
-      return null;
+        // Ready! Let's start drawing.
+        requestAnimationFrame(draw);
     }
 
-    return context.getImageData(0, 0, width, height);
-  }
+    function draw() {
+        var frame = readFrame();
+
+        if (frame) {
+          zeroResponseAdjust(frame.data);
+          zeroResponseContext.putImageData(frame, 0, 0);
+        }
+
+        // Wait for the next frame.
+        requestAnimationFrame(draw);
+    }
+
+    function readFrame() {
+        try {
+          zeroResponseContext.drawImage(video, 0, 0, width, height);
+        } catch (e) {
+          // The video may not be ready, yet.
+          return null;
+        }
+
+        return zeroResponseContext.getImageData(0, 0, width, height);
+    }
 
     function findRGBMinimums(data) {
         var minimums = [ data[0], data[1], data[2] ];
@@ -68,9 +72,9 @@
     }
 
     function zeroResponseAdjust(data) {
-      var minimums = findRGBMinimums(data);
-      removeOffsets(data, minimums);
-  }
+        var minimums = findRGBMinimums(data);
+        removeOffsets(data, minimums);
+    }
 
   addEventListener("DOMContentLoaded", initialize);
 })(document, navigator);
