@@ -10,14 +10,9 @@
     width = video.width;
     height = video.height;
 
-    // The target canvas.
-    var canvas = doc.getElementById("c");
+    // The target canvases.
+    var canvas = doc.getElementById("zero-response-adjusted");
     context = canvas.getContext("2d");
-
-    // Prepare buffers to store lightness data.
-    for (var i = 0; i < 2; i++) {
-      buffers.push(new Uint8Array(width * height));
-    }
 
     // Get the webcam's stream.
     nav.getUserMedia({video: true}, startStream, function () {});
@@ -35,7 +30,7 @@
     var frame = readFrame();
 
     if (frame) {
-      markLightnessChanges(frame.data);
+      zeroResponseAdjust(frame.data);
       context.putImageData(frame, 0, 0);
     }
 
@@ -54,33 +49,27 @@
     return context.getImageData(0, 0, width, height);
   }
 
-  function markLightnessChanges(data) {
-    // Pick the next buffer (round-robin).
-    var buffer = buffers[bufidx++ % buffers.length];
-
-    for (var i = 0, j = 0; i < buffer.length; i++, j += 4) {
-      // Determine lightness value.
-      var current = lightnessValue(data[j], data[j + 1], data[j + 2]);
-
-      // Set color to black.
-      data[j] = data[j + 1] = data[j + 2] = 0;
-
-      // Full opacity for changes.
-      data[j + 3] = 255 * lightnessHasChanged(i, current);
-
-      // Store current lightness value.
-      buffer[i] = current;
+    function findRGBMinimums(data) {
+        var minimums = [ data[0], data[1], data[2] ];
+        for (var i = 0; i < data.length; i+= 4) {
+            for (var j = 0; j < minimums.length; j++) {
+                minimums[j] = Math.min(minimums[j], data[i + j]);
+            }
+        }
+        return minimums;
     }
-  }
 
-  function lightnessHasChanged(index, value) {
-    return buffers.some(function (buffer) {
-      return Math.abs(value - buffer[index]) >= 15;
-    });
-  }
+    function removeOffsets(data, minimums) {
+        for (var i = 0; i < data.length; i+= 4) {
+            for (var j = 0; j < minimums.length; j++) {
+                data[i + j] = data[i + j] - minimums[j];
+            }
+        }
+    }
 
-  function lightnessValue(r, g, b) {
-    return (Math.min(r, g, b) + Math.max(r, g, b)) / 255 * 50;
+    function zeroResponseAdjust(data) {
+      var minimums = findRGBMinimums(data);
+      removeOffsets(data, minimums);
   }
 
   addEventListener("DOMContentLoaded", initialize);
