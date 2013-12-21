@@ -152,26 +152,31 @@
         });
     }
 
+    function hue(i, logOpponentBuffers) {
+        var rg = logOpponentBuffers['rg'][i];
+        var by = logOpponentBuffers['by'][i];
+        return Math.atan2(rg, by);
+    }
+    function saturation (i, logOpponentBuffers) {
+        var rg = logOpponentBuffers['rg'][i];
+        var by = logOpponentBuffers['by'][i];
+        return Math.sqrt(Math.pow(rg, 2.0) + Math.pow(by, 2.0));
+    }
+    function between(value, lower, upper) {
+        return (value >= lower) && (value <= upper);
+    }
+
     function detectSkin(logOpponentBuffers, skinBuffer) {
-        function hue(i, logOpponentBuffers) {
-            return Math.atan(logOpponentBuffers['rg'][i], logOpponentBuffers['by'][i]);
-        }
-        function saturation (i, logOpponentBuffers) {
-            return Math.sqrt(
-                Math.pow(logOpponentBuffers['rg'][i], 2.0)
-                + Math.pow(logOpponentBuffers['by'][i], 2.0));
-        }
-        function between(value, lower, upper) {
-            return (value >= lower) && (value <= upper);
-        }
         function skin(i, logOpponentBuffers) {
 //            if (logOpponentBuffers['i'][i] <= 5) {
                 var h = hue(i, logOpponentBuffers);
                 var s = saturation(i, logOpponentBuffers);
-                return (between(h, 110, 150) && between(s, 20, 60))
-                    || (between(h, 130, 170) && between(s, 30, 130));
+//                return (between(h, 110, 150) && between(s, 20, 60))
+//                    || (between(h, 130, 170) && between(s, 30, 130));
 //            return between(s, 20, 60)
 //                || between(s, 30, 130);
+            return (between(s, 20, 60))
+                || (between(s, 30, 130));
 //            }
 //            else {
 //                return false;
