@@ -145,12 +145,6 @@
         };
     }
 
-    function rescale(v, inMin, inMax, outMin, outMax) {
-        var inRange = inMax - inMin;
-        var outRange = outMax - outMin;
-        return outMin + (((v - inMin) / inRange) * outRange);
-    }
-
     function visualiseRange(buffer, context) {
         var bounds = findBounds(buffer);
         var image = context.createImageData(width, height);
@@ -179,10 +173,14 @@
         });
     }
 
+    function radiansToDegrees(radians) {
+        return radians * 180.0 / Math.PI;
+    }
+
     function hue(i, logOpponentBuffers) {
         var rg = logOpponentBuffers['rg'][i];
         var by = logOpponentBuffers['by'][i];
-        return rescale(Math.atan2(rg, by), -1.0 * Math.PI, Math.PI, 0, 255);
+        return radiansToDegrees(Math.atan2(rg, by));
     }
 
     function createHue(logOpponentBuffers, hueBuffer) {
