@@ -29,9 +29,9 @@
         logOpponentContexts['by'] = doc.getElementById("log-opponent-by").getContext("2d");
 
         // hue, saturation
-        hueBuffer = new Int16Array(width * height);
+        hueBuffer = new Float32Array(width * height);
         hueContext = doc.getElementById("hue").getContext("2d");
-        saturationBuffer = new Int16Array(width * height);
+        saturationBuffer = new Float32Array(width * height);
         saturationContext = doc.getElementById("saturation").getContext("2d");
 
         // candidate skin pixels
@@ -145,6 +145,12 @@
         };
     }
 
+    function rescale(v, inMin, inMax, outMin, outMax) {
+        var inRange = inMax - inMin;
+        var outRange = outMax - outMin;
+        return outMin + (((v - inMin) / inRange) * outRange);
+    }
+
     function visualiseRange(buffer, context) {
         var bounds = findBounds(buffer);
         var image = context.createImageData(width, height);
@@ -176,7 +182,7 @@
     function hue(i, logOpponentBuffers) {
         var rg = logOpponentBuffers['rg'][i];
         var by = logOpponentBuffers['by'][i];
-        return Math.atan2(rg, by);
+        return rescale(Math.atan2(rg, by), -1.0 * Math.PI, Math.PI, 0, 255);
     }
 
     function createHue(logOpponentBuffers, hueBuffer) {
@@ -203,13 +209,13 @@
 
     function detectSkin(intensityBuffer, hueBuffer, saturationBuffer, skinBuffer) {
         function skin(intensity, hue, saturation) {
-            if (intensity <= 5) {
+//            if (intensity <= 5) {
                 return (between(hue, 110, 150) && between(saturation, 20, 60))
                     || (between(hue, 130, 170) && between(saturation, 30, 130));
-            }
-            else {
-                return false;
-            }
+//            }
+//            else {
+//                return false;
+//            }
         }
 
         for (var i = 0; i < logOpponentBuffers['i'].length; i++) {
