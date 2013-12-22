@@ -4,6 +4,8 @@
     var video, width, height,
         zeroResponseContext,
         logOpponentBuffers = {}, logOpponentContexts = {},
+        hueBuffer, hueContext,
+        saturationBuffer, saturationContext,
         skinBuffer, skinContext;
     var bufidx = 0, buffers = [];
 
@@ -25,6 +27,12 @@
         logOpponentContexts['i'] = doc.getElementById("log-opponent-i").getContext("2d");
         logOpponentContexts['rg'] = doc.getElementById("log-opponent-rg").getContext("2d");
         logOpponentContexts['by'] = doc.getElementById("log-opponent-by").getContext("2d");
+
+        // hue, saturation
+        hueBuffer = new Int16Array(width * height);
+        hueContext = doc.getElementById("hue").getContext("2d");
+        saturationBuffer = new Int16Array(width * height);
+        saturationContext = doc.getElementById("saturation").getContext("2d");
 
         // candidate skin pixels
         skinBuffer = new Uint8Array(width * height);
@@ -48,8 +56,15 @@
         if (frame) {
             zeroResponseAdjust(frame.data);
             zeroResponseContext.putImageData(frame, 0, 0);
+
             convertToLogOpponent(frame.data, logOpponentBuffers);
             visualiseLogOpponent(logOpponentBuffers, logOpponentContexts);
+
+            createHue(logOpponentBuffers, hueBuffer);
+            visualiseRange(hueBuffer, hueContext);
+            createSaturation(logOpponentBuffers, saturationBuffer);
+            visualiseRange(saturationBuffer, saturationContext);
+
             detectSkin(logOpponentBuffers, skinBuffer);
             visualiseSkin(skinBuffer, skinContext);
         }
@@ -114,42 +129,43 @@
         }
     }
 
+    function findBounds(buffer) {
+        var min = buffer[0];
+        var max = buffer[0];
+        for (var i = 0; i < buffer.length; i++) {
+            var value = buffer[i];
+            min = Math.min(value, min);
+            max = Math.max(value, max);
+        };
+        var range = max - min;
+        return {
+            max: max,
+            min: min,
+            range: range
+        };
+    }
+
+    function visualiseRange(buffer, context) {
+        var bounds = findBounds(buffer);
+        var image = context.createImageData(width, height);
+        var data = image.data;
+        for (var i = 0; i < data.length; i+= 4) {
+            var value = buffer[i / 4];
+            var scaled = 256 * ((value - bounds.min) / (bounds.range * 1.0));
+            data[i] = data[i + 1] = data[i + 2] = scaled;
+            data[i + 3] = 255;
+        }
+        context.putImageData(image, 0, 0);
+
+        context.fillStyle = "black";
+        context.fillRect(0, height - 20, width, 20);
+        context.fillStyle = "white";
+        context.font="20px Georgia";
+        context.fillText(JSON.stringify(bounds), 5, height - 5);
+    }
+
     function visualiseLogOpponent(logOpponentBuffers, logOpponentContexts)
     {
-        function findBounds(buffer) {
-            var min = buffer[0];
-            var max = buffer[0];
-            for (var i = 0; i < buffer.length; i++) {
-                var value = buffer[i];
-                min = Math.min(value, min);
-                max = Math.max(value, max);
-            };
-            var range = max - min;
-            return {
-                max: max,
-                min: min,
-                range: range
-            };
-        }
-        function visualiseRange(buffer, context) {
-            var bounds = findBounds(buffer);
-            var image = context.createImageData(width, height);
-            var data = image.data;
-            for (var i = 0; i < data.length; i+= 4) {
-                var value = buffer[i / 4];
-                var scaled = 256 * ((value - bounds.min) / (bounds.range * 1.0));
-                data[i] = data[i + 1] = data[i + 2] = scaled;
-                data[i + 3] = 255;
-            }
-            context.putImageData(image, 0, 0);
-
-            context.fillStyle = "black";
-            context.fillRect(0, height - 20, width, 20);
-            context.fillStyle = "white";
-            context.font="20px Georgia";
-            context.fillText(JSON.stringify(bounds), 5, height - 5);
-        }
-
         var parts = ['i','rg','by'];
         parts.forEach(function(part) {
             var context = logOpponentContexts[part];
@@ -162,11 +178,25 @@
         var by = logOpponentBuffers['by'][i];
         return Math.atan2(rg, by);
     }
+
+    function createHue(logOpponentBuffers, hueBuffer) {
+        for (var i = 0; i < logOpponentBuffers['rg'].length; i++) {
+            hueBuffer[i] = hue(i, logOpponentBuffers);
+        }
+    }
+
     function saturation (i, logOpponentBuffers) {
         var rg = logOpponentBuffers['rg'][i];
         var by = logOpponentBuffers['by'][i];
         return Math.sqrt(Math.pow(rg, 2.0) + Math.pow(by, 2.0));
     }
+
+    function createSaturation(logOpponentBuffers, saturationBuffer) {
+        for (var i = 0; i < logOpponentBuffers['rg'].length; i++) {
+            saturationBuffer[i] = saturation(i, logOpponentBuffers);
+        }
+    }
+
     function between(value, lower, upper) {
         return (value >= lower) && (value <= upper);
     }
