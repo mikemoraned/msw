@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7f21192e-77df-465f-a1b7-2f5bdde51415" name="Default" comment="" />
+    <list default="true" id="7f21192e-77df-465f-a1b7-2f5bdde51415" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/eye-toy/bg.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/eye-toy/index.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/eye-toy/main.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/eye-toy/main.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/green-screen/bg.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/green-screen/index.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/green-screen/main.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/green-screen/main.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/motion-detection/index.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/motion-detection/main.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/motion-detection/main.js" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path="msw.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -32,19 +46,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/motion-detection/main.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="38" column="26" selection-start="886" selection-end="906" vertical-scroll-proportion="0.0" vertical-offset="430" max-vertical-offset="1395">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.html" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/skin-detection/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="28" selection-start="97" selection-end="97" vertical-scroll-proportion="0.06810442" vertical-offset="0" max-vertical-offset="881">
+            <state line="4" column="28" selection-start="97" selection-end="97" vertical-scroll-proportion="-2.5" vertical-offset="0" max-vertical-offset="540">
               <folding>
                 <element signature="n#style#0;n#br#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#br#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -71,10 +76,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="README.md" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="README.md" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="53" selection-start="233" selection-end="233" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="165">
+            <state line="1" column="13" selection-start="153" selection-end="153" vertical-scroll-proportion="0.016574586" vertical-offset="0" max-vertical-offset="905">
               <folding />
             </state>
           </provider>
@@ -98,11 +103,11 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/skin-detection/main.js" />
         <option value="$PROJECT_DIR$/motion-detection/main.css" />
         <option value="$PROJECT_DIR$/skin-detection/main.css" />
         <option value="$PROJECT_DIR$/skin-detection/index.html" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -181,20 +186,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="shared" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="msw" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="msw" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="motion-detection" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -296,27 +287,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="53" selection-start="233" selection-end="233" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="165">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/motion-detection/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="26" selection-start="886" selection-end="906" vertical-scroll-proportion="0.0" vertical-offset="430" max-vertical-offset="1395">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/motion-detection/main.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="0" selection-start="96" selection-end="96" vertical-scroll-proportion="0.1160221" vertical-offset="0" max-vertical-offset="905">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/skin-detection/main.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="80" column="40" selection-start="3080" selection-end="3080" vertical-scroll-proportion="0.0" vertical-offset="700" max-vertical-offset="4080">
@@ -340,11 +310,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/skin-detection/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="28" selection-start="97" selection-end="97" vertical-scroll-proportion="0.06810442" vertical-offset="0" max-vertical-offset="881">
+        <state line="4" column="28" selection-start="97" selection-end="97" vertical-scroll-proportion="-2.5" vertical-offset="0" max-vertical-offset="540">
           <folding>
             <element signature="n#style#0;n#br#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#br#1;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="13" selection-start="153" selection-end="153" vertical-scroll-proportion="0.016574586" vertical-offset="0" max-vertical-offset="905">
+          <folding />
         </state>
       </provider>
     </entry>
