@@ -2,14 +2,29 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Demo: simple motion detection in a live video</title>
+    <title>Demo: simple skin detection in a live video</title>
     <link href="main.css" rel="stylesheet" type="text/css">
     <script src="../shared/shim.js"></script>
     <script src="main.js"></script>
   </head>
 
   <body>
-    <video id="v" width="320" height="240"></video>
-    <canvas id="zero-response-adjusted" width="320" height="240"></canvas>
+    <div>
+        <video id="v" width="320" height="240"></video>
+        <canvas id="zero-response-adjusted" width="320" height="240"></canvas>
+        <canvas id="masked" width="320" height="240"></canvas>
+    </div>
+    <br style="clear: both"/>
+    <div>
+        <canvas id="log-opponent-i" width="320" height="240"></canvas>
+        <canvas id="log-opponent-rg" width="320" height="240"></canvas>
+        <canvas id="log-opponent-by" width="320" height="240"></canvas>
+    </div>
+    <br style="clear: both"/>
+    <div>
+        <canvas id="hue" width="320" height="240"></canvas>
+        <canvas id="saturation" width="320" height="240"></canvas>
+        <canvas id="skin" width="320" height="240"></canvas>
+    </div>
   </body>
 </html>
