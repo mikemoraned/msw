@@ -65,7 +65,7 @@
             createSaturation(logOpponentBuffers, saturationBuffer);
             visualiseRange(saturationBuffer, saturationContext);
 
-            detectSkin(logOpponentBuffers, skinBuffer);
+            detectSkin(logOpponentBuffers['i'], hueBuffer, saturationBuffer, skinBuffer);
             visualiseSkin(skinBuffer, skinContext);
         }
 
@@ -201,25 +201,19 @@
         return (value >= lower) && (value <= upper);
     }
 
-    function detectSkin(logOpponentBuffers, skinBuffer) {
-        function skin(i, logOpponentBuffers) {
-//            if (logOpponentBuffers['i'][i] <= 5) {
-                var h = hue(i, logOpponentBuffers);
-                var s = saturation(i, logOpponentBuffers);
-//                return (between(h, 110, 150) && between(s, 20, 60))
-//                    || (between(h, 130, 170) && between(s, 30, 130));
-//            return between(s, 20, 60)
-//                || between(s, 30, 130);
-            return (between(s, 20, 60))
-                || (between(s, 30, 130));
-//            }
-//            else {
-//                return false;
-//            }
+    function detectSkin(intensityBuffer, hueBuffer, saturationBuffer, skinBuffer) {
+        function skin(intensity, hue, saturation) {
+            if (intensity <= 5) {
+                return (between(hue, 110, 150) && between(saturation, 20, 60))
+                    || (between(hue, 130, 170) && between(saturation, 30, 130));
+            }
+            else {
+                return false;
+            }
         }
 
         for (var i = 0; i < logOpponentBuffers['i'].length; i++) {
-            if (skin(i, logOpponentBuffers)) {
+            if (skin(intensityBuffer[i], hueBuffer[i], saturationBuffer[i])) {
                 skinBuffer[i] = 255;
             }
             else {
