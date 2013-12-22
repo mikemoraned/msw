@@ -59,20 +59,26 @@
         if (frame) {
             zeroResponseAdjust(frame.data);
             zeroResponseContext.putImageData(frame, 0, 0);
+            zeroResponseContext.font="20px Georgia";
+            zeroResponseContext.fillStyle = "red";
+            zeroResponseContext.fillText("zeroed", 5, 25);
 
             convertToLogOpponent(frame.data, logOpponentBuffers);
             visualiseLogOpponent(logOpponentBuffers, logOpponentContexts);
 
             createHue(logOpponentBuffers, hueBuffer);
-            visualiseRange(hueBuffer, hueContext);
+            visualiseRange("hue", hueBuffer, hueContext);
             createSaturation(logOpponentBuffers, saturationBuffer);
-            visualiseRange(saturationBuffer, saturationContext);
+            visualiseRange("saturation", saturationBuffer, saturationContext);
 
             detectSkin(logOpponentBuffers['i'], hueBuffer, saturationBuffer, skinBuffer);
             visualiseSkin(skinBuffer, skinContext);
 
             applyAsMask(skinBuffer, frame.data);
             maskContext.putImageData(frame, 0, 0);
+            maskContext.font="20px Georgia";
+            maskContext.fillStyle = "red";
+            maskContext.fillText("masked", 5, 25);
         }
 
         // Wait for the next frame.
@@ -151,7 +157,7 @@
         };
     }
 
-    function visualiseRange(buffer, context) {
+    function visualiseRange(name, buffer, context) {
         var bounds = findBounds(buffer);
         var image = context.createImageData(width, height);
         var data = image.data;
@@ -163,10 +169,14 @@
         }
         context.putImageData(image, 0, 0);
 
+        context.font="20px Georgia";
+
+        context.fillStyle = "red";
+        context.fillText(name, 5, 25);
+
         context.fillStyle = "black";
         context.fillRect(0, height - 20, width, 20);
         context.fillStyle = "white";
-        context.font="20px Georgia";
         context.fillText(JSON.stringify(bounds), 5, height - 5);
     }
 
@@ -175,7 +185,7 @@
         var parts = ['i','rg','by'];
         parts.forEach(function(part) {
             var context = logOpponentContexts[part];
-            visualiseRange(logOpponentBuffers[part], context);
+            visualiseRange(part, logOpponentBuffers[part], context);
         });
     }
 
@@ -241,6 +251,9 @@
             data[i + 3] = 255;
         }
         skinContext.putImageData(image, 0, 0);
+        skinContext.font="20px Georgia";
+        skinContext.fillStyle = "red";
+        skinContext.fillText("skin", 5, 25);
     }
 
     function applyAsMask(skinBuffer, data) {
