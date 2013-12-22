@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7f21192e-77df-465f-a1b7-2f5bdde51415" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/skin-detection/main.js" afterPath="$PROJECT_DIR$/skin-detection/main.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/motion-detection/main.css" afterPath="$PROJECT_DIR$/motion-detection/main.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/skin-detection/main.css" afterPath="$PROJECT_DIR$/skin-detection/main.css" />
     </list>
     <ignored path="msw.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,10 +26,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="main.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="main.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/skin-detection/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="80" column="40" selection-start="3080" selection-end="3080" vertical-scroll-proportion="0.5524862" vertical-offset="700" max-vertical-offset="4080">
+            <state line="80" column="40" selection-start="3080" selection-end="3080" vertical-scroll-proportion="0.0" vertical-offset="700" max-vertical-offset="4080">
               <folding />
             </state>
           </provider>
@@ -46,7 +47,7 @@
       <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/skin-detection/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="26" selection-start="467" selection-end="467" vertical-scroll-proportion="-8.75" vertical-offset="0" max-vertical-offset="540">
+            <state line="14" column="26" selection-start="461" selection-end="467" vertical-scroll-proportion="-8.75" vertical-offset="0" max-vertical-offset="540">
               <folding>
                 <element signature="n#style#0;n#br#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#br#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -55,10 +56,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.css" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="main.css" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/skin-detection/main.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="180">
+            <state line="9" column="12" selection-start="156" selection-end="156" vertical-scroll-proportion="0.14917128" vertical-offset="0" max-vertical-offset="905">
               <folding />
             </state>
           </provider>
@@ -94,6 +95,8 @@
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/skin-detection/index.html" />
         <option value="$PROJECT_DIR$/skin-detection/main.js" />
+        <option value="$PROJECT_DIR$/motion-detection/main.css" />
+        <option value="$PROJECT_DIR$/skin-detection/main.css" />
       </list>
     </option>
   </component>
@@ -280,13 +283,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/skin-detection/main.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="905">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/motion-detection/main.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="38" column="26" selection-start="886" selection-end="906" vertical-scroll-proportion="0.0" vertical-offset="430" max-vertical-offset="1395">
@@ -296,7 +292,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/skin-detection/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="26" selection-start="467" selection-end="467" vertical-scroll-proportion="-8.75" vertical-offset="0" max-vertical-offset="540">
+        <state line="14" column="26" selection-start="461" selection-end="467" vertical-scroll-proportion="-8.75" vertical-offset="0" max-vertical-offset="540">
           <folding>
             <element signature="n#style#0;n#br#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#br#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -304,9 +300,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/motion-detection/main.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="0" selection-start="96" selection-end="96" vertical-scroll-proportion="0.1160221" vertical-offset="0" max-vertical-offset="905">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/skin-detection/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="80" column="40" selection-start="3080" selection-end="3080" vertical-scroll-proportion="0.5524862" vertical-offset="700" max-vertical-offset="4080">
+        <state line="80" column="40" selection-start="3080" selection-end="3080" vertical-scroll-proportion="0.0" vertical-offset="700" max-vertical-offset="4080">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/skin-detection/main.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="12" selection-start="156" selection-end="156" vertical-scroll-proportion="0.14917128" vertical-offset="0" max-vertical-offset="905">
           <folding />
         </state>
       </provider>
