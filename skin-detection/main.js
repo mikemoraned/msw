@@ -6,8 +6,8 @@
         logOpponentBuffers = {}, logOpponentContexts = {},
         hueBuffer, hueContext,
         saturationBuffer, saturationContext,
-        skinBuffer, skinContext;
-    var bufidx = 0, buffers = [];
+        skinBuffer, skinContext,
+        maskContext;
 
     function initialize() {
         // The source video.
@@ -38,6 +38,9 @@
         skinBuffer = new Uint8Array(width * height);
         skinContext = doc.getElementById("skin").getContext("2d");
 
+        // mask over input
+        maskContext = doc.getElementById("masked").getContext("2d");
+
         // Get the webcam's stream.
         nav.getUserMedia({video: true}, startStream, function () {});
     }
@@ -67,6 +70,9 @@
 
             detectSkin(logOpponentBuffers['i'], hueBuffer, saturationBuffer, skinBuffer);
             visualiseSkin(skinBuffer, skinContext);
+
+            applyAsMask(skinBuffer, frame.data);
+            maskContext.putImageData(frame, 0, 0);
         }
 
         // Wait for the next frame.
@@ -235,6 +241,12 @@
             data[i + 3] = 255;
         }
         skinContext.putImageData(image, 0, 0);
+    }
+
+    function applyAsMask(skinBuffer, data) {
+        for (var i = 0; i < skinBuffer.length; i++) {
+            data[(i * 4) + 3] = skinBuffer[i];
+        }
     }
 
     addEventListener("DOMContentLoaded", initialize);
