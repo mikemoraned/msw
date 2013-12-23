@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7f21192e-77df-465f-a1b7-2f5bdde51415" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/eye-toy/bg.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/eye-toy/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/eye-toy/main.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/eye-toy/main.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/green-screen/bg.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/green-screen/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/green-screen/main.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/green-screen/main.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/motion-detection/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/motion-detection/main.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/motion-detection/main.js" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="7f21192e-77df-465f-a1b7-2f5bdde51415" name="Default" comment="" />
     <ignored path="msw.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -37,10 +23,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="main.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="main.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/skin-detection/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="80" column="40" selection-start="3080" selection-end="3080" vertical-scroll-proportion="0.0" vertical-offset="700" max-vertical-offset="4080">
+            <state line="70" column="67" selection-start="2628" selection-end="2628" vertical-scroll-proportion="0.9281768" vertical-offset="210" max-vertical-offset="4080">
               <folding />
             </state>
           </provider>
@@ -76,10 +62,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="README.md" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="README.md" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="13" selection-start="153" selection-end="153" vertical-scroll-proportion="0.016574586" vertical-offset="0" max-vertical-offset="905">
+            <state line="1" column="13" selection-start="153" selection-end="153" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="150">
               <folding />
             </state>
           </provider>
@@ -287,23 +273,9 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/skin-detection/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="80" column="40" selection-start="3080" selection-end="3080" vertical-scroll-proportion="0.0" vertical-offset="700" max-vertical-offset="4080">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/skin-detection/main.css">
       <provider selected="true" editor-type-id="text-editor">
         <state line="9" column="12" selection-start="156" selection-end="156" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="255">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/shared/shim.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="905">
           <folding />
         </state>
       </provider>
@@ -320,7 +292,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="13" selection-start="153" selection-end="153" vertical-scroll-proportion="0.016574586" vertical-offset="0" max-vertical-offset="905">
+        <state line="1" column="13" selection-start="153" selection-end="153" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="150">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/shared/shim.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="905">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/skin-detection/main.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="70" column="67" selection-start="2628" selection-end="2628" vertical-scroll-proportion="0.9281768" vertical-offset="210" max-vertical-offset="4080">
           <folding />
         </state>
       </provider>
