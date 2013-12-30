@@ -9,6 +9,23 @@
         skinBuffer, skinContext,
         maskContext;
 
+    function detect() {
+        var body = document.getElementsByTagName("body")[0];
+        if (nav.getUserMedia) {
+            console.log("Supported");
+            body.className = "supported";
+            initialize();
+        }
+        else {
+            console.log("Unsupported");
+            body.className = "unsupported";
+        }
+    }
+
+    function unsupported() {
+        doc.getElementsByName("body").className = "unsupported";
+    }
+
     function initialize() {
         // The source video.
         video = doc.getElementById("v");
@@ -42,7 +59,10 @@
         maskContext = doc.getElementById("masked").getContext("2d");
 
         // Get the webcam's stream.
-        nav.getUserMedia({video: true}, startStream, function () {});
+        nav.getUserMedia({video: true}, startStream, function (error) {
+            console.log("Error");
+            console.dir(error);
+        });
     }
 
     function startStream(stream) {
@@ -262,5 +282,5 @@
         }
     }
 
-    addEventListener("DOMContentLoaded", initialize);
+    addEventListener("DOMContentLoaded", detect);
 })(document, navigator);

@@ -6,25 +6,43 @@
     <link href="main.css" rel="stylesheet" type="text/css">
     <script src="../shared/shim.js"></script>
     <script src="main.js"></script>
+      <style type="text/css">
+            body .option {
+                display: none;
+            }
+            body.supported div#video {
+                display: block;
+            }
+            body.unsupported div#fallback {
+                display: block;
+            }
+      </style>
   </head>
 
   <body>
-    <div>
-        <video id="v" width="320" height="240"></video>
-        <canvas id="zero-response-adjusted" width="320" height="240"></canvas>
-        <canvas id="masked" width="320" height="240"></canvas>
+    <div id="fallback" class="option">
+        <p>
+            Sorry, your browser doesn't support getUserMedia(). Please see <a href="http://caniuse.com/stream">caniuse.com</a> for a supported browser.
+        </p>
     </div>
-    <br style="clear: both"/>
-    <div>
-        <canvas id="log-opponent-i" width="320" height="240"></canvas>
-        <canvas id="log-opponent-rg" width="320" height="240"></canvas>
-        <canvas id="log-opponent-by" width="320" height="240"></canvas>
-    </div>
-    <br style="clear: both"/>
-    <div>
-        <canvas id="hue" width="320" height="240"></canvas>
-        <canvas id="saturation" width="320" height="240"></canvas>
-        <canvas id="skin" width="320" height="240"></canvas>
+    <div id="video" class="option">
+        <div>
+            <video id="v" width="320" height="240"></video>
+            <canvas id="zero-response-adjusted" width="320" height="240"></canvas>
+            <canvas id="masked" width="320" height="240"></canvas>
+        </div>
+        <br style="clear: both"/>
+        <div>
+            <canvas id="log-opponent-i" width="320" height="240"></canvas>
+            <canvas id="log-opponent-rg" width="320" height="240"></canvas>
+            <canvas id="log-opponent-by" width="320" height="240"></canvas>
+        </div>
+        <br style="clear: both"/>
+        <div>
+            <canvas id="hue" width="320" height="240"></canvas>
+            <canvas id="saturation" width="320" height="240"></canvas>
+            <canvas id="skin" width="320" height="240"></canvas>
+        </div>
     </div>
   </body>
 </html>
